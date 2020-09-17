@@ -1,6 +1,7 @@
+import rgb2hex from 'rgb2hex';
+
 const content = document.getElementById('content') as HTMLDivElement;
 const parseBtn = document.getElementById('parse') as HTMLButtonElement;
-const stripBtn = document.getElementById('strip') as HTMLButtonElement;
 
 interface StringItem {
     text: string;
@@ -11,6 +12,17 @@ interface StringItem {
     strikethrough: boolean;
 }
 
+function searchLineStyle(el: HTMLElement, root: HTMLElement, name: string): boolean {
+    const styles = window.getComputedStyle(el);
+    if (styles.textDecorationLine.includes(name)) {
+        return true;
+    }
+    if (el.isEqualNode(root)) {
+        return false;
+    }
+    return searchLineStyle(el.parentNode as HTMLElement, root, name);
+}
+
 function parse(el: HTMLElement) {
     let item: StringItem[] = [];
     el.childNodes.forEach((e) => {
@@ -19,8 +31,9 @@ function parse(el: HTMLElement) {
             const color = styles.color;
             const bold = Number(styles.fontWeight) >= 700;
             const italic = (styles.fontStyle === 'italic') || (styles.fontStyle === 'oblique');
-            const underline = styles.textDecorationLine.includes('underline');
-            const strikethrough = styles.textDecorationLine.includes('line-through');
+            const parentStyles = window.getComputedStyle(el.parentNode as HTMLElement);
+            const underline = searchLineStyle(el, content, 'underline');
+            const strikethrough = searchLineStyle(el, content, 'line-through');
             item.push({
                 text: e.nodeValue as string,
                 color,
@@ -46,6 +59,7 @@ function strip(el: HTMLElement) {
         const span = document.createElement('span') as HTMLSpanElement;
         span.textContent = e.text;
         span.style.color = e.color;
+        span.style.textDecorationColor = e.color;
         if (e.bold) {
             span.style.fontWeight = '700';
         }
@@ -84,14 +98,80 @@ function optimizeTree(item: StringItem[]) {
     }
 }
 
+/*
+[23:50:52] [main/INFO]: [CHAT] &l  bold
+[23:50:52] [main/INFO]: [CHAT] &m  strikethrough
+[23:50:52] [main/INFO]: [CHAT] &n  underline
+[23:50:52] [main/INFO]: [CHAT] &o  ltalic
+[23:50:52] [main/INFO]: [CHAT] &r  reset
+*/
+
+function toMinecraftString(item: StringItem[]) {
+    let result = '';
+    item.forEach((e, i) => {
+        if (i <= 0 || e.color !== item[i - 1].color) {
+            result += `&${rgb2hex(e.color).hex}`;
+            if (e.bold) {
+                result += '&l';
+            }
+            if (e.strikethrough) {
+                result += '&m';
+            }
+            if (e.underline) {
+                result += '&n';
+            }
+            if (e.italic) {
+                result += '&o';
+            }
+        }
+        // TBD
+    });
+}
+
 parseBtn.addEventListener('click', () => {
     console.log(parse(content));
 });
 
-stripBtn.addEventListener('click', () => {
-    strip(content);
+const boldBtn = document.getElementById('bold') as HTMLButtonElement;
+const italicBtn = document.getElementById('italic') as HTMLButtonElement;
+const underlineBtn = document.getElementById('underline') as HTMLButtonElement;
+const strikeBtn = document.getElementById('strike') as HTMLButtonElement;
+const colorBtn = document.getElementById('color') as HTMLButtonElement;
+
+boldBtn.addEventListener('click', () => {
+    document.execCommand('bold', false);
 });
 
+italicBtn.addEventListener('click', () => {
+    document.execCommand('italic', false);
+});
+
+underlineBtn.addEventListener('click', () => {
+    document.execCommand('underline', false);
+});
+
+strikeBtn.addEventListener('click', () => {
+    document.execCommand('strikeThrough', false);
+});
+
+colorBtn.addEventListener('click', () => {
+    document.execCommand('foreColor', false, `${prompt('请输入颜色代码', '#000000')}`);
+});
+
+let stripTimer: NodeJS.Timer | null = null;
+
+content.addEventListener('focus', () => {
+    if (stripTimer !== null) {
+        clearTimeout(stripTimer);
+        stripTimer = null;
+    }
+})
+
 content.addEventListener('blur', () => {
-    strip(content);
+    if (stripTimer) {
+        clearTimeout(stripTimer);
+    }
+    stripTimer = setTimeout(() => {
+        strip(content);
+    }, 1000);
 });

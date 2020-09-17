@@ -22,6 +22,8 @@
     "serve": "del-cli dist/ && parcel serve ./src/index.html"
   },
   "dependencies": {
-    "normalize.css": "^8.0.1"
+    "@types/rgb2hex": "^0.2.0",
+    "normalize.css": "^8.0.1",
+    "rgb2hex": "^0.2.0"
   }
 }
