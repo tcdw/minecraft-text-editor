@@ -20,5 +20,8 @@
   "scripts": {
     "build": "del-cli dist/ && parcel build --no-source-maps ./src/index.html",
     "serve": "del-cli dist/ && parcel serve ./src/index.html"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
   }
 }
