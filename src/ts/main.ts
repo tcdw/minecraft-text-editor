@@ -77,7 +77,7 @@ function optimizeTree(item: StringItem[]) {
             item[i].strikethrough === item[i - 1].strikethrough &&
             item[i].underline === item[i - 1].underline) {
             item[i - 1].text += item[i].text;
-            item = item.splice(i, 1);
+            item.splice(i, 1);
             continue;
         }
         i += 1;
