@@ -21,6 +21,13 @@ interface StringItem {
     strikethrough: boolean;
 }
 
+/**
+ * 检查某个元素是否会渲染出下划线或删除线样式
+ * @param el 要开始搜索的节点
+ * @param root 根节点（停止搜索的地方）
+ * @param name 搜索的关键词
+ * @returns 是否会渲染
+ */
 function searchLineStyle(el: HTMLElement, root: HTMLElement, name: string): boolean {
     if (el === null) {
         return false;
@@ -35,6 +42,12 @@ function searchLineStyle(el: HTMLElement, root: HTMLElement, name: string): bool
     return searchLineStyle(el.parentNode as HTMLElement, root, name);
 }
 
+/**
+ * 解析 HTML 多彩文本为结构化数据
+ * @param el 包含要进行解析的文本的元素
+ * @param root 根节点
+ * @returns 解析结果
+ */
 function parse(el: HTMLElement, root: HTMLElement = content) {
     let item: StringItem[] = [];
     el.childNodes.forEach((e) => {
@@ -61,6 +74,11 @@ function parse(el: HTMLElement, root: HTMLElement = content) {
     return item;
 }
 
+/**
+ * 优化多彩文本数据结构
+ * @param item 需要优化的数据结构
+ * @returns 优化结果
+ */
 function optimizeTree(item: StringItem[]) {
     let i = 0;
     while (i < item.length) {
@@ -81,6 +99,12 @@ function optimizeTree(item: StringItem[]) {
     }
 }
 
+/**
+ * 从多彩文本数据结构渲染 HTML
+ * @param item 需要优化的数据结构
+ * @param target 需要插入渲染结果的 HTML 元素
+ * @returns 需要插入渲染结果的 HTML 元素
+ */
 function randerFromTree(item: StringItem[], target: Element) {
     item.forEach((e) => {
         const span = document.createElement('span') as HTMLSpanElement;
