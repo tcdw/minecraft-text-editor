@@ -76,6 +76,7 @@ function strip(el: HTMLElement) {
         }
         el.appendChild(span);
     });
+    return textTree;
 }
 
 function optimizeTree(item: StringItem[]) {
@@ -109,23 +110,29 @@ function optimizeTree(item: StringItem[]) {
 function toMinecraftString(item: StringItem[]) {
     let result = '';
     item.forEach((e, i) => {
-        if (i <= 0 || e.color !== item[i - 1].color) {
+        if (i <= 0
+             || e.color !== item[i - 1].color
+             || (!e.bold && item[i - 1].bold)
+             || (!e.strikethrough && item[i - 1].strikethrough)
+             || (!e.underline && item[i - 1].underline)
+             || (!e.italic && item[i - 1].italic)) {
             result += `&${rgb2hex(e.color).hex}`;
-            if (e.bold) {
-                result += '&l';
-            }
-            if (e.strikethrough) {
-                result += '&m';
-            }
-            if (e.underline) {
-                result += '&n';
-            }
-            if (e.italic) {
-                result += '&o';
-            }
         }
-        // TBD
+        if (e.bold) {
+            result += '&l';
+        }
+        if (e.strikethrough) {
+            result += '&m';
+        }
+        if (e.underline) {
+            result += '&n';
+        }
+        if (e.italic) {
+            result += '&o';
+        }
+        result += e.text;
     });
+    return result;
 }
 
 parseBtn.addEventListener('click', () => {
@@ -172,6 +179,8 @@ content.addEventListener('blur', () => {
         clearTimeout(stripTimer);
     }
     stripTimer = setTimeout(() => {
-        strip(content);
+        const result = strip(content);
+        const display = document.getElementById('results') as HTMLTextAreaElement;
+        display.value = toMinecraftString(result);
     }, 1000);
 });
