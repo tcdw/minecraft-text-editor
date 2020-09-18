@@ -1,7 +1,16 @@
+// TODO: 进行处理
+
+/* eslint-disable no-alert */
+/* eslint-disable no-console */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-continue */
+
 import rgb2hex from 'rgb2hex';
 
 const content = document.getElementById('content') as HTMLDivElement;
 const parseBtn = document.getElementById('parse') as HTMLButtonElement;
+
+const defaultColor = '#000000';
 
 interface StringItem {
     text: string;
@@ -13,6 +22,9 @@ interface StringItem {
 }
 
 function searchLineStyle(el: HTMLElement, root: HTMLElement, name: string): boolean {
+    if (el === null) {
+        return false;
+    }
     const styles = window.getComputedStyle(el);
     if (styles.textDecorationLine.includes(name)) {
         return true;
@@ -23,17 +35,17 @@ function searchLineStyle(el: HTMLElement, root: HTMLElement, name: string): bool
     return searchLineStyle(el.parentNode as HTMLElement, root, name);
 }
 
-function parse(el: HTMLElement) {
+function parse(el: HTMLElement, root: HTMLElement = content) {
     let item: StringItem[] = [];
     el.childNodes.forEach((e) => {
         if (e.nodeType === Node.TEXT_NODE) {
             const styles = window.getComputedStyle(el);
-            const color = styles.color;
+            const { color } = styles;
             const bold = Number(styles.fontWeight) >= 700;
             const italic = (styles.fontStyle === 'italic') || (styles.fontStyle === 'oblique');
-            const parentStyles = window.getComputedStyle(el.parentNode as HTMLElement);
-            const underline = searchLineStyle(el, content, 'underline');
-            const strikethrough = searchLineStyle(el, content, 'line-through');
+            // const parentStyles = window.getComputedStyle(el.parentNode as HTMLElement);
+            const underline = searchLineStyle(el, root, 'underline');
+            const strikethrough = searchLineStyle(el, root, 'line-through');
             item.push({
                 text: e.nodeValue as string,
                 color,
@@ -43,19 +55,34 @@ function parse(el: HTMLElement) {
                 strikethrough,
             });
         } else if (e.nodeType === Node.ELEMENT_NODE) {
-            item = item.concat(parse(e as HTMLElement));
+            item = item.concat(parse(e as HTMLElement, root));
         }
     });
     return item;
 }
 
-function strip(el: HTMLElement) {
-    const textTree = parse(el);
-    optimizeTree(textTree);
-    while (el.childNodes.length > 0) {
-        el.removeChild(el.lastChild as ChildNode);
+function optimizeTree(item: StringItem[]) {
+    let i = 0;
+    while (i < item.length) {
+        if (i <= 0) {
+            i = 1;
+            continue;
+        }
+        if (item[i].color === item[i - 1].color
+            && item[i].bold === item[i - 1].bold
+            && item[i].italic === item[i - 1].italic
+            && item[i].strikethrough === item[i - 1].strikethrough
+            && item[i].underline === item[i - 1].underline) {
+            item[i - 1].text += item[i].text;
+            item.splice(i, 1);
+            continue;
+        }
+        i += 1;
     }
-    textTree.forEach((e) => {
+}
+
+function randerFromTree(item: StringItem[], target: Element) {
+    item.forEach((e) => {
         const span = document.createElement('span') as HTMLSpanElement;
         span.textContent = e.text;
         span.style.color = e.color;
@@ -74,29 +101,19 @@ function strip(el: HTMLElement) {
         if (e.italic) {
             span.style.fontStyle = 'italic';
         }
-        el.appendChild(span);
+        target.appendChild(span);
     });
-    return textTree;
+    return target;
 }
 
-function optimizeTree(item: StringItem[]) {
-    let i = 0;
-    while (i < item.length) {
-        if (i <= 0) {
-            i = 1;
-            continue;
-        }
-        if (item[i].color === item[i - 1].color &&
-            item[i].bold === item[i - 1].bold &&
-            item[i].italic === item[i - 1].italic &&
-            item[i].strikethrough === item[i - 1].strikethrough &&
-            item[i].underline === item[i - 1].underline) {
-            item[i - 1].text += item[i].text;
-            item.splice(i, 1);
-            continue;
-        }
-        i += 1;
+function strip(el: HTMLElement, target?: Element) {
+    const textTree = parse(el);
+    optimizeTree(textTree);
+    while (el.lastChild !== null) {
+        el.removeChild(el.lastChild);
     }
+    randerFromTree(textTree, target || el);
+    return textTree;
 }
 
 /*
@@ -116,7 +133,12 @@ function toMinecraftString(item: StringItem[]) {
              || (!e.strikethrough && item[i - 1].strikethrough)
              || (!e.underline && item[i - 1].underline)
              || (!e.italic && item[i - 1].italic)) {
-            result += `&${rgb2hex(e.color).hex}`;
+            const hexColor = rgb2hex(e.color).hex;
+            if (defaultColor === hexColor) {
+                result += '&r';
+            } else {
+                result += `&${hexColor}`;
+            }
         }
         if (e.bold) {
             result += '&l';
@@ -136,7 +158,14 @@ function toMinecraftString(item: StringItem[]) {
 }
 
 parseBtn.addEventListener('click', () => {
-    console.log(parse(content));
+    const selection = document.getSelection() as Selection;
+    console.log(selection);
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const extracted = range.extractContents();
+        console.log(extracted);
+        // range.insertNode(extracted);
+    }
 });
 
 const boldBtn = document.getElementById('bold') as HTMLButtonElement;
@@ -165,6 +194,7 @@ colorBtn.addEventListener('click', () => {
     document.execCommand('foreColor', false, `${prompt('请输入颜色代码', '#000000')}`);
 });
 
+// eslint-disable-next-line no-undef
 let stripTimer: NodeJS.Timer | null = null;
 
 content.addEventListener('focus', () => {
@@ -172,7 +202,7 @@ content.addEventListener('focus', () => {
         clearTimeout(stripTimer);
         stripTimer = null;
     }
-})
+});
 
 content.addEventListener('blur', () => {
     if (stripTimer) {
@@ -183,4 +213,53 @@ content.addEventListener('blur', () => {
         const display = document.getElementById('results') as HTMLTextAreaElement;
         display.value = toMinecraftString(result);
     }, 1000);
+});
+
+function insertHTMLAtCaret(e: HTMLElement) {
+    let range: Range;
+    const sel = window.getSelection() as Selection;
+    if (sel.getRangeAt && sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(e);
+    }
+}
+
+function saveSelection() {
+    const sel = window.getSelection() as Selection;
+    if (sel.getRangeAt && sel.rangeCount) {
+        return sel.getRangeAt(0);
+    }
+    return null;
+}
+
+function restoreSelection(range: Range) {
+    if (range) {
+        const sel = window.getSelection() as Selection;
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+}
+
+content.addEventListener('paste', (e) => {
+    e.preventDefault();
+    const data = e.clipboardData;
+    if (data === null) {
+        return;
+    }
+    const temp = document.createElement('div');
+    temp.innerHTML = data.getData('text/html');
+    temp.style.color = defaultColor;
+
+    document.body.appendChild(temp);
+    const tree = parse(temp, temp);
+    document.body.removeChild(temp);
+
+    const filtered = document.createElement('span');
+    randerFromTree(tree, filtered);
+    const selection = saveSelection();
+    insertHTMLAtCaret(filtered);
+    if (selection !== null) {
+        restoreSelection(selection);
+    }
 });

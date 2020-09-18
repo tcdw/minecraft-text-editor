@@ -12,10 +12,15 @@
   },
   "homepage": "https://github.com/tcdw/minecraft-text-editor#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.1.1",
+    "@typescript-eslint/parser": "^4.1.1",
+    "del-cli": "^3.0.1",
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
     "parcel": "^1.12.4",
     "sass": "^1.26.10",
-    "typescript": "^4.0.2",
-    "del-cli": "^3.0.1"
+    "typescript": "^4.0.2"
   },
   "scripts": {
     "build": "del-cli dist/ && parcel build --no-source-maps ./src/index.html",
