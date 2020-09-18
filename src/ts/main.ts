@@ -247,19 +247,37 @@ content.addEventListener('paste', (e) => {
     if (data === null) {
         return;
     }
-    const temp = document.createElement('div');
-    temp.innerHTML = data.getData('text/html');
-    temp.style.color = defaultColor;
 
-    document.body.appendChild(temp);
-    const tree = parse(temp, temp);
-    document.body.removeChild(temp);
+    const temp = document.createElement('span');
+    let target: HTMLElement | undefined;
 
-    const filtered = document.createElement('span');
-    randerFromTree(tree, filtered);
-    const selection = saveSelection();
-    insertHTMLAtCaret(filtered);
-    if (selection !== null) {
-        restoreSelection(selection);
+    if (data.getData('text/html').length <= 0 && data.getData('text/plain').length > 0) {
+        // 用户使用了 Chrome 浏览器的「粘贴纯文本」功能
+        let text = data.getData('text/plain');
+        text = text.replace(/\r\n/g, ' ');
+        text = text.replace(/\n/g, ' ');
+        text = text.replace(/\r/g, ' ');
+        temp.textContent = text;
+        target = temp;
+    } else if (data.getData('text/html').length > 0) {
+        // 用户正常粘贴
+        temp.innerHTML = data.getData('text/html');
+        temp.style.color = defaultColor;
+
+        // 在真实插入元素到文档以后，才可以获取计算以后的样式
+        document.body.appendChild(temp);
+        const tree = parse(temp, temp);
+        document.body.removeChild(temp);
+
+        target = document.createElement('span');
+        randerFromTree(tree, target);
+    }
+
+    if (typeof target !== 'undefined') {
+        const selection = saveSelection();
+        insertHTMLAtCaret(target);
+        if (selection !== null) {
+            restoreSelection(selection);
+        }
     }
 });
