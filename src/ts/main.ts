@@ -12,6 +12,25 @@ const parseBtn = document.getElementById('parse') as HTMLButtonElement;
 
 const defaultColor = '#000000';
 
+const builtinColor = [
+    '000000',
+    '0000aa',
+    '00aa00',
+    '00aaaa',
+    'aa0000',
+    'aa00aa',
+    'ffaa00',
+    'aaaaaa',
+    '555555',
+    '5555ff',
+    '55ff55',
+    '55ffff',
+    'ff5555',
+    'ff55ff',
+    'ffff55',
+    'ffffff',
+];
+
 interface StringItem {
     text: string;
     color: string;
@@ -161,7 +180,15 @@ function toMinecraftString(item: StringItem[]) {
             if (defaultColor === hexColor) {
                 result += '&r';
             } else {
-                result += `&${hexColor}`;
+                for (let j = 0; j < builtinColor.length; j += 1) {
+                    if (hexColor === `#${builtinColor[j]}`) {
+                        result += `&${j.toString(16)}`;
+                        break;
+                    }
+                    if (j >= builtinColor.length - 1) {
+                        result += `&${hexColor}`;
+                    }
+                }
             }
         }
         if (e.bold) {
@@ -298,10 +325,7 @@ content.addEventListener('paste', (e) => {
     }
 
     if (typeof target !== 'undefined') {
-        const selection = saveSelection();
+        // const selection = saveSelection();
         insertHTMLAtCaret(target);
-        if (selection !== null) {
-            restoreSelection(selection);
-        }
     }
 });
