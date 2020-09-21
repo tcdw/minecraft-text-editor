@@ -3,17 +3,33 @@
 <head>
     <meta charset="utf-8">
     <title>Minecraft Text Editor</title>
-    <link rel="stylesheet" href="./scss/main.scss">
 </head>
 <body>
-    <button id="parse">获取选区</button>
-    <button id="bold">B</button>
-    <button id="italic">I</button>
-    <button id="underline">U</button>
-    <button id="strike">S</button>
-    <button id="color">颜色</button><br>
-    <div contenteditable="true" id="content">测试<s>文本</s>内容！<span style="color: #ffaa00;">测试文本<span style="text-decoration: underline;">内容！测试</span>文本</span>内容！</div>
-    <textarea id="results" style="font-family: monospace;"></textarea>
+    <div class="container">
+        <header>
+            <h1>Minecraft Text Editor</h1>
+        </header>
+        <section class="editor">
+            <button id="parse">获取选区</button>
+            <button id="insert">插入测试内容</button>
+            <button id="bold">B</button>
+            <button id="italic">I</button>
+            <button id="underline">U</button>
+            <button id="strike">S</button>
+            <button id="color">颜色</button><br>
+            <div contenteditable="true" id="content">测试<s>文本</s>内容！<span style="color: #ffaa00;">测试文本<span style="text-decoration: underline;">内容！测试</span>文本</span>内容！</div>
+            <textarea id="results" style="font-family: monospace;"></textarea>
+        </section>
+        <section class="info">
+            <div class="markdown-body">
+                <p>TBD...</p>
+            </div>
+        </section>
+    </div>
+    <footer>
+        &copy; 2020 tcdw
+    </footer>
+    <div class="modal-cover"></div>
     <script src="./ts/main.ts"></script>
 </body>
 </html>

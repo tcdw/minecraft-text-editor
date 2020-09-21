@@ -6,6 +6,9 @@
 /* eslint-disable no-continue */
 
 import rgb2hex from 'rgb2hex';
+import 'normalize.css/normalize.css';
+import '@sukka/markdown.css/dist/markdown.css';
+import '../scss/main.scss';
 
 const content = document.getElementById('content') as HTMLDivElement;
 const parseBtn = document.getElementById('parse') as HTMLButtonElement;
@@ -208,6 +211,26 @@ function toMinecraftString(item: StringItem[]) {
     return result;
 }
 
+function insertContent(data: string | HTMLElement | StringItem[]) {
+    let temp: Element;
+    if (typeof data === 'string') {
+        temp = document.createElement('span');
+        temp.textContent = data;
+    } else if (Array.isArray(data)) {
+        temp = document.createElement('span');
+        randerFromTree(data, temp);
+    } else {
+        temp = data;
+    }
+    let range: Range;
+    const sel = window.getSelection() as Selection;
+    if (sel.getRangeAt && sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(temp);
+    }
+}
+
 parseBtn.addEventListener('click', () => {
     const selection = document.getSelection() as Selection;
     console.log(selection);
@@ -224,6 +247,7 @@ const italicBtn = document.getElementById('italic') as HTMLButtonElement;
 const underlineBtn = document.getElementById('underline') as HTMLButtonElement;
 const strikeBtn = document.getElementById('strike') as HTMLButtonElement;
 const colorBtn = document.getElementById('color') as HTMLButtonElement;
+const insertBtn = document.getElementById('insert') as HTMLButtonElement;
 
 boldBtn.addEventListener('click', () => {
     document.execCommand('bold', false);
@@ -243,6 +267,21 @@ strikeBtn.addEventListener('click', () => {
 
 colorBtn.addEventListener('click', () => {
     document.execCommand('foreColor', false, `${prompt('请输入颜色代码', '#000000')}`);
+});
+
+insertBtn.addEventListener('click', () => {
+    const temp = document.createElement('span');
+    temp.innerHTML = '<span style="color: #66ccff">测试内容</span>';
+    temp.style.color = defaultColor;
+
+    // 在真实插入元素到文档以后，才可以获取计算以后的样式
+    document.body.appendChild(temp);
+    const tree = parse(temp, temp);
+    document.body.removeChild(temp);
+
+    const target = document.createElement('span');
+    randerFromTree(tree, target);
+    insertContent(target);
 });
 
 // eslint-disable-next-line no-undef
@@ -266,32 +305,6 @@ content.addEventListener('blur', () => {
     }, 1000);
 });
 
-function insertHTMLAtCaret(e: HTMLElement) {
-    let range: Range;
-    const sel = window.getSelection() as Selection;
-    if (sel.getRangeAt && sel.rangeCount) {
-        range = sel.getRangeAt(0);
-        range.deleteContents();
-        range.insertNode(e);
-    }
-}
-
-function saveSelection() {
-    const sel = window.getSelection() as Selection;
-    if (sel.getRangeAt && sel.rangeCount) {
-        return sel.getRangeAt(0);
-    }
-    return null;
-}
-
-function restoreSelection(range: Range) {
-    if (range) {
-        const sel = window.getSelection() as Selection;
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }
-}
-
 content.addEventListener('paste', (e) => {
     e.preventDefault();
     const data = e.clipboardData;
@@ -299,19 +312,16 @@ content.addEventListener('paste', (e) => {
         return;
     }
 
-    const temp = document.createElement('span');
-    let target: HTMLElement | undefined;
-
     if (data.getData('text/html').length <= 0 && data.getData('text/plain').length > 0) {
         // 用户使用了 Chrome 浏览器的「粘贴纯文本」功能
         let text = data.getData('text/plain');
         text = text.replace(/\r\n/g, ' ');
         text = text.replace(/\n/g, ' ');
         text = text.replace(/\r/g, ' ');
-        temp.textContent = text;
-        target = temp;
+        insertContent(text);
     } else if (data.getData('text/html').length > 0) {
         // 用户正常粘贴
+        const temp = document.createElement('span');
         temp.innerHTML = data.getData('text/html');
         temp.style.color = defaultColor;
 
@@ -320,12 +330,6 @@ content.addEventListener('paste', (e) => {
         const tree = parse(temp, temp);
         document.body.removeChild(temp);
 
-        target = document.createElement('span');
-        randerFromTree(tree, target);
-    }
-
-    if (typeof target !== 'undefined') {
-        // const selection = saveSelection();
-        insertHTMLAtCaret(target);
+        insertContent(tree);
     }
 });
