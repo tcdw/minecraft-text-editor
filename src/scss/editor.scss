@@ -1,9 +1,39 @@
 & > .editor {
-    & > #content {
-        background-color: #222;
-        color: #fff;
-        padding: 0.3em 0.6em;
-        line-height: 1.6em;
-        border-radius: 0.3em;
+    .editbox {
+        .toolbar {
+            display: flex;
+            border-radius: 0.3em 0.3em 0 0;
+            background-color: #cfd8dc;
+            .icon-btn {
+                appearance: none;
+                font-size: 1.5em;
+                width: 2rem;
+                height: 2rem;
+                line-height: 2rem;
+                text-align: center;
+                background-color: #babdbe00;
+                transition: background-color 0.16s, color 0.16s;
+                margin: 0.2rem;
+                margin-right: 0;
+                padding: 0;
+                border: 0;
+                border-radius: 0.15rem;
+                &:hover {
+                    background-color: #babdbe;
+                }
+                &:focus {
+                    outline: none;
+                    background-color: #797979;
+                    color: #fff;
+                }
+            }
+        }
+        #content {
+            background-color: #222;
+            color: #fff;
+            padding: 0.4em 0.8em;
+            line-height: 1.8em;
+            border-radius: 0 0 0.3em 0.3em;
+        }
     }
 }

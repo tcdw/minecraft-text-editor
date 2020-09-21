@@ -14,11 +14,13 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
+    "autoprefixer": "^9.8.6",
     "del-cli": "^3.0.1",
     "eslint": "^7.9.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
     "parcel": "^1.12.4",
+    "postcss-modules": "^3.2.2",
     "typescript": "^4.0.3"
   },
   "scripts": {
