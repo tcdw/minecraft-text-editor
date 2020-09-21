@@ -26,6 +26,48 @@
                     background-color: #797979;
                     color: #fff;
                 }
+                &#color:after {
+                    content: " ";
+                    width: 0.7em;
+                    height: 0.7em;
+                    border-radius: 50%;
+                    background-color: #fff;
+                    position: absolute;
+                    transform: translate3d(-50%, -50%, 0);
+                    border: 2.5px solid #000;
+                }
+            }
+            .color-panel {
+                position: absolute;
+                background-color: #cfd8dc;
+                padding: 0.4em;
+                padding-top: 0;
+                border-radius: 0 0 0.3em 0.3em;
+                width: 208px;
+                .color-btn {
+                    appearance: none;
+                    border: 0;
+                    width: 1.5em;
+                    height: 1.5em;
+                    margin: 1px;
+                    float: left;
+                    &[data-color="0"] { background-color: #000000 }
+                    &[data-color="1"] { background-color: #0000aa }
+                    &[data-color="2"] { background-color: #00aa00 }
+                    &[data-color="3"] { background-color: #00aaaa }
+                    &[data-color="4"] { background-color: #aa0000 }
+                    &[data-color="5"] { background-color: #aa00aa }
+                    &[data-color="6"] { background-color: #ffaa00 }
+                    &[data-color="7"] { background-color: #aaaaaa }
+                    &[data-color="8"] { background-color: #555555 }
+                    &[data-color="9"] { background-color: #5555ff }
+                    &[data-color="10"] { background-color: #55ff55 }
+                    &[data-color="11"] { background-color: #55ffff }
+                    &[data-color="12"] { background-color: #ff5555 }
+                    &[data-color="13"] { background-color: #ff55ff }
+                    &[data-color="14"] { background-color: #ffff55 }
+                    &[data-color="15"] { background-color: #ffffff }
+                }
             }
         }
         #content {

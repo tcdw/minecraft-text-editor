@@ -249,7 +249,6 @@ const boldBtn = document.getElementById('bold') as HTMLButtonElement;
 const italicBtn = document.getElementById('italic') as HTMLButtonElement;
 const underlineBtn = document.getElementById('underline') as HTMLButtonElement;
 const strikeBtn = document.getElementById('strike') as HTMLButtonElement;
-const colorBtn = document.getElementById('color') as HTMLButtonElement;
 const insertBtn = document.getElementById('insert') as HTMLButtonElement;
 
 boldBtn.addEventListener('click', () => {
@@ -268,8 +267,15 @@ strikeBtn.addEventListener('click', () => {
     document.execCommand('strikeThrough', false);
 });
 
-colorBtn.addEventListener('click', () => {
-    document.execCommand('foreColor', false, `${prompt('请输入颜色代码', '#000000')}`);
+function setBuiltinColorEvent(e: MouseEvent) {
+    const src = e.target as HTMLElement;
+    const code = Number(src.dataset.color);
+    document.execCommand('foreColor', false, `#${builtinColor[code]}`);
+}
+
+const colorBtns = document.getElementsByClassName('color-btn');
+Array.prototype.forEach.call(colorBtns, (e: HTMLElement) => {
+    e.addEventListener('click', setBuiltinColorEvent);
 });
 
 insertBtn.addEventListener('click', () => {

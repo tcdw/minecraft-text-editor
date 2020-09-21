@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Minecraft Text Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -13,7 +14,6 @@
         <section class="editor">
             <button id="parse">获取选区</button>
             <button id="insert">插入测试内容</button>
-            <button id="color">颜色</button>
             <select>
                 <option value="chat">聊天框</option>
                 <option value="sign">木牌</option>
@@ -24,6 +24,30 @@
                     <button class="icon-btn material-icons" id="italic">format_italic</button>
                     <button class="icon-btn material-icons" id="underline">format_underlined</button>
                     <button class="icon-btn material-icons" id="strike">strikethrough_s</button>
+                    <div class="color-menu">
+                        <button class="icon-btn" id="color"></button>
+                        <div class="color-panel">
+                            <div class="color-list">
+                                <button class="color-btn" data-color="0"></button>
+                                <button class="color-btn" data-color="1"></button>
+                                <button class="color-btn" data-color="2"></button>
+                                <button class="color-btn" data-color="3"></button>
+                                <button class="color-btn" data-color="4"></button>
+                                <button class="color-btn" data-color="5"></button>
+                                <button class="color-btn" data-color="6"></button>
+                                <button class="color-btn" data-color="7"></button>
+                                <button class="color-btn" data-color="8"></button>
+                                <button class="color-btn" data-color="9"></button>
+                                <button class="color-btn" data-color="10"></button>
+                                <button class="color-btn" data-color="11"></button>
+                                <button class="color-btn" data-color="12"></button>
+                                <button class="color-btn" data-color="13"></button>
+                                <button class="color-btn" data-color="14"></button>
+                                <button class="color-btn" data-color="15"></button>
+                            </div>
+                            <input type="color" id="custom-color" style="display: none;"><label for="custom-color">自定义颜色 (Minecraft 1.16+)</label>
+                        </div>
+                    </div>
                 </div>
                 <div contenteditable="true" id="content">测试<s>文本</s>内容！<span style="color: #ffaa00;">测试文本<span style="text-decoration: underline;">内容！测试</span>文本</span>内容！</div>
             <textarea id="results" style="font-family: monospace;"></textarea>
