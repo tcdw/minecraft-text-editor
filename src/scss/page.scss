@@ -38,6 +38,7 @@ body {
     & > .info {
         padding: 1em 0;
     }
+    @import "./editor.scss";
 }
 
 footer {

@@ -152,6 +152,12 @@ function randerFromTree(item: StringItem[], target: Element) {
     return target;
 }
 
+/**
+ * 优化文本框中已有的内容
+ * @param el 文本框
+ * @param target 输出目标
+ * @returns 优化结果的文本数据结构
+ */
 function strip(el: HTMLElement, target?: Element) {
     const textTree = parse(el);
     optimizeTree(textTree);
@@ -162,14 +168,11 @@ function strip(el: HTMLElement, target?: Element) {
     return textTree;
 }
 
-/*
-[23:50:52] [main/INFO]: [CHAT] &l  bold
-[23:50:52] [main/INFO]: [CHAT] &m  strikethrough
-[23:50:52] [main/INFO]: [CHAT] &n  underline
-[23:50:52] [main/INFO]: [CHAT] &o  ltalic
-[23:50:52] [main/INFO]: [CHAT] &r  reset
-*/
-
+/**
+ * 将文本数据结构转换为 Minecraft EssentialsX 表记
+ * @param item 文本数据结构
+ * @returns 表记
+ */
 function toMinecraftString(item: StringItem[]) {
     let result = '';
     item.forEach((e, i) => {
@@ -331,5 +334,11 @@ content.addEventListener('paste', (e) => {
         document.body.removeChild(temp);
 
         insertContent(tree);
+    }
+});
+
+content.addEventListener('keydown', (e) => {
+    if (e.code === 'Enter') {
+        e.preventDefault();
     }
 });
