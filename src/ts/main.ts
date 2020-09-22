@@ -35,19 +35,19 @@ parseBtn.addEventListener('click', () => {
 });
 
 boldBtn.addEventListener('click', () => {
-    document.execCommand('bold', false);
+    textEditor.setStyle('bold');
 });
 
 italicBtn.addEventListener('click', () => {
-    document.execCommand('italic', false);
+    textEditor.setStyle('italic');
 });
 
 underlineBtn.addEventListener('click', () => {
-    document.execCommand('underline', false);
+    textEditor.setStyle('underline');
 });
 
 strikeBtn.addEventListener('click', () => {
-    document.execCommand('strikeThrough', false);
+    textEditor.setStyle('strikethrough');
 });
 
 colorBtn.addEventListener('click', () => {

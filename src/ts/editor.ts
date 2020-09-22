@@ -66,7 +66,7 @@ export class TextEditor {
      * @param root 根节点
      * @returns 解析结果
      */
-    parse(el: HTMLElement, root: HTMLElement = this.content) {
+    parse(el: HTMLElement, root: HTMLElement = el) {
         let item: StringItem[] = [];
         el.childNodes.forEach((e) => {
             if (e.nodeType === Node.TEXT_NODE) {
@@ -90,6 +90,17 @@ export class TextEditor {
             }
         });
         return item;
+    }
+
+    parseFromFragment(
+        df: DocumentFragment,
+    ) {
+        const temp = document.createElement('div');
+        temp.appendChild(df);
+        document.body.appendChild(temp);
+        const tree = this.parse(temp);
+        document.body.removeChild(temp);
+        return tree;
     }
 
     /**
@@ -212,6 +223,26 @@ export class TextEditor {
         return result;
     }
 
+    /**
+     * 剪切用户选区
+     * @returns 剪切下来的用户选区的文本数据结构
+     */
+    cutSelection(): StringItem[] {
+        const selection = document.getSelection() as Selection;
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const extracted = range.extractContents();
+            // range.insertNode(extracted);
+            const tree = this.parseFromFragment(extracted);
+            return tree;
+        }
+        return [];
+    }
+
+    /**
+     * 在指定选区插入内容
+     * @param data 要被插入的内容
+     */
     static insertContent(data: string | HTMLElement | StringItem[]) {
         let temp: Element;
         if (typeof data === 'string') {
@@ -230,6 +261,21 @@ export class TextEditor {
             range.deleteContents();
             range.insertNode(temp);
         }
+    }
+
+    setStyle(type: 'bold' | 'italic' | 'underline' | 'strikethrough') {
+        const selection = this.cutSelection();
+        let apply = false;
+        for (let i = 0; i < selection.length; i += 1) {
+            if (!selection[i][type]) {
+                apply = true;
+                break;
+            }
+        }
+        for (let i = 0; i < selection.length; i += 1) {
+            selection[i][type] = apply;
+        }
+        TextEditor.insertContent(selection);
     }
 
     get defaultColor() {
