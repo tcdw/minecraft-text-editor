@@ -25,8 +25,8 @@
                     <button class="icon-btn material-icons" id="underline">format_underlined</button>
                     <button class="icon-btn material-icons" id="strike">strikethrough_s</button>
                     <div class="color-menu">
-                        <button class="icon-btn" id="color"></button>
-                        <div class="color-panel">
+                        <button class="icon-btn material-icons" id="color">color_lens</button>
+                        <div class="color-panel" id="color-panel">
                             <div class="color-list">
                                 <button class="color-btn" data-color="0"></button>
                                 <button class="color-btn" data-color="1"></button>
@@ -45,7 +45,13 @@
                                 <button class="color-btn" data-color="14"></button>
                                 <button class="color-btn" data-color="15"></button>
                             </div>
-                            <input type="color" id="custom-color" style="display: none;"><label for="custom-color">自定义颜色 (Minecraft 1.16+)</label>
+                            <div class="custom-color">
+                                <input type="color" id="custom-color" class="selector-pos">
+                                <label for="custom-color" class="selector-pos">
+                                    <div class="current-color" id="current-color"></div>
+                                    <div class="info">自定义 (Minecraft 1.16+)</div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,6 +69,7 @@
         &copy; 2020 tcdw
     </footer>
     <div class="modal-cover"></div>
+    <div class="modal-closer"></div>
     <script src="./ts/main.ts"></script>
 </body>
 </html>

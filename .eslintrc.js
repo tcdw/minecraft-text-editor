@@ -16,5 +16,20 @@ module.exports = {
     ],
     rules: {
         indent: ['error', 4],
+        'import/extensions': [
+            'error',
+            'ignorePackages',
+            {
+                js: 'never',
+                ts: 'never',
+            },
+        ],
+    },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.ts'],
+            },
+        },
     },
 };

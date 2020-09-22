@@ -1,10 +1,17 @@
-.modal-cover {
-    background-color: rgba(0, 0, 0, 0.5);
+.modal-cover, .modal-closer {
     width: 100vw;
     height: 100vh;
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 10000;
     display: none;
+}
+
+.modal-cover {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+}
+
+.modal-closer {
+    z-index: 2000;
 }

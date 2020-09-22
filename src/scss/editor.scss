@@ -3,7 +3,7 @@
         .toolbar {
             display: flex;
             border-radius: 0.3em 0.3em 0 0;
-            background-color: #cfd8dc;
+            background-color: #e7ecee;
             .icon-btn {
                 appearance: none;
                 font-size: 1.5em;
@@ -26,31 +26,27 @@
                     background-color: #797979;
                     color: #fff;
                 }
-                &#color:after {
-                    content: " ";
-                    width: 0.7em;
-                    height: 0.7em;
-                    border-radius: 50%;
-                    background-color: #fff;
-                    position: absolute;
-                    transform: translate3d(-50%, -50%, 0);
-                    border: 2.5px solid #000;
-                }
             }
             .color-panel {
+                display: none;
                 position: absolute;
-                background-color: #cfd8dc;
-                padding: 0.4em;
-                padding-top: 0;
-                border-radius: 0 0 0.3em 0.3em;
-                width: 208px;
+                background-color: #ffffff;
+                padding: 0.3em;
+                border-radius: 0.3em;
+                width: 224px;
+                box-shadow: rgba(0, 0, 0, 0.12) 0.25em 0.25em 1em 0.25em;
+                @media screen and (max-width: 480px) {
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
                 .color-btn {
                     appearance: none;
                     border: 0;
                     width: 1.5em;
                     height: 1.5em;
-                    margin: 1px;
+                    margin: 2px;
                     float: left;
+                    border-radius: 50%;
                     &[data-color="0"] { background-color: #000000 }
                     &[data-color="1"] { background-color: #0000aa }
                     &[data-color="2"] { background-color: #00aa00 }
@@ -66,7 +62,49 @@
                     &[data-color="12"] { background-color: #ff5555 }
                     &[data-color="13"] { background-color: #ff55ff }
                     &[data-color="14"] { background-color: #ffff55 }
-                    &[data-color="15"] { background-color: #ffffff }
+                    &[data-color="15"] {
+                        background-color: #ffffff;
+                        border: 1px solid #dedede;
+                    }
+                }
+                .custom-color {
+                    clear: both;
+                    position: relative;
+                    width: 100%;
+                    height: calc(1.8rem + 4px);
+                    .selector-pos {
+                        position: absolute;
+                        left: 0;
+                        top: 0.3em;
+                        width: 100%;
+                        box-sizing: border-box;
+                    }
+                    label {
+                        font-size: 0.875rem;
+                        > div {
+                            vertical-align: text-top;
+                            display: inline-block;
+                            height: 1.5rem;
+                            margin: 2px;
+                        }
+                        .current-color {
+                            width: 1.5rem;
+                            background-color: red;
+                            border-radius: 50%;
+                        }
+                        .info {
+                            line-height: 1.5rem;
+                            color: #222;
+                        }
+                    }
+                    input[type="color"] {
+                        appearance: none;
+                        border: 0;
+                        padding: 0;
+                        margin: 0;
+                        height: calc(1.5rem + 4px);
+                        visibility: hidden;
+                    }
                 }
             }
         }
