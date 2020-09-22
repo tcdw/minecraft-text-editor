@@ -65,7 +65,9 @@ modalCloser.addEventListener('click', () => {
 function setBuiltinColorEvent(e: MouseEvent) {
     const src = e.target as HTMLElement;
     const code = Number(src.dataset.color);
-    document.execCommand('foreColor', false, `#${TextEditor.builtinColor[code]}`);
+    // document.execCommand('foreColor', false, `#${TextEditor.builtinColor[code]}`);
+    textEditor.setColor(`#${TextEditor.builtinColor[code]}`);
+    colorBtn.classList.remove('focus');
     colorPanel.style.display = 'none';
     modalCloser.style.display = 'none';
 }
@@ -73,6 +75,11 @@ function setBuiltinColorEvent(e: MouseEvent) {
 const colorBtns = document.getElementsByClassName('color-btn');
 Array.prototype.forEach.call(colorBtns, (e: HTMLElement) => {
     e.addEventListener('click', setBuiltinColorEvent);
+});
+
+document.addEventListener('selectionchange', () => {
+    const selection = document.getSelection();
+    console.log(selection);
 });
 
 insertBtn.addEventListener('click', () => {

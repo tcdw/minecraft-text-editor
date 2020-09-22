@@ -278,6 +278,14 @@ export class TextEditor {
         TextEditor.insertContent(selection);
     }
 
+    setColor(color: string) {
+        const selection = this.cutSelection();
+        for (let i = 0; i < selection.length; i += 1) {
+            selection[i].color = color;
+        }
+        TextEditor.insertContent(selection);
+    }
+
     get defaultColor() {
         return this.currentDefaultColor;
     }
