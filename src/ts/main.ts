@@ -10,6 +10,7 @@ import 'normalize.css/normalize.css';
 import '@sukka/markdown.css/dist/markdown.css';
 import '../scss/main.scss';
 
+const modalCloser = document.getElementById('modal-closer') as HTMLDivElement;
 const content = document.getElementById('content') as HTMLDivElement;
 const parseBtn = document.getElementById('parse') as HTMLButtonElement;
 const boldBtn = document.getElementById('bold') as HTMLButtonElement;
@@ -50,7 +51,15 @@ strikeBtn.addEventListener('click', () => {
 });
 
 colorBtn.addEventListener('click', () => {
+    colorBtn.classList.add('focus');
     colorPanel.style.display = 'block';
+    modalCloser.style.display = 'block';
+});
+
+modalCloser.addEventListener('click', () => {
+    colorBtn.classList.remove('focus');
+    colorPanel.style.display = 'none';
+    modalCloser.style.display = 'none';
 });
 
 function setBuiltinColorEvent(e: MouseEvent) {
@@ -58,6 +67,7 @@ function setBuiltinColorEvent(e: MouseEvent) {
     const code = Number(src.dataset.color);
     document.execCommand('foreColor', false, `#${TextEditor.builtinColor[code]}`);
     colorPanel.style.display = 'none';
+    modalCloser.style.display = 'none';
 }
 
 const colorBtns = document.getElementsByClassName('color-btn');
@@ -95,9 +105,9 @@ content.addEventListener('focus', () => {
 //         clearTimeout(stripTimer);
 //     }
 //     stripTimer = setTimeout(() => {
-//         const result = strip(content);
+//         const result = textEditor.strip(content);
 //         const display = document.getElementById('results') as HTMLTextAreaElement;
-//         display.value = toMinecraftString(result);
+//         display.value = textEditor.toMinecraftString(result);
 //     }, 1000);
 // });
 

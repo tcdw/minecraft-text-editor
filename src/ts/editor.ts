@@ -6,7 +6,7 @@ import rgb2hex from 'rgb2hex';
 
 export interface StringItem {
     text: string;
-    color: string;
+    color: string | null;
     bold: boolean;
     italic: boolean;
     underline: boolean;
@@ -127,8 +127,10 @@ export class TextEditor {
         item.forEach((e) => {
             const span = document.createElement('span') as HTMLSpanElement;
             span.textContent = e.text;
-            span.style.color = e.color;
-            span.style.textDecorationColor = e.color;
+            if (e.color !== null) {
+                span.style.color = e.color;
+                span.style.textDecorationColor = e.color;
+            }
             if (e.bold) {
                 span.style.fontWeight = '700';
             }
@@ -178,10 +180,10 @@ export class TextEditor {
                 || (!e.strikethrough && item[i - 1].strikethrough)
                 || (!e.underline && item[i - 1].underline)
                 || (!e.italic && item[i - 1].italic)) {
-                const hexColor = rgb2hex(e.color).hex;
-                if (this.currentDefaultColor === hexColor) {
+                if (e.color === null || this.currentDefaultColor === rgb2hex(e.color).hex) {
                     result += '&r';
                 } else {
+                    const hexColor = rgb2hex(e.color).hex;
                     for (let j = 0; j < TextEditor.builtinColor.length; j += 1) {
                         if (hexColor === `#${TextEditor.builtinColor[j]}`) {
                             result += `&${j.toString(16)}`;

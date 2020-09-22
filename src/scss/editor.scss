@@ -21,7 +21,7 @@
                 &:hover {
                     background-color: #babdbe;
                 }
-                &:focus {
+                &:focus, &.focus {
                     outline: none;
                     background-color: #797979;
                     color: #fff;
@@ -30,6 +30,7 @@
             .color-panel {
                 display: none;
                 position: absolute;
+                z-index: 3000;
                 background-color: #ffffff;
                 padding: 0.3em;
                 border-radius: 0.3em;

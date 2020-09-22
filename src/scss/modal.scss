@@ -1,4 +1,4 @@
-.modal-cover, .modal-closer {
+#modal-cover, #modal-closer {
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -7,11 +7,11 @@
     display: none;
 }
 
-.modal-cover {
+#modal-cover {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 10000;
 }
 
-.modal-closer {
+#modal-closer {
     z-index: 2000;
 }
