@@ -219,7 +219,14 @@ export class TextEditor {
             if (e.italic) {
                 result += '&o';
             }
-            result += e.text;
+            let content = e.text;
+            content = content.replace(/&#[0-9a-fA-F]{6}/g, (match) => `&${match}`);
+            content = content.replace(/&l/g, '&&l');
+            content = content.replace(/&m/g, '&&m');
+            content = content.replace(/&n/g, '&&n');
+            content = content.replace(/&o/g, '&&o');
+            content = content.replace(/&k/g, '&&k');
+            result += content;
         });
         return result;
     }
