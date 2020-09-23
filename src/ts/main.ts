@@ -20,8 +20,24 @@ const strikeBtn = document.getElementById('strike') as HTMLButtonElement;
 const insertBtn = document.getElementById('insert') as HTMLButtonElement;
 const colorBtn = document.getElementById('color') as HTMLButtonElement;
 const colorPanel = document.getElementById('color-panel') as HTMLDivElement;
+const customColor = document.getElementById('custom-color') as HTMLInputElement;
 
 const textEditor = new TextEditor(content);
+
+let userSelection: Range | null = null;
+
+function openColorBox() {
+    colorBtn.classList.add('focus');
+    colorPanel.style.display = 'block';
+    modalCloser.style.display = 'block';
+    userSelection = TextEditor.saveSelection();
+}
+
+function closeColorBox() {
+    colorBtn.classList.remove('focus');
+    colorPanel.style.display = 'none';
+    modalCloser.style.display = 'none';
+}
 
 parseBtn.addEventListener('click', () => {
     const selection = document.getSelection() as Selection;
@@ -51,15 +67,11 @@ strikeBtn.addEventListener('click', () => {
 });
 
 colorBtn.addEventListener('click', () => {
-    colorBtn.classList.add('focus');
-    colorPanel.style.display = 'block';
-    modalCloser.style.display = 'block';
+    openColorBox();
 });
 
 modalCloser.addEventListener('click', () => {
-    colorBtn.classList.remove('focus');
-    colorPanel.style.display = 'none';
-    modalCloser.style.display = 'none';
+    closeColorBox();
 });
 
 function setBuiltinColorEvent(e: MouseEvent) {
@@ -67,9 +79,7 @@ function setBuiltinColorEvent(e: MouseEvent) {
     const code = Number(src.dataset.color);
     // document.execCommand('foreColor', false, `#${TextEditor.builtinColor[code]}`);
     textEditor.setColor(`#${TextEditor.builtinColor[code]}`);
-    colorBtn.classList.remove('focus');
-    colorPanel.style.display = 'none';
-    modalCloser.style.display = 'none';
+    closeColorBox();
 }
 
 const colorBtns = document.getElementsByClassName('color-btn');
@@ -77,9 +87,14 @@ Array.prototype.forEach.call(colorBtns, (e: HTMLElement) => {
     e.addEventListener('click', setBuiltinColorEvent);
 });
 
+customColor.addEventListener('change', () => {
+    TextEditor.restoreSelection(userSelection);
+    textEditor.setColor(customColor.value);
+    closeColorBox();
+});
+
 document.addEventListener('selectionchange', () => {
-    const selection = document.getSelection();
-    console.log(selection);
+    console.log(textEditor.isSelectedInBox());
 });
 
 insertBtn.addEventListener('click', () => {

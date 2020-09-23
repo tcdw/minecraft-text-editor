@@ -263,6 +263,60 @@ export class TextEditor {
         }
     }
 
+    static saveSelection() {
+        const sel = window.getSelection();
+        if (sel && sel.getRangeAt && sel.rangeCount) {
+            return sel.getRangeAt(0);
+        }
+        return null;
+    }
+
+    static restoreSelection(range: Range | null) {
+        const sel = window.getSelection();
+        if (range && sel) {
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+
+    /**
+     * 寻找一个节点是否存在某父元素
+     * @param node 节点
+     * @param root 要寻找的根元素的 CSS 选择器
+     */
+    static rootLookup(node: Node | HTMLElement, root: string) {
+        let start: Node | HTMLElement = node;
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (node.parentElement === null) {
+                return false;
+            }
+            start = node.parentElement;
+        }
+        if ((start as HTMLElement).closest(root)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 检查用户选区是否在编辑器内
+     */
+    isSelectedInBox() {
+        const selection = document.getSelection();
+        const { id } = this.content;
+        if (selection?.anchorNode && selection?.focusNode) {
+            if (TextEditor.rootLookup(selection?.anchorNode, `#${id}`)
+                && TextEditor.rootLookup(selection?.focusNode, `#${id}`)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 对用户选区设置样式
+     * @param type 样式类型
+     */
     setStyle(type: 'bold' | 'italic' | 'underline' | 'strikethrough') {
         const selection = this.cutSelection();
         let apply = false;
@@ -278,6 +332,10 @@ export class TextEditor {
         TextEditor.insertContent(selection);
     }
 
+    /**
+     * 对用户选区设置颜色
+     * @param color 颜色
+     */
     setColor(color: string) {
         const selection = this.cutSelection();
         for (let i = 0; i < selection.length; i += 1) {
