@@ -264,6 +264,7 @@ export class TextEditor {
     }
 
     static saveSelection() {
+        // https://gist.github.com/dantaex/543e721be845c18d2f92652c0ebe06aa
         const sel = window.getSelection();
         if (sel && sel.getRangeAt && sel.rangeCount) {
             return sel.getRangeAt(0);
@@ -272,6 +273,7 @@ export class TextEditor {
     }
 
     static restoreSelection(range: Range | null) {
+        // https://gist.github.com/dantaex/543e721be845c18d2f92652c0ebe06aa
         const sel = window.getSelection();
         if (range && sel) {
             sel.removeAllRanges();
@@ -301,8 +303,8 @@ export class TextEditor {
     /**
      * 检查用户选区是否在编辑器内
      */
-    isSelectedInBox() {
-        const selection = document.getSelection();
+    isSelectedInBox(sel?: Selection) {
+        const selection = sel || document.getSelection();
         const { id } = this.content;
         if (selection?.anchorNode && selection?.focusNode) {
             if (TextEditor.rootLookup(selection?.anchorNode, `#${id}`)
@@ -318,6 +320,9 @@ export class TextEditor {
      * @param type 样式类型
      */
     setStyle(type: 'bold' | 'italic' | 'underline' | 'strikethrough') {
+        if (!this.isSelectedInBox()) {
+            return;
+        }
         const selection = this.cutSelection();
         let apply = false;
         for (let i = 0; i < selection.length; i += 1) {
@@ -337,6 +342,9 @@ export class TextEditor {
      * @param color 颜色
      */
     setColor(color: string) {
+        if (!this.isSelectedInBox()) {
+            return;
+        }
         const selection = this.cutSelection();
         for (let i = 0; i < selection.length; i += 1) {
             selection[i].color = color;
