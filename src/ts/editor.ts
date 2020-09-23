@@ -224,6 +224,7 @@ export class TextEditor {
             }
             let content = e.text;
             content = content.replace(/&#[0-9a-fA-F]{6}/g, (match) => `&${match}`);
+            content = content.replace(/&[0-9a-f]/g, (match) => `&${match}`);
             content = content.replace(/&l/g, '&&l');
             content = content.replace(/&m/g, '&&m');
             content = content.replace(/&n/g, '&&n');
