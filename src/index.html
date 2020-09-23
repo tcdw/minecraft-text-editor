@@ -12,12 +12,6 @@
             <h1>Minecraft Text Editor</h1>
         </header>
         <section class="editor">
-            <button id="parse">获取选区</button>
-            <button id="insert">插入测试内容</button>
-            <select>
-                <option value="chat">聊天框</option>
-                <option value="sign">木牌</option>
-            </select><br>
             <div class="editbox">
                 <div class="toolbar">
                     <button class="icon-btn material-icons" id="bold">format_bold</button>
@@ -46,7 +40,7 @@
                                 <button class="color-btn" data-color="15"></button>
                             </div>
                             <div class="custom-color">
-                                <input type="color" id="custom-color" class="selector-pos">
+                                <input type="color" id="custom-color" class="selector-pos" value="#ff0000">
                                 <label for="custom-color" class="selector-pos">
                                     <div class="current-color" id="current-color"></div>
                                     <div class="info">自定义 (Minecraft 1.16+)</div>
@@ -54,14 +48,55 @@
                             </div>
                         </div>
                     </div>
+                    <button class="icon-btn material-icons" id="code">code</button>
+                    <button class="icon-btn material-icons" id="magic">
+                        <svg x="0px" y="0px" viewBox="0 0 512 512">
+                            <g>
+                                <g>
+                                    <path d="M344.476,105.328L1.004,448.799L64.205,512l343.472-343.471L344.476,105.328z M290.594,201.792l53.882-53.882
+                                                   l20.619,20.619l-53.882,53.882L290.594,201.792z" />
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                                    <rect x="413.735" y="55.578" transform="matrix(0.7071 -0.7071 0.7071 0.7071 79.0342 332.0713)"
+                                        width="53.255" height="30.11" />
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                    
+                                    <rect x="420.768" y="255.551" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -72.2351 390.9691)"
+                                        width="30.11" height="54.259" />
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                                    <rect x="213.158" y="48.098" transform="matrix(0.7071 -0.7071 0.7071 0.7071 13.767 183.3558)"
+                                        width="30.11" height="53.922" />
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                                    <polygon
+                                        points="510.735,163.868 456.446,163.868 456.446,193.979 510.735,193.979 510.996,193.979 510.996,163.868 		" />
+                                </g>
+                            </g>
+                            <g>
+                                <g>
+                                    <polygon points="317.017,0.018 317.017,54.307 347.128,54.307 347.128,0.018 347.128,0 		" />
+                                </g>
+                            </g>
+                        </svg>
+                    </button>
                 </div>
-                <div contenteditable="true" id="content"></div>
+                <div contenteditable="true" id="content">在这里输入你的文本……</div>
             <textarea id="results" style="font-family: monospace;"></textarea>
             </div>
         </section>
         <section class="info">
             <div class="markdown-body">
-                <p>TBD...</p>
+                <p>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
             </div>
         </section>
     </div>

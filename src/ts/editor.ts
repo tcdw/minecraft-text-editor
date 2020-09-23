@@ -37,7 +37,7 @@ export class TextEditor {
 
     constructor(content: HTMLElement) {
         this.content = content;
-        this.currentDefaultColor = '#000000';
+        this.currentDefaultColor = '#ffffff';
     }
     /**
      * 检查某个元素是否会渲染出下划线或删除线样式
@@ -96,6 +96,7 @@ export class TextEditor {
         df: DocumentFragment,
     ) {
         const temp = document.createElement('div');
+        temp.style.color = this.currentDefaultColor;
         temp.appendChild(df);
         document.body.appendChild(temp);
         const tree = this.parse(temp);
@@ -167,7 +168,7 @@ export class TextEditor {
      * @param target 输出目标
      * @returns 优化结果的文本数据结构
      */
-    strip(el: HTMLElement, target?: Element) {
+    strip(el: HTMLElement = this.content, target?: Element) {
         const textTree = this.parse(el);
         TextEditor.optimizeTree(textTree);
         while (el.lastChild !== null) {
@@ -179,10 +180,10 @@ export class TextEditor {
 
     /**
      * 将文本数据结构转换为 Minecraft EssentialsX 表记
-     * @param item 文本数据结构
      * @returns 表记
      */
-    toMinecraftString(item: StringItem[]) {
+    toMinecraftString() {
+        const item = this.parse(this.content);
         let result = '';
         item.forEach((e, i) => {
             if (i <= 0

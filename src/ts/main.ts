@@ -12,15 +12,14 @@ import '../scss/main.scss';
 
 const modalCloser = document.getElementById('modal-closer') as HTMLDivElement;
 const content = document.getElementById('content') as HTMLDivElement;
-const parseBtn = document.getElementById('parse') as HTMLButtonElement;
 const boldBtn = document.getElementById('bold') as HTMLButtonElement;
 const italicBtn = document.getElementById('italic') as HTMLButtonElement;
 const underlineBtn = document.getElementById('underline') as HTMLButtonElement;
 const strikeBtn = document.getElementById('strike') as HTMLButtonElement;
-const insertBtn = document.getElementById('insert') as HTMLButtonElement;
 const colorBtn = document.getElementById('color') as HTMLButtonElement;
 const colorPanel = document.getElementById('color-panel') as HTMLDivElement;
 const customColor = document.getElementById('custom-color') as HTMLInputElement;
+const currentColor = document.getElementById('current-color') as HTMLDivElement;
 
 const textEditor = new TextEditor(content);
 
@@ -38,17 +37,6 @@ function closeColorBox() {
     colorPanel.style.display = 'none';
     modalCloser.style.display = 'none';
 }
-
-parseBtn.addEventListener('click', () => {
-    const selection = document.getSelection() as Selection;
-    console.log(selection);
-    if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const extracted = range.extractContents();
-        console.log(extracted);
-        // range.insertNode(extracted);
-    }
-});
 
 boldBtn.addEventListener('click', () => {
     textEditor.setStyle('bold');
@@ -77,7 +65,6 @@ modalCloser.addEventListener('click', () => {
 function setBuiltinColorEvent(e: MouseEvent) {
     const src = e.target as HTMLElement;
     const code = Number(src.dataset.color);
-    // document.execCommand('foreColor', false, `#${TextEditor.builtinColor[code]}`);
     textEditor.setColor(`#${TextEditor.builtinColor[code]}`);
     closeColorBox();
 }
@@ -89,27 +76,27 @@ Array.prototype.forEach.call(colorBtns, (e: HTMLElement) => {
 
 customColor.addEventListener('change', () => {
     TextEditor.restoreSelection(userSelection);
+    const { value } = customColor;
     textEditor.setColor(customColor.value);
+    currentColor.style.backgroundColor = customColor.value;
+
+    // 自定义颜色展示区是不是太浅了？如果是，增加外框
+    const r = parseInt(value.slice(1, 3), 16);
+    const g = parseInt(value.slice(3, 5), 16);
+    const b = parseInt(value.slice(5, 7), 16);
+    currentColor.style.border = '0';
+    if (r > 0xde && g > 0xde && b > 0xde) {
+        currentColor.style.border = '1px solid #dedede';
+    }
     closeColorBox();
 });
 
 document.addEventListener('selectionchange', () => {
-    console.log(textEditor.isSelectedInBox());
-});
-
-insertBtn.addEventListener('click', () => {
-    const temp = document.createElement('span');
-    temp.innerHTML = '<span style="color: #66ccff">测试内容</span>';
-    temp.style.color = textEditor.defaultColor;
-
-    // 在真实插入元素到文档以后，才可以获取计算以后的样式
-    document.body.appendChild(temp);
-    const tree = textEditor.parse(temp, temp);
-    document.body.removeChild(temp);
-
-    const target = document.createElement('span');
-    TextEditor.randerFromTree(tree, target);
-    TextEditor.insertContent(target);
+    if (!textEditor.isSelectedInBox()) {
+        const results = document.getElementById('results') as HTMLInputElement;
+        textEditor.strip();
+        results.value = textEditor.toMinecraftString();
+    }
 });
 
 // eslint-disable-next-line no-undef
@@ -121,17 +108,6 @@ content.addEventListener('focus', () => {
         stripTimer = null;
     }
 });
-
-// content.addEventListener('blur', () => {
-//     if (stripTimer) {
-//         clearTimeout(stripTimer);
-//     }
-//     stripTimer = setTimeout(() => {
-//         const result = textEditor.strip(content);
-//         const display = document.getElementById('results') as HTMLTextAreaElement;
-//         display.value = textEditor.toMinecraftString(result);
-//     }, 1000);
-// });
 
 content.addEventListener('paste', (e) => {
     e.preventDefault();
