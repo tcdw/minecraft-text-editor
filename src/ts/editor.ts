@@ -77,14 +77,17 @@ export class TextEditor {
                 // const parentStyles = window.getComputedStyle(el.parentNode as HTMLElement);
                 const underline = TextEditor.searchLineStyle(el, root, 'underline');
                 const strikethrough = TextEditor.searchLineStyle(el, root, 'line-through');
-                item.push({
-                    text: e.nodeValue as string,
-                    color,
-                    bold,
-                    italic,
-                    underline,
-                    strikethrough,
-                });
+                const text = `${e.nodeValue}`;
+                for (const f of text) {
+                    item.push({
+                        text: f,
+                        color,
+                        bold,
+                        italic,
+                        underline,
+                        strikethrough,
+                    });
+                }
             } else if (e.nodeType === Node.ELEMENT_NODE) {
                 item = item.concat(this.parse(e as HTMLElement, root));
             }
@@ -170,7 +173,6 @@ export class TextEditor {
      */
     strip(el: HTMLElement = this.content, target?: Element) {
         const textTree = this.parse(el);
-        TextEditor.optimizeTree(textTree);
         while (el.lastChild !== null) {
             el.removeChild(el.lastChild);
         }
@@ -184,6 +186,7 @@ export class TextEditor {
      */
     toMinecraftString() {
         const item = this.parse(this.content);
+        TextEditor.optimizeTree(item);
         let result = '';
         item.forEach((e, i) => {
             if (i <= 0
@@ -241,6 +244,22 @@ export class TextEditor {
             const range = selection.getRangeAt(0);
             const extracted = range.extractContents();
             // range.insertNode(extracted);
+            if (extracted.childNodes.length === 1
+                && extracted.childNodes[0].nodeType === Node.TEXT_NODE) {
+                const parent = range.commonAncestorContainer.parentElement;
+                if (parent) {
+                    const nc = document.createElement('span');
+                    nc.style.color = parent.style.color;
+                    nc.style.fontWeight = parent.style.fontWeight;
+                    nc.style.fontStyle = parent.style.fontStyle;
+                    nc.style.textDecorationLine = parent.style.textDecorationLine;
+                    nc.style.textDecorationColor = parent.style.textDecorationColor;
+                    parent.style.cssText = '';
+                    nc.textContent = extracted.childNodes[0].textContent;
+                    extracted.childNodes[0].remove();
+                    extracted.appendChild(nc);
+                }
+            }
             const tree = this.parseFromFragment(extracted);
             return tree;
         }
@@ -334,6 +353,9 @@ export class TextEditor {
         const selection = this.cutSelection();
         let apply = false;
         for (let i = 0; i < selection.length; i += 1) {
+            if (!selection[i].text) {
+                continue;
+            }
             if (!selection[i][type]) {
                 apply = true;
                 break;

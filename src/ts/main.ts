@@ -36,6 +36,7 @@ function closeColorBox() {
     colorBtn.classList.remove('focus');
     colorPanel.style.display = 'none';
     modalCloser.style.display = 'none';
+    userSelection = null;
 }
 
 boldBtn.addEventListener('click', () => {
@@ -92,6 +93,9 @@ customColor.addEventListener('change', () => {
 });
 
 document.addEventListener('selectionchange', () => {
+    if (userSelection) {
+        return;
+    }
     if (!textEditor.isSelectedInBox()) {
         const results = document.getElementById('results') as HTMLInputElement;
         textEditor.strip();
