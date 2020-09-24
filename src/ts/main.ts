@@ -22,6 +22,7 @@ const colorBtn = document.getElementById('color') as HTMLButtonElement;
 const colorPanel = document.getElementById('color-panel') as HTMLDivElement;
 const customColor = document.getElementById('custom-color') as HTMLInputElement;
 const currentColor = document.getElementById('current-color') as HTMLDivElement;
+const bgPanel = document.getElementById('bg-panel') as HTMLDivElement;
 
 const textEditor = new TextEditor(content);
 const bubble = new Bubble();
@@ -161,3 +162,5 @@ clipboard.on('success', () => {
 copyBtn.addEventListener('mouseleave', () => {
     bubble.hide();
 });
+
+console.log(bgPanel.querySelectorAll('li'));
