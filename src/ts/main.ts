@@ -6,6 +6,7 @@
 /* eslint-disable no-continue */
 
 import Clipboard from 'clipboard';
+import Bubble from './bubble';
 import { TextEditor } from './editor';
 import 'normalize.css/normalize.css';
 import '@sukka/markdown.css/dist/markdown.css';
@@ -23,6 +24,7 @@ const customColor = document.getElementById('custom-color') as HTMLInputElement;
 const currentColor = document.getElementById('current-color') as HTMLDivElement;
 
 const textEditor = new TextEditor(content);
+const bubble = new Bubble();
 
 let userSelection: Range | null = null;
 
@@ -150,5 +152,12 @@ content.addEventListener('keydown', (e) => {
 });
 
 // 结果展示区
-
 const clipboard = new Clipboard('#copy-btn');
+const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+clipboard.on('success', () => {
+    bubble.show(copyBtn, '复制成功！');
+});
+
+copyBtn.addEventListener('mouseleave', () => {
+    bubble.hide();
+});
