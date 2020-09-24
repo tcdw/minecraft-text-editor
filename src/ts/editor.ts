@@ -258,7 +258,9 @@ export class TextEditor {
                     nc.style.fontStyle = parent.style.fontStyle;
                     nc.style.textDecorationLine = parent.style.textDecorationLine;
                     nc.style.textDecorationColor = parent.style.textDecorationColor;
-                    parent.style.cssText = '';
+                    if (!parent.childNodes[0]) {
+                        parent.style.cssText = '';
+                    }
                     nc.textContent = extracted.childNodes[0].textContent;
                     extracted.childNodes[0].remove();
                     extracted.appendChild(nc);
