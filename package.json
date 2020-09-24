@@ -29,7 +29,9 @@
   },
   "dependencies": {
     "@sukka/markdown.css": "^0.1.5",
+    "@types/clipboard": "^2.0.1",
     "@types/rgb2hex": "^0.2.0",
+    "clipboard": "^2.0.6",
     "node-sass": "^4.14.1",
     "normalize.css": "^8.0.1",
     "rgb2hex": "^0.2.0"

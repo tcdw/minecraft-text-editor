@@ -78,15 +78,18 @@ export class TextEditor {
                 const underline = TextEditor.searchLineStyle(el, root, 'underline');
                 const strikethrough = TextEditor.searchLineStyle(el, root, 'line-through');
                 const text = `${e.nodeValue}`;
-                for (const f of text) {
+                const iterator = text[Symbol.iterator]();
+                let char = iterator.next();
+                while (!char.done) {
                     item.push({
-                        text: f,
+                        text: char.value,
                         color,
                         bold,
                         italic,
                         underline,
                         strikethrough,
                     });
+                    char = iterator.next();
                 }
             } else if (e.nodeType === Node.ELEMENT_NODE) {
                 item = item.concat(this.parse(e as HTMLElement, root));

@@ -48,6 +48,7 @@
                             </div>
                         </div>
                     </div>
+                    <!--
                     <button class="icon-btn material-icons" id="code">code</button>
                     <button class="icon-btn material-icons" id="magic">
                         <svg x="0px" y="0px" viewBox="0 0 512 512">
@@ -59,10 +60,17 @@
                             <polygon points="317.017,0.018 317.017,54.307 347.128,54.307 347.128,0.018 347.128,0" />
                         </svg>
                     </button>
+                    -->
                 </div>
-                <div contenteditable="true" id="content">在这里输入你的文本……</div>
-            <textarea id="results" style="font-family: monospace;"></textarea>
+                <div contenteditable="true" id="content" class="monospace">在这里输入你的文本……</div>
             </div>
+        </section>
+        <section class="edit-results">
+            <div class="result-banner clearfix">
+                <span class="left">生成的代码</span>
+                <button class="right" id="copy-btn" data-clipboard-target="#results">复制代码</button>
+            </div>
+            <textarea id="results" style="font-family: monospace;"></textarea>
         </section>
         <section class="info">
             <div class="markdown-body">

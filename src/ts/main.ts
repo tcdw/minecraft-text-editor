@@ -5,6 +5,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-continue */
 
+import Clipboard from 'clipboard';
 import { TextEditor } from './editor';
 import 'normalize.css/normalize.css';
 import '@sukka/markdown.css/dist/markdown.css';
@@ -147,3 +148,7 @@ content.addEventListener('keydown', (e) => {
         e.preventDefault();
     }
 });
+
+// 结果展示区
+
+const clipboard = new Clipboard('#copy-btn');
