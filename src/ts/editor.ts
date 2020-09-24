@@ -100,9 +100,19 @@ export class TextEditor {
 
     parseFromFragment(
         df: DocumentFragment,
+        parent?: HTMLElement,
     ) {
         const temp = document.createElement('div');
         temp.style.color = this.currentDefaultColor;
+        if (parent) {
+            const styles = window.getComputedStyle(parent);
+            console.log(styles);
+            temp.style.color = styles.color;
+            temp.style.fontWeight = styles.fontWeight;
+            temp.style.fontStyle = styles.fontStyle;
+            temp.style.textDecorationLine = styles.textDecorationLine;
+            temp.style.textDecorationColor = styles.textDecorationColor;
+        }
         temp.appendChild(df);
         document.body.appendChild(temp);
         const tree = this.parse(temp);
@@ -118,10 +128,17 @@ export class TextEditor {
     static optimizeTree(item: StringItem[]) {
         let i = 0;
         while (i < item.length) {
+            // 零宽字符的移除
+            const char = item[i].text.replace(/[\n\r\u200B-\u200D\uFEFF]/g, '');
+            if (!char) {
+                item.splice(i, 1);
+                continue;
+            }
             if (i <= 0) {
                 i = 1;
                 continue;
             }
+            // 相同样式的文字的合并
             if (item[i].color === item[i - 1].color
                 && item[i].bold === item[i - 1].bold
                 && item[i].italic === item[i - 1].italic
@@ -248,9 +265,9 @@ export class TextEditor {
             const range = selection.getRangeAt(0);
             const extracted = range.extractContents();
             // range.insertNode(extracted);
+            const parent = range.commonAncestorContainer.parentElement;
             if (extracted.childNodes.length === 1
                 && extracted.childNodes[0].nodeType === Node.TEXT_NODE) {
-                const parent = range.commonAncestorContainer.parentElement;
                 if (parent) {
                     const nc = document.createElement('span');
                     nc.style.color = parent.style.color;
@@ -264,10 +281,11 @@ export class TextEditor {
                     nc.textContent = extracted.childNodes[0].textContent;
                     extracted.childNodes[0].remove();
                     extracted.appendChild(nc);
+                    const tree = this.parseFromFragment(extracted);
+                    return tree;
                 }
             }
-            const tree = this.parseFromFragment(extracted);
-            return tree;
+            return this.parseFromFragment(extracted, parent || undefined);
         }
         return [];
     }
