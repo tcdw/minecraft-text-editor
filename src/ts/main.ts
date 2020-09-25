@@ -9,7 +9,7 @@ import Clipboard from 'clipboard';
 import Bubble from './bubble';
 import { TextEditor } from './editor';
 import 'normalize.css/normalize.css';
-import '@sukka/markdown.css/dist/markdown.css';
+import 'github-markdown-css/github-markdown.css';
 import '../scss/main.scss';
 
 const modalCloser = document.getElementById('modal-closer') as HTMLDivElement;
