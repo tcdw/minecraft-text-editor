@@ -38,6 +38,7 @@ export class TextEditor {
     constructor(content: HTMLElement) {
         this.content = content;
         this.currentDefaultColor = '#ffffff';
+        content.style.color = '#ffffff';
     }
     /**
      * 检查某个元素是否会渲染出下划线或删除线样式
@@ -285,6 +286,41 @@ export class TextEditor {
                     return tree;
                 }
             }
+            const cac = range.commonAncestorContainer as HTMLElement;
+            const parentColor = cac.style.color;
+            const parentFontWeight = cac.style.fontWeight;
+            const parentFontStyle = cac.style.fontStyle;
+            const parentTextDecorationLine = cac.style.textDecorationLine;
+            const parentTextDecorationColor = cac.style.textDecorationColor;
+            let outerAltered = false;
+            extracted.childNodes.forEach((e) => {
+                if (e.nodeType === Node.TEXT_NODE) {
+                    const nc = document.createElement('span');
+                    nc.style.color = parentColor;
+                    nc.style.fontWeight = parentFontWeight;
+                    nc.style.fontStyle = parentFontStyle;
+                    nc.style.textDecorationLine = parentTextDecorationLine;
+                    nc.style.textDecorationColor = parentTextDecorationColor;
+                    nc.textContent = `${e.textContent}`;
+                    cac.style.cssText = '';
+                    outerAltered = true;
+                    e.replaceWith(nc);
+                }
+            });
+            if (outerAltered) {
+                cac.childNodes.forEach((e) => {
+                    if (e.nodeType === Node.TEXT_NODE) {
+                        const nc = document.createElement('span');
+                        nc.style.color = parentColor;
+                        nc.style.fontWeight = parentFontWeight;
+                        nc.style.fontStyle = parentFontStyle;
+                        nc.style.textDecorationLine = parentTextDecorationLine;
+                        nc.style.textDecorationColor = parentTextDecorationColor;
+                        nc.textContent = `${e.textContent}`;
+                        e.replaceWith(nc);
+                    }
+                });
+            }
             return this.parseFromFragment(extracted, parent || undefined);
         }
         return [];
@@ -310,7 +346,12 @@ export class TextEditor {
         if (sel.getRangeAt && sel.rangeCount) {
             range = sel.getRangeAt(0);
             range.deleteContents();
-            range.insertNode(temp);
+            const fg = document.createDocumentFragment();
+            while (temp.childNodes.length > 0) {
+                fg.appendChild(temp.childNodes[0]);
+            }
+            range.insertNode(fg);
+            // range.insertNode(temp);
         }
     }
 

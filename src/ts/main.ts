@@ -27,6 +27,8 @@ const results = document.getElementById('results') as HTMLInputElement;
 const textEditor = new TextEditor(content);
 const bubble = new Bubble();
 
+textEditor.strip();
+
 let userSelection: Range | null = null;
 
 function closeColorBox() {
@@ -93,10 +95,8 @@ customColor.addEventListener('change', () => {
 });
 
 document.addEventListener('selectionchange', () => {
-    if (userSelection) {
-        return;
-    }
     if (!textEditor.isSelectedInBox()) {
+        console.log('selectionchange');
         textEditor.strip();
         results.value = textEditor.toMinecraftString();
     }
