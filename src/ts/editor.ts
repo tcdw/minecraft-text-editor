@@ -106,7 +106,7 @@ export class TextEditor {
         temp.style.color = this.currentDefaultColor;
         if (parent) {
             const styles = window.getComputedStyle(parent);
-            console.log(styles);
+            // console.log(styles);
             temp.style.color = styles.color;
             temp.style.fontWeight = styles.fontWeight;
             temp.style.fontStyle = styles.fontStyle;
@@ -408,6 +408,12 @@ export class TextEditor {
 
     get defaultColor() {
         return this.currentDefaultColor;
+    }
+
+    set defaultColor(color: string) {
+        this.content.style.color = color;
+        this.currentDefaultColor = color;
+        this.strip();
     }
 }
 

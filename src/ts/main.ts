@@ -22,25 +22,24 @@ const colorBtn = document.getElementById('color') as HTMLButtonElement;
 const colorPanel = document.getElementById('color-panel') as HTMLDivElement;
 const customColor = document.getElementById('custom-color') as HTMLInputElement;
 const currentColor = document.getElementById('current-color') as HTMLDivElement;
-const bgPanel = document.getElementById('bg-panel') as HTMLDivElement;
 
 const textEditor = new TextEditor(content);
 const bubble = new Bubble();
 
 let userSelection: Range | null = null;
 
-function openColorBox() {
-    colorBtn.classList.add('focus');
-    colorPanel.style.display = 'block';
-    modalCloser.style.display = 'block';
-    userSelection = TextEditor.saveSelection();
-}
-
 function closeColorBox() {
     colorBtn.classList.remove('focus');
     colorPanel.style.display = 'none';
     modalCloser.style.display = 'none';
     userSelection = null;
+}
+function openColorBox() {
+    colorBtn.classList.add('focus');
+    colorPanel.style.display = 'block';
+    modalCloser.style.display = 'block';
+    userSelection = TextEditor.saveSelection();
+    modalCloser.addEventListener('click', closeColorBox);
 }
 
 boldBtn.addEventListener('click', () => {
@@ -61,10 +60,6 @@ strikeBtn.addEventListener('click', () => {
 
 colorBtn.addEventListener('click', () => {
     openColorBox();
-});
-
-modalCloser.addEventListener('click', () => {
-    closeColorBox();
 });
 
 function setBuiltinColorEvent(e: MouseEvent) {
@@ -163,9 +158,38 @@ copyBtn.addEventListener('mouseleave', () => {
     bubble.hide();
 });
 
+const bgBtn = document.getElementById('background') as HTMLButtonElement;
+const bgPanel = document.getElementById('bg-panel') as HTMLDivElement;
+
+function closeBackgroundBox() {
+    bgBtn.classList.remove('focus');
+    bgPanel.style.display = 'none';
+    modalCloser.style.display = 'none';
+}
+
+function openBackgroundBox() {
+    bgBtn.classList.add('focus');
+    bgPanel.style.display = 'block';
+    modalCloser.style.display = 'block';
+    modalCloser.addEventListener('click', closeBackgroundBox);
+}
+
+function setBackgroundEvent(e: MouseEvent) {
+    const el = e.target as HTMLAnchorElement;
+    textEditor.defaultColor = `${el.dataset.fg}`;
+    textEditor.content.style.backgroundColor = `${el.dataset.bg}`;
+    closeBackgroundBox();
+}
+
+bgBtn.addEventListener('click', openBackgroundBox);
+
 const bgList = bgPanel.querySelectorAll('li');
 bgList.forEach((e) => {
-    const bg = `${e.dataset.bg}`;
+    const anchor = e.querySelector('a') as HTMLAnchorElement;
+    anchor.addEventListener('click', setBackgroundEvent);
+
+    // 圈圈颜色的设置
+    const bg = `${anchor.dataset.bg}`;
     const bgDisplay = document.createElement('div');
     bgDisplay.className = 'bg-display';
     bgDisplay.setAttribute('aria-hidden', 'true');
