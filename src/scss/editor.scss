@@ -128,6 +128,38 @@
                     }
                 }
             }
+            .bg-panel {
+                padding: 0;
+                h4 {
+                    margin: 0;
+                    padding: 0.4rem 0.5rem;
+                    font-weight: bold;
+                    background-color: #efefef;
+                }
+                ul {
+                    margin: 0;
+                    padding: 0;
+                    li {
+                        display: block;
+                        margin: 0;
+                        padding: 0.4rem 0.5rem;
+                        padding-left: 1.8rem;
+                        position: relative;
+                        & > div.bg-display {
+                            position: absolute;
+                            width: 1rem;
+                            height: 1rem;
+                            left: 0.4rem;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            // background-color: red;
+                            // background-color: attr(data-bg);
+                            border-radius: 50%;
+                            z-index: 4000;
+                        }
+                    }
+                }
+            }
         }
         #content {
             background-color: #222;

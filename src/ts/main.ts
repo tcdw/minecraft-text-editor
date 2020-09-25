@@ -163,4 +163,15 @@ copyBtn.addEventListener('mouseleave', () => {
     bubble.hide();
 });
 
-console.log(bgPanel.querySelectorAll('li'));
+const bgList = bgPanel.querySelectorAll('li');
+bgList.forEach((e) => {
+    const bg = `${e.dataset.bg}`;
+    const bgDisplay = document.createElement('div');
+    bgDisplay.className = 'bg-display';
+    bgDisplay.setAttribute('aria-hidden', 'true');
+    bgDisplay.style.backgroundColor = bg;
+    if (bg === '#fff') {
+        bgDisplay.style.border = '1px solid #dedede';
+    }
+    e.appendChild(bgDisplay);
+});
