@@ -22,6 +22,7 @@ const colorBtn = document.getElementById('color') as HTMLButtonElement;
 const colorPanel = document.getElementById('color-panel') as HTMLDivElement;
 const customColor = document.getElementById('custom-color') as HTMLInputElement;
 const currentColor = document.getElementById('current-color') as HTMLDivElement;
+const results = document.getElementById('results') as HTMLInputElement;
 
 const textEditor = new TextEditor(content);
 const bubble = new Bubble();
@@ -96,7 +97,6 @@ document.addEventListener('selectionchange', () => {
         return;
     }
     if (!textEditor.isSelectedInBox()) {
-        const results = document.getElementById('results') as HTMLInputElement;
         textEditor.strip();
         results.value = textEditor.toMinecraftString();
     }
@@ -147,17 +147,6 @@ content.addEventListener('keydown', (e) => {
     }
 });
 
-// 结果展示区
-const clipboard = new Clipboard('#copy-btn');
-const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
-clipboard.on('success', () => {
-    bubble.show(copyBtn, '复制成功！');
-});
-
-copyBtn.addEventListener('mouseleave', () => {
-    bubble.hide();
-});
-
 const bgBtn = document.getElementById('background') as HTMLButtonElement;
 const bgPanel = document.getElementById('bg-panel') as HTMLDivElement;
 
@@ -178,6 +167,7 @@ function setBackgroundEvent(e: MouseEvent) {
     const el = e.target as HTMLAnchorElement;
     textEditor.defaultColor = `${el.dataset.fg}`;
     textEditor.content.style.backgroundColor = `${el.dataset.bg}`;
+    results.value = textEditor.toMinecraftString();
     closeBackgroundBox();
 }
 
@@ -198,4 +188,15 @@ bgList.forEach((e) => {
         bgDisplay.style.border = '1px solid #dedede';
     }
     e.appendChild(bgDisplay);
+});
+
+// 结果展示区
+const clipboard = new Clipboard('#copy-btn');
+const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+clipboard.on('success', () => {
+    bubble.show(copyBtn, '复制成功！');
+});
+
+copyBtn.addEventListener('mouseleave', () => {
+    bubble.hide();
 });
