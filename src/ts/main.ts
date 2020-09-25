@@ -95,8 +95,10 @@ customColor.addEventListener('change', () => {
 });
 
 document.addEventListener('selectionchange', () => {
+    if (userSelection) {
+        return;
+    }
     if (!textEditor.isSelectedInBox()) {
-        console.log('selectionchange');
         textEditor.strip();
         results.value = textEditor.toMinecraftString();
     }
