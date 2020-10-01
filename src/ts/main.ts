@@ -104,45 +104,6 @@ document.addEventListener('selectionchange', () => {
     }
 });
 
-// eslint-disable-next-line no-undef
-let stripTimer: NodeJS.Timer | null = null;
-
-content.addEventListener('focus', () => {
-    if (stripTimer !== null) {
-        clearTimeout(stripTimer);
-        stripTimer = null;
-    }
-});
-
-content.addEventListener('paste', (e) => {
-    e.preventDefault();
-    const data = e.clipboardData;
-    if (data === null) {
-        return;
-    }
-
-    if (data.getData('text/html').length <= 0 && data.getData('text/plain').length > 0) {
-        // 用户使用了 Chrome 浏览器的「粘贴纯文本」功能
-        let text = data.getData('text/plain');
-        text = text.replace(/\r\n/g, ' ');
-        text = text.replace(/\n/g, ' ');
-        text = text.replace(/\r/g, ' ');
-        TextEditor.insertContent(text);
-    } else if (data.getData('text/html').length > 0) {
-        // 用户正常粘贴
-        const temp = document.createElement('span');
-        temp.innerHTML = data.getData('text/html');
-        temp.style.color = textEditor.defaultColor;
-
-        // 在真实插入元素到文档以后，才可以获取计算以后的样式
-        document.body.appendChild(temp);
-        const tree = textEditor.parse(temp, temp);
-        document.body.removeChild(temp);
-
-        TextEditor.insertContent(tree);
-    }
-});
-
 content.addEventListener('keydown', (e) => {
     if (e.code === 'Enter') {
         e.preventDefault();

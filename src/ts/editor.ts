@@ -39,6 +39,9 @@ export class TextEditor {
         this.content = content;
         this.currentDefaultColor = '#ffffff';
         content.style.color = '#ffffff';
+        content.addEventListener('paste', (e) => {
+            this.pasteEvent(e);
+        });
     }
     /**
      * 检查某个元素是否会渲染出下划线或删除线样式
@@ -250,6 +253,7 @@ export class TextEditor {
             content = content.replace(/&n/g, '&&n');
             content = content.replace(/&o/g, '&&o');
             content = content.replace(/&k/g, '&&k');
+            content = content.replace(/&r/g, '&&r');
             result += content;
         });
         return result;
@@ -264,7 +268,6 @@ export class TextEditor {
         if (selection.rangeCount > 0) {
             const range = selection.getRangeAt(0);
             const extracted = range.extractContents();
-            // range.insertNode(extracted);
             const parent = range.commonAncestorContainer.parentElement;
             if (extracted.childNodes.length === 1
                 && extracted.childNodes[0].nodeType === Node.TEXT_NODE) {
@@ -284,41 +287,6 @@ export class TextEditor {
                     const tree = this.parseFromFragment(extracted);
                     return tree;
                 }
-            }
-            const cac = range.commonAncestorContainer as HTMLElement;
-            const parentColor = cac.style.color;
-            const parentFontWeight = cac.style.fontWeight;
-            const parentFontStyle = cac.style.fontStyle;
-            const parentTextDecorationLine = cac.style.textDecorationLine;
-            const parentTextDecorationColor = cac.style.textDecorationColor;
-            let outerAltered = false;
-            extracted.childNodes.forEach((e) => {
-                if (e.nodeType === Node.TEXT_NODE) {
-                    const nc = document.createElement('span');
-                    nc.style.color = parentColor;
-                    nc.style.fontWeight = parentFontWeight;
-                    nc.style.fontStyle = parentFontStyle;
-                    nc.style.textDecorationLine = parentTextDecorationLine;
-                    nc.style.textDecorationColor = parentTextDecorationColor;
-                    nc.textContent = `${e.textContent}`;
-                    cac.style.cssText = '';
-                    outerAltered = true;
-                    e.replaceWith(nc);
-                }
-            });
-            if (outerAltered) {
-                cac.childNodes.forEach((e) => {
-                    if (e.nodeType === Node.TEXT_NODE) {
-                        const nc = document.createElement('span');
-                        nc.style.color = parentColor;
-                        nc.style.fontWeight = parentFontWeight;
-                        nc.style.fontStyle = parentFontStyle;
-                        nc.style.textDecorationLine = parentTextDecorationLine;
-                        nc.style.textDecorationColor = parentTextDecorationColor;
-                        nc.textContent = `${e.textContent}`;
-                        e.replaceWith(nc);
-                    }
-                });
             }
             return this.parseFromFragment(extracted, parent || undefined);
         }
@@ -350,6 +318,7 @@ export class TextEditor {
                 fg.appendChild(temp.childNodes[0]);
             }
             range.insertNode(fg);
+            sel.removeAllRanges();
             // range.insertNode(temp);
         }
     }
@@ -444,6 +413,34 @@ export class TextEditor {
             selection[i].color = color;
         }
         TextEditor.insertContent(selection);
+    }
+
+    private pasteEvent(e: ClipboardEvent) {
+        e.preventDefault();
+        const data = e.clipboardData;
+        if (data === null) {
+            return;
+        }
+        if (data.getData('text/html').length <= 0 && data.getData('text/plain').length > 0) {
+            // 用户使用了 Chrome 浏览器的「粘贴纯文本」功能
+            let text = data.getData('text/plain');
+            text = text.replace(/\r\n/g, ' ');
+            text = text.replace(/\n/g, ' ');
+            text = text.replace(/\r/g, ' ');
+            TextEditor.insertContent(text);
+        } else if (data.getData('text/html').length > 0) {
+            // 用户正常粘贴
+            const temp = document.createElement('span');
+            temp.innerHTML = data.getData('text/html');
+            temp.style.color = this.defaultColor;
+
+            // 在真实插入元素到文档以后，才可以获取计算以后的样式
+            document.body.appendChild(temp);
+            const tree = this.parse(temp, temp);
+            document.body.removeChild(temp);
+
+            TextEditor.insertContent(tree);
+        }
     }
 
     get defaultColor() {
