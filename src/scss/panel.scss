@@ -1,0 +1,136 @@
+$radius: 0.3rem;
+
+& {
+    .panel {
+        display: none;
+        position: absolute;
+        z-index: 3000;
+        background-color: #ffffff;
+        padding: 0.3rem;
+        border-radius: $radius;
+        box-shadow: rgba(0, 0, 0, 0.12) 0.25em 0.25em 1em 0.25em;
+        @media screen and (max-width: 480px) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+    .color-panel {
+        width: 224px;
+        .color-btn {
+            appearance: none;
+            border: 0;
+            width: 1.5em;
+            height: 1.5em;
+            margin: 2px;
+            float: left;
+            border-radius: 50%;
+            &[data-color="0"] { background-color: #000000 }
+            &[data-color="1"] { background-color: #0000aa }
+            &[data-color="2"] { background-color: #00aa00 }
+            &[data-color="3"] { background-color: #00aaaa }
+            &[data-color="4"] { background-color: #aa0000 }
+            &[data-color="5"] { background-color: #aa00aa }
+            &[data-color="6"] { background-color: #ffaa00 }
+            &[data-color="7"] { background-color: #aaaaaa }
+            &[data-color="8"] { background-color: #555555 }
+            &[data-color="9"] { background-color: #5555ff }
+            &[data-color="10"] { background-color: #55ff55 }
+            &[data-color="11"] { background-color: #55ffff }
+            &[data-color="12"] { background-color: #ff5555 }
+            &[data-color="13"] { background-color: #ff55ff }
+            &[data-color="14"] { background-color: #ffff55 }
+            &[data-color="15"] {
+                background-color: #ffffff;
+                border: 1px solid #dedede;
+            }
+        }
+        .custom-color {
+            clear: both;
+            position: relative;
+            width: 100%;
+            height: calc(1.8rem + 4px);
+            .selector-pos {
+                position: absolute;
+                left: 0;
+                top: 0.3rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            label {
+                font-size: 0.875rem;
+                > div {
+                    vertical-align: text-top;
+                    display: inline-block;
+                    height: 1.5rem;
+                    margin: 2px;
+                }
+                .current-color {
+                    width: 1.5rem;
+                    background-color: red;
+                    border-radius: 50%;
+                }
+                .info {
+                    line-height: 1.5rem;
+                    color: #222;
+                }
+            }
+            input[type="color"] {
+                appearance: none;
+                border: 0;
+                padding: 0;
+                margin: 0;
+                height: calc(1.5rem + 4px);
+                visibility: hidden;
+            }
+        }
+    }
+    .bg-panel {
+        padding: 0;
+        h4 {
+            margin: 0;
+            padding: 0.4rem 0.5rem;
+            font-weight: bold;
+            background-color: #efefef;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+            li {
+                display: block;
+                margin: 0;
+                position: relative;
+                & > a {
+                    display: block;
+                    padding: 0.5rem 0.6rem;
+                    padding-left: 2rem;
+                    color: #000;
+                    text-decoration: none;
+                    cursor: default;
+                    &:hover {
+                        color: #fff;
+                        background-color: #444;
+                    }
+                    &.first {
+                        border-radius: $radius $radius 0 0;
+                    }
+                    &.last {
+                        border-radius: 0 0 $radius $radius;
+                    }
+                }
+                & > div.bg-display {
+                    position: absolute;
+                    width: 1rem;
+                    height: 1rem;
+                    left: 0.5rem;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    // background-color: red;
+                    // background-color: attr(data-bg);
+                    border-radius: 50%;
+                    z-index: 4000;
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+}

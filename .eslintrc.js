@@ -25,5 +25,20 @@ module.exports = {
         'no-alert': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'import/extensions': [
+            'error',
+            'ignorePackages',
+            {
+                js: 'never',
+                ts: 'never',
+            },
+        ],
+    },
+    settings: {
+        'import/resolver': {
+            node: {
+                extensions: ['.js', '.ts'],
+            },
+        },
     },
 };

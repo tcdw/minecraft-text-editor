@@ -1,26 +1,50 @@
 <template>
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <Container />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import HelloWorld from './components/HelloWorld.vue';
+import Container from './components/Container.vue';
 
 @Options({
     components: {
-        HelloWorld,
+        Container,
     },
 })
 export default class App extends Vue {}
 </script>
 
-<style>
-#app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+<style lang="scss">
+:root {
+    --theme: #66ccff;
+    font-size: 18px;
+}
+@media (max-width: 1600px) {
+    :root {
+        font-size: 16px;
+    }
+}
+@media (max-width: 320px) {
+    :root {
+        font-size: 14px;
+    }
+}
+
+body {
+    margin: 1rem;
+    background-color: #66ccff;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 268 268' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Ccircle cx='37' cy='37' r='36'/%3E%3Ccircle cx='171' cy='171' r='36'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
+    font-family:
+        Inter,
+        -apple-system,
+        'PingFang SC',
+        'Microsoft Yahei',
+        'WenQuanYi Micro Hei',
+        sans-serif;
+}
+
+code, pre, .monospace {
+    font-family: Consolas, "Ubuntu Mono", Monaco, "Courier New", Courier, monospace
 }
 </style>

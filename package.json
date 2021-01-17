@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "rgb2hex": "^0.2.5",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0"
   },
@@ -26,6 +27,8 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-vue": "^7.4.1",
+    "sass": "^1.32.4",
+    "sass-loader": "^10.1.1",
     "typescript": "~3.9.3"
   },
   "eslintConfig": {
