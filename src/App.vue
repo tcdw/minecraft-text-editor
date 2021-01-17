@@ -1,5 +1,8 @@
 <template>
-    <Container />
+    <div class="all">
+        <Container />
+        <div class="modal-mask"></div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -58,10 +61,19 @@ input, button, textarea {
     content: " ";
     display: table
 }
+
 .clearfix:after {
     clear: both
 }
+
 .clearfix {
     zoom: 1
+}
+
+.modal-mask {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 </style>
