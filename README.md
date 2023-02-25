@@ -15,7 +15,8 @@
 
 ## 开发/编译
 
-本工具使用 Parcel 进行编译工作。
+本工具使用 ~~Parcel~~ Vite 进行编译工作。
 
 - 编译：`npm run build`
-- 开发模式：`npm run serve`
+- 开发模式：`npm run dev`
+- 预览（需要先编译）：`npm run preview`
