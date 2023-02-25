@@ -1,6 +1,7 @@
 {
   "name": "minecraft-text-editor",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tcdw/minecraft-text-editor.git"
@@ -12,28 +13,26 @@
   },
   "homepage": "https://github.com/tcdw/minecraft-text-editor#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "@typescript-eslint/parser": "^4.3.0",
-    "autoprefixer": "^9.8.6",
-    "del-cli": "^3.0.1",
-    "eslint": "^7.10.0",
-    "eslint-config-airbnb-base": "^14.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint": "^8.34.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.22.1",
-    "parcel": "^1.12.4",
-    "postcss-modules": "^3.2.2",
-    "typescript": "^4.0.3"
+    "postcss": "^8.4.21",
+    "postcss-preset-env": "^8.0.1",
+    "sass": "^1.58.3",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.4"
   },
   "scripts": {
-    "build": "del-cli dist/ && parcel build --no-source-maps ./src/index.html",
-    "serve": "del-cli dist/ && parcel serve ./src/index.html"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@types/clipboard": "^2.0.1",
-    "@types/rgb2hex": "^0.2.0",
-    "clipboard": "^2.0.6",
+    "clipboard": "^2.0.11",
     "github-markdown-css": "^4.0.0",
-    "node-sass": "^4.14.1",
     "normalize.css": "^8.0.1",
-    "rgb2hex": "^0.2.0"
+    "rgb2hex": "^0.2.5"
   }
 }

@@ -10,7 +10,7 @@ import Bubble from './bubble';
 import { TextEditor } from './editor';
 import 'normalize.css/normalize.css';
 import 'github-markdown-css/github-markdown.css';
-import '../scss/main.scss';
+import './scss/main.scss';
 
 const modalCloser = document.getElementById('modal-closer') as HTMLDivElement;
 const content = document.getElementById('content') as HTMLDivElement;
