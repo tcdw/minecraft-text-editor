@@ -1,7 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-continue */
-/* eslint-disable lines-between-class-members */
-
 import rgb2hex from 'rgb2hex';
 
 export interface StringItem {

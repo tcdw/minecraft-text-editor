@@ -1,10 +1,3 @@
-// TODO: 进行处理
-
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-continue */
-
 import Clipboard from 'clipboard';
 import Bubble from './bubble';
 import { TextEditor } from './editor';
