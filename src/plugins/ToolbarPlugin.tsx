@@ -13,7 +13,8 @@ import {
     CAN_REDO_COMMAND,
     CAN_UNDO_COMMAND,
     // FORMAT_ELEMENT_COMMAND,
-    FORMAT_TEXT_COMMAND, LexicalEditor,
+    FORMAT_TEXT_COMMAND,
+    LexicalEditor,
     REDO_COMMAND,
     SELECTION_CHANGE_COMMAND,
     UNDO_COMMAND,
@@ -74,7 +75,7 @@ export default function ToolbarPlugin() {
             ),
             editor.registerCommand(
                 CAN_UNDO_COMMAND,
-                (payload) => {
+                payload => {
                     setCanUndo(payload);
                     return false;
                 },
@@ -82,7 +83,7 @@ export default function ToolbarPlugin() {
             ),
             editor.registerCommand(
                 CAN_REDO_COMMAND,
-                (payload) => {
+                payload => {
                     setCanRedo(payload);
                     return false;
                 },
@@ -99,7 +100,8 @@ export default function ToolbarPlugin() {
                     editor.dispatchCommand(UNDO_COMMAND, undefined);
                 }}
                 className="toolbar-item spaced"
-                aria-label="Undo">
+                aria-label="Undo"
+            >
                 <i className="format undo" />
             </button>
             <button
@@ -108,7 +110,8 @@ export default function ToolbarPlugin() {
                     editor.dispatchCommand(REDO_COMMAND, undefined);
                 }}
                 className="toolbar-item"
-                aria-label="Redo">
+                aria-label="Redo"
+            >
                 <i className="format redo" />
             </button>
             <Divider />
@@ -117,7 +120,8 @@ export default function ToolbarPlugin() {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
                 }}
                 className={"toolbar-item spaced " + (isBold ? "active" : "")}
-                aria-label="Format Bold">
+                aria-label="Format Bold"
+            >
                 <i className="format bold" />
             </button>
             <button
@@ -125,7 +129,8 @@ export default function ToolbarPlugin() {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
                 }}
                 className={"toolbar-item spaced " + (isItalic ? "active" : "")}
-                aria-label="Format Italics">
+                aria-label="Format Italics"
+            >
                 <i className="format italic" />
             </button>
             <button
@@ -133,7 +138,8 @@ export default function ToolbarPlugin() {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
                 }}
                 className={"toolbar-item spaced " + (isUnderline ? "active" : "")}
-                aria-label="Format Underline">
+                aria-label="Format Underline"
+            >
                 <i className="format underline" />
             </button>
             <button
@@ -141,7 +147,8 @@ export default function ToolbarPlugin() {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
                 }}
                 className={"toolbar-item spaced " + (isStrikethrough ? "active" : "")}
-                aria-label="Format Strikethrough">
+                aria-label="Format Strikethrough"
+            >
                 <i className="format strikethrough" />
             </button>
             <button
@@ -149,7 +156,8 @@ export default function ToolbarPlugin() {
                     applyTextColor(editor, "#ff0000");
                 }}
                 className={"toolbar-item"}
-                aria-label="Format Strikethrough">
+                aria-label="Format Strikethrough"
+            >
                 red
             </button>
             <button
@@ -157,7 +165,8 @@ export default function ToolbarPlugin() {
                     applyTextColor(editor, "#00ff00");
                 }}
                 className={"toolbar-item"}
-                aria-label="Format Strikethrough">
+                aria-label="Format Strikethrough"
+            >
                 green
             </button>
             <button
@@ -165,7 +174,8 @@ export default function ToolbarPlugin() {
                     applyTextColor(editor, "#0000ff");
                 }}
                 className={"toolbar-item"}
-                aria-label="Format Strikethrough">
+                aria-label="Format Strikethrough"
+            >
                 glue
             </button>
         </div>
