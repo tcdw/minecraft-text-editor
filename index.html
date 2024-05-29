@@ -1,114 +1,12 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minecraft Text Editor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Minecraft Text Editor</h1>
-        </header>
-        <section class="editor">
-            <div class="editbox">
-                <div class="toolbar">
-                    <button class="icon-btn material-icons" id="bold">format_bold</button>
-                    <button class="icon-btn material-icons" id="italic">format_italic</button>
-                    <button class="icon-btn material-icons" id="underline">format_underlined</button>
-                    <button class="icon-btn material-icons" id="strike">strikethrough_s</button>
-                    <div class="color-menu">
-                        <button class="icon-btn material-icons" id="color">color_lens</button>
-                        <div class="panel color-panel" id="color-panel">
-                            <div class="color-list">
-                                <button class="color-btn" data-color="0"></button>
-                                <button class="color-btn" data-color="1"></button>
-                                <button class="color-btn" data-color="2"></button>
-                                <button class="color-btn" data-color="3"></button>
-                                <button class="color-btn" data-color="4"></button>
-                                <button class="color-btn" data-color="5"></button>
-                                <button class="color-btn" data-color="6"></button>
-                                <button class="color-btn" data-color="7"></button>
-                                <button class="color-btn" data-color="8"></button>
-                                <button class="color-btn" data-color="9"></button>
-                                <button class="color-btn" data-color="10"></button>
-                                <button class="color-btn" data-color="11"></button>
-                                <button class="color-btn" data-color="12"></button>
-                                <button class="color-btn" data-color="13"></button>
-                                <button class="color-btn" data-color="14"></button>
-                                <button class="color-btn" data-color="15"></button>
-                            </div>
-                            <div class="custom-color">
-                                <input type="color" id="custom-color" class="selector-pos" value="#ff0000">
-                                <label for="custom-color" class="selector-pos">
-                                    <div class="current-color" id="current-color"></div>
-                                    <div class="info">自定义 (Minecraft 1.16+)</div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-menu">
-                        <button class="icon-btn svg-icons" id="background">
-                            <svg viewBox="248 60 544 544" width="200" height="200">
-                                <path d="M761.105067 250.641067l-165.239467-165.239467a48.059733 48.059733 0 0 0-33.6896-13.960533 48.128 48.128 0 0 0-33.723733 13.960533l-45.499734 45.499733c-38.980267-30.481067-85.981867-59.460267-123.050666-59.460266-23.04 0-37.819733 9.864533-46.045867 18.090666-26.3168 27.101867-23.825067 68.232533 9.045333 122.4704 8.977067 14.6432 19.5584 30.139733 32.5632 46.3872l-92.5696 92.535467c-18.909867 18.944-18.909867 49.3568 0 67.447467l165.239467 165.205333c9.045333 9.079467 21.367467 13.994667 33.723733 13.994667 12.322133 0 24.6784-4.949333 33.6896-13.994667l265.557334-265.5232c18.944-18.909867 18.944-49.288533 0-67.413333zM347.579733 123.221333c2.4576-2.4576 6.587733-4.096 12.322134-4.096 18.773333 0 51.5072 16.9984 89.088 45.738667l-76.765867 76.765867 16.452267-17.271467c-36.181333-47.684267-54.272-87.9616-41.096534-101.137067z m114.2784 426.7008L296.584533 384.682667l189.1328-189.1328a708.5056 708.5056 0 0 1 61.713067 62.2592 36.522667 36.522667 0 0 0 36.1472 35.6352c19.729067 0 36.181333-16.452267 36.181333-36.181334s-16.418133-36.181333-36.181333-36.181333c-1.570133 0-3.037867 0.273067-4.573867 0.477867a754.3808 754.3808 0 0 0-28.330666-30.071467 654.677333 654.677333 0 0 0-31.095467-29.730133L562.176 119.125333l165.239467 165.239467-265.557334 265.557333zM696.32 484.4544a51.2 51.2 0 0 0-3.4816 3.1744l-1.6384 1.467733 0.341333 0.1024a47.3088 47.3088 0 0 0-11.8784 31.1296 47.650133 47.650133 0 1 0 95.300267 0.785067l0.1024 0.034133v-171.008c0.034133 56.763733-60.757333 117.623467-78.7456 134.314667z" p-id="5103"></path>
-                            </svg>
-                        </button>
-                        <div class="panel bg-panel" id="bg-panel">
-                            <ul>
-                                <li><a href="#" data-bg="#222" data-fg="#ffffff" class="first">聊天栏（深色）</a></li>
-                                <li><a href="#" data-bg="#888" data-fg="#ffffff">聊天栏（浅色）</a></li>
-                                <li><a href="#" data-bg="#fff" data-fg="#000000">书</a></li>
-                            </ul>
-                            <h4>告示牌</h4>
-                            <ul>
-                                <li><a href="#" data-bg="#ae8d5a" data-fg="#000000">橡木</a></li>
-                                <li><a href="#" data-bg="#7b5e3c" data-fg="#000000">云杉木</a></li>
-                                <li><a href="#" data-bg="#d6ca94" data-fg="#000000">白桦木</a></li>
-                                <li><a href="#" data-bg="#b28869" data-fg="#000000">丛林木</a></li>
-                                <li><a href="#" data-bg="#b06641" data-fg="#000000">金合欢木</a></li>
-                                <li><a href="#" data-bg="#45301b" data-fg="#000000">深色橡木</a></li>
-                                <li><a href="#" data-bg="#743d54" data-fg="#000000">绯红木</a></li>
-                                <li><a href="#" data-bg="#4b7f7f" data-fg="#000000">诡异木</a></li>
-                                <li><a href="#" data-bg="#6e292c" data-fg="#000000">红树木</a></li>
-                                <li><a href="#" data-bg="#d69297" data-fg="#000000">樱花木</a></li>
-                                <li><a href="#" data-bg="#c6af4c" data-fg="#000000" class="last">竹</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div contenteditable="true" id="content" class="monospace">在这里输入你的文本……</div>
-            </div>
-        </section>
-        <section class="edit-results">
-            <div class="result-banner clearfix">
-                <span class="left">生成的代码</span>
-                <button class="right" id="copy-btn" data-clipboard-target="#results">复制代码</button>
-            </div>
-            <textarea id="results" style="font-family: monospace;"></textarea>
-        </section>
-        <section class="info">
-            <div class="markdown-body">
-                <h2>关于本工具</h2>
-                <p>这是一款用来编辑 Minecraft 文本的所见即所得 (WYSIWYG) 编辑器，使用该工具可以方便的编辑 Minecraft 彩色文本，并生成可在聊天或命令中使用的代码。</p>
-                <p>与市面上其它编辑器不同的是，这是专门针对第三方 Minecraft 服务器玩家设计的。</p>
-                <p>若要能够在 Minecraft 服务器上使用本工具生成的彩色代码，服务器需要满足以下条件：</p>
-                <ul>
-                    <li>安装有 <a href="https://essentialsx.net/" target="_blank">EssentialsX</a></li>
-                    <li>向玩家开放彩色文本及样式权限</li>
-                </ul>
-                <p>如果需使用自定义 RGB 颜色，服务端的 Minecraft 版本应 ≥1.16，EssentialsX 版本应 ≥2.18.0。</p>
-                <hr>
-                <p>本工具目前由 <a href="https://www.tcdw.net" target="_blank">tcdw</a> 维护，源代码可以在 <a href="https://github.com/tcdw/minecraft-text-editor" target="_blank">这里</a> 见到。</p>
-                <!-- <p>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p> -->
-            </div>
-        </section>
-    </div>
-    <footer>
-        &copy; 2020 <a href="https://www.tcdw.net">tcdw</a>
-    </footer>
-    <div id="modal-cover"></div>
-    <div id="modal-closer"></div>
-    <script type="module" src="/src/main.ts"></script>
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
