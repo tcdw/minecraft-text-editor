@@ -21,12 +21,11 @@ import {
 } from "lexical";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { $patchStyleText } from "@lexical/selection";
+import { Button } from "@/components/ui/button.tsx";
+import { Toggle } from "@/components/ui/toggle.tsx";
+import { Bold, Italic, Redo, Strikethrough, Underline, Undo } from "lucide-react";
 
 const LowPriority = 1;
-
-function Divider() {
-    return <div className="divider" />;
-}
 
 function applyTextColor(editor: LexicalEditor, color: string) {
     editor.update(() => {
@@ -93,65 +92,70 @@ export default function ToolbarPlugin() {
     }, [editor, $updateToolbar]);
 
     return (
-        <div className="toolbar" ref={toolbarRef}>
-            <button
+        <div className="flex" ref={toolbarRef}>
+            <Button
+                variant={"ghost"}
+                size={"icon"}
                 disabled={!canUndo}
                 onClick={() => {
                     editor.dispatchCommand(UNDO_COMMAND, undefined);
                 }}
-                className="toolbar-item spaced"
                 aria-label="Undo"
             >
-                <i className="format undo" />
-            </button>
-            <button
+                <Undo className={"size-4"} />
+            </Button>
+            <Button
+                variant={"ghost"}
+                size={"icon"}
                 disabled={!canRedo}
                 onClick={() => {
                     editor.dispatchCommand(REDO_COMMAND, undefined);
                 }}
-                className="toolbar-item"
                 aria-label="Redo"
             >
-                <i className="format redo" />
-            </button>
-            <Divider />
-            <button
+                <Redo className={"size-4"} />
+            </Button>
+            <Toggle
+                pressed={isBold}
+                onPressedChange={setIsBold}
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
                 }}
-                className={"toolbar-item spaced " + (isBold ? "active" : "")}
                 aria-label="Format Bold"
             >
-                <i className="format bold" />
-            </button>
-            <button
+                <Bold className={"size-4"} />
+            </Toggle>
+            <Toggle
+                pressed={isItalic}
+                onPressedChange={setIsItalic}
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
                 }}
-                className={"toolbar-item spaced " + (isItalic ? "active" : "")}
                 aria-label="Format Italics"
             >
-                <i className="format italic" />
-            </button>
-            <button
+                <Italic className={"size-4"} />
+            </Toggle>
+            <Toggle
+                pressed={isUnderline}
+                onPressedChange={setIsUnderline}
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
                 }}
-                className={"toolbar-item spaced " + (isUnderline ? "active" : "")}
                 aria-label="Format Underline"
             >
-                <i className="format underline" />
-            </button>
-            <button
+                <Underline className={"size-4"} />
+            </Toggle>
+            <Toggle
+                pressed={isStrikethrough}
+                onPressedChange={setIsStrikethrough}
                 onClick={() => {
                     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
                 }}
-                className={"toolbar-item spaced " + (isStrikethrough ? "active" : "")}
                 aria-label="Format Strikethrough"
             >
-                <i className="format strikethrough" />
-            </button>
-            <button
+                <Strikethrough className={"size-4"} />
+            </Toggle>
+            {/*<button
                 onClick={() => {
                     applyTextColor(editor, "#ff0000");
                 }}
@@ -177,7 +181,7 @@ export default function ToolbarPlugin() {
                 aria-label="Format Strikethrough"
             >
                 glue
-            </button>
+            </button>*/}
         </div>
     );
 }

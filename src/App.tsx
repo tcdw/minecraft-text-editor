@@ -34,17 +34,19 @@ const editorConfig = {
 export default function App() {
     return (
         <LexicalComposer initialConfig={editorConfig}>
-            <div className="editor-container">
-                <ToolbarPlugin />
-                <div className="editor-inner">
-                    <RichTextPlugin
-                        contentEditable={<ContentEditable className="editor-input" />}
-                        placeholder={<Placeholder />}
-                        ErrorBoundary={LexicalErrorBoundary}
-                    />
-                    <HistoryPlugin />
-                    <AutoFocusPlugin />
-                    <TreeViewPlugin />
+            <div className={"container py-4 max-w-screen-lg"}>
+                <div className="border rounded-xl p-1.5 space-y-1.5">
+                    <ToolbarPlugin />
+                    <div className="editor-inner">
+                        <RichTextPlugin
+                            contentEditable={<ContentEditable className="min-h-16 p-3" />}
+                            placeholder={<Placeholder />}
+                            ErrorBoundary={LexicalErrorBoundary}
+                        />
+                        <HistoryPlugin />
+                        <AutoFocusPlugin />
+                        <TreeViewPlugin />
+                    </div>
                 </div>
             </div>
         </LexicalComposer>
