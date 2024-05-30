@@ -18,7 +18,6 @@ export function parseFromHTML(html: string) {
     elements.forEach(e => {
         if (e.childNodes.length === 1 && e.childNodes[0].nodeType === Node.TEXT_NODE) {
             const styles = getComputedStyle(e);
-            console.log(styles.textDecorationLine);
             const { color } = styles;
             const bold = Number(styles.fontWeight) >= 700;
             const italic = styles.fontStyle === "italic" || styles.fontStyle === "oblique";

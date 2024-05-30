@@ -8,9 +8,7 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
-    $getRoot,
     $getSelection,
-    $insertNodes,
     $isRangeSelection,
     CAN_REDO_COMMAND,
     CAN_UNDO_COMMAND,
@@ -18,7 +16,6 @@ import {
     LexicalEditor,
     REDO_COMMAND,
     SELECTION_CHANGE_COMMAND,
-    TextNode,
     UNDO_COMMAND,
 } from "lexical";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -32,8 +29,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { HexColorPicker } from "react-colorful";
 import styles from "./ToolbarPlugin.module.scss";
 import { Input } from "@/components/ui/input.tsx";
-import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
-import { MinecraftStringItem, parseFromHTML, stringItemsToHTML } from "@/lib/parser.ts";
+import { $generateHtmlFromNodes } from "@lexical/html";
+import { MinecraftStringItem, parseFromHTML } from "@/lib/parser.ts";
+import { setStringItems } from "@/lib/editor.ts";
 
 const LowPriority = 1;
 
@@ -251,31 +249,7 @@ export default function ToolbarPlugin() {
             </Button>
             <Button
                 onClick={() => {
-                    editor.update(() => {
-                        const dom = new DOMParser().parseFromString(stringItemsToHTML(exampleData), "text/html");
-
-                        // Once you have the DOM instance it's easy to generate LexicalNodes.
-                        const nodes = $generateNodesFromDOM(editor, dom);
-
-                        // Write color information to AST
-                        // Workaround of https://github.com/facebook/lexical/issues/3042
-                        nodes.forEach((e, i) => {
-                            const color = exampleData[i].color;
-                            if (e instanceof TextNode && color) {
-                                e.setStyle(`color: ${color}`);
-                            }
-                        });
-
-                        // Clear existing content
-                        const root = $getRoot();
-                        root.clear();
-
-                        // Select the root
-                        $getRoot().select();
-
-                        // Insert them at a selection.
-                        $insertNodes(nodes);
-                    });
+                    setStringItems(editor, exampleData);
                 }}
             >
                 写入编辑器内容
