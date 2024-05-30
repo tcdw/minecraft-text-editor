@@ -11,13 +11,18 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 
 import ExampleTheme from "./ExampleTheme";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import TreeViewPlugin from "./plugins/TreeViewPlugin";
+import { Textarea } from "@/components/ui/textarea.tsx";
 
 function Placeholder() {
-    return <div className="editor-placeholder">Enter some rich text...</div>;
+    return (
+        <div className="p-3 absolute top-0 left-0 text-neutral-500 pointer-events-none" aria-hidden={true}>
+            在这里输入你的内容……
+        </div>
+    );
 }
 
 const editorConfig = {
@@ -35,9 +40,9 @@ export default function App() {
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className={"container py-4 max-w-screen-lg"}>
-                <div className="border rounded-xl p-1.5 space-y-1.5">
+                <div className="border rounded-xl p-2 flex flex-col items-stretch gap-2">
                     <ToolbarPlugin />
-                    <div className="editor-inner">
+                    <div className="relative">
                         <RichTextPlugin
                             contentEditable={<ContentEditable className="min-h-16 p-3 rounded-md editor-theme-dark" />}
                             placeholder={<Placeholder />}
@@ -45,8 +50,12 @@ export default function App() {
                         />
                         <HistoryPlugin />
                         <AutoFocusPlugin />
-                        <TreeViewPlugin />
+                        <ClearEditorPlugin />
                     </div>
+                    <label htmlFor={"gen-code"} className={"block text-xl font-bold leading-normal py-1"}>
+                        生成的代码
+                    </label>
+                    <Textarea id={"gen-code"} />
                 </div>
             </div>
         </LexicalComposer>

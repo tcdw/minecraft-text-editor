@@ -8,15 +8,17 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { mergeRegister } from "@lexical/utils";
 import {
+    $getRoot,
     $getSelection,
+    $insertNodes,
     $isRangeSelection,
     CAN_REDO_COMMAND,
     CAN_UNDO_COMMAND,
-    // FORMAT_ELEMENT_COMMAND,
     FORMAT_TEXT_COMMAND,
     LexicalEditor,
     REDO_COMMAND,
     SELECTION_CHANGE_COMMAND,
+    TextNode,
     UNDO_COMMAND,
 } from "lexical";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
@@ -30,10 +32,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.t
 import { HexColorPicker } from "react-colorful";
 import styles from "./ToolbarPlugin.module.scss";
 import { Input } from "@/components/ui/input.tsx";
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
+import { MinecraftStringItem, parseFromHTML, stringItemsToHTML } from "@/lib/parser.ts";
 
 const LowPriority = 1;
 
 const hexRGBRegex = /^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+const exampleData: MinecraftStringItem[] = [
+    { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
+    { text: "56786", bold: false, italic: false, underline: true, strikethrough: false },
+    { text: "5", bold: false, italic: false, underline: true, strikethrough: true },
+    { text: "43", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: true, strikethrough: true },
+    { text: "456", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: true },
+    { text: "7", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: false },
+    { text: "86啊啊啊", bold: false, italic: false, underline: false, strikethrough: false },
+];
 
 function applyTextColor(editor: LexicalEditor, color: string) {
     editor.update(() => {
@@ -211,7 +225,11 @@ export default function ToolbarPlugin() {
                                     type={"button"}
                                     variant={"outline"}
                                     onClick={() => {
-                                        applyTextColor(editor, currentColorCustom);
+                                        if (currentColorCustom.startsWith("#")) {
+                                            applyTextColor(editor, currentColorCustom);
+                                            return;
+                                        }
+                                        applyTextColor(editor, "#" + currentColorCustom);
                                     }}
                                     disabled={!hexRGBRegex.test(currentColorCustom)}
                                 >
@@ -222,33 +240,46 @@ export default function ToolbarPlugin() {
                     </Tabs>
                 </PopoverContent>
             </Popover>
-            {/*<button
+            <Button
                 onClick={() => {
-                    applyTextColor(editor, "#ff0000");
+                    editor.update(() => {
+                        console.log(parseFromHTML($generateHtmlFromNodes(editor, null)));
+                    });
                 }}
-                className={"toolbar-item"}
-                aria-label="Format Strikethrough"
             >
-                red
-            </button>
-            <button
+                读取编辑器内容
+            </Button>
+            <Button
                 onClick={() => {
-                    applyTextColor(editor, "#00ff00");
+                    editor.update(() => {
+                        const dom = new DOMParser().parseFromString(stringItemsToHTML(exampleData), "text/html");
+
+                        // Once you have the DOM instance it's easy to generate LexicalNodes.
+                        const nodes = $generateNodesFromDOM(editor, dom);
+
+                        // Write color information to AST
+                        // Workaround of https://github.com/facebook/lexical/issues/3042
+                        nodes.forEach((e, i) => {
+                            const color = exampleData[i].color;
+                            if (e instanceof TextNode && color) {
+                                e.setStyle(`color: ${color}`);
+                            }
+                        });
+
+                        // Clear existing content
+                        const root = $getRoot();
+                        root.clear();
+
+                        // Select the root
+                        $getRoot().select();
+
+                        // Insert them at a selection.
+                        $insertNodes(nodes);
+                    });
                 }}
-                className={"toolbar-item"}
-                aria-label="Format Strikethrough"
             >
-                green
-            </button>
-            <button
-                onClick={() => {
-                    applyTextColor(editor, "#0000ff");
-                }}
-                className={"toolbar-item"}
-                aria-label="Format Strikethrough"
-            >
-                glue
-            </button>*/}
+                写入编辑器内容
+            </Button>
         </div>
     );
 }
