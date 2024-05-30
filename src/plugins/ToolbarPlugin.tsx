@@ -23,7 +23,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { $patchStyleText } from "@lexical/selection";
 import { Button } from "@/components/ui/button.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
-import { Bold, Italic, Redo, Strikethrough, Underline, Undo } from "lucide-react";
+import { Bold, Italic, PaintBucket, Redo, Strikethrough, Underline, Undo } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
+import { BUILTIN_COLOR } from "@/constants/colors.ts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 
 const LowPriority = 1;
 
@@ -45,6 +48,8 @@ export default function ToolbarPlugin() {
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
+
+    const [currentColorTab, setCurrentColorTab] = useState("built-in");
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -92,7 +97,7 @@ export default function ToolbarPlugin() {
     }, [editor, $updateToolbar]);
 
     return (
-        <div className="flex" ref={toolbarRef}>
+        <div className="flex gap-1" ref={toolbarRef}>
             <Button
                 variant={"ghost"}
                 size={"icon"}
@@ -155,6 +160,37 @@ export default function ToolbarPlugin() {
             >
                 <Strikethrough className={"size-4"} />
             </Toggle>
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant={"ghost"} size={"icon"} aria-label="Text Color">
+                        <PaintBucket className={"size-4"} />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-72 p-3">
+                    <Tabs className="w-full" value={currentColorTab} onValueChange={setCurrentColorTab}>
+                        <TabsList className="grid w-full grid-cols-2 mb-3">
+                            <TabsTrigger value="builtin">内置</TabsTrigger>
+                            <TabsTrigger value="custom">自定义</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="builtin">
+                            <div className="grid grid-cols-8 gap-1.5">
+                                {BUILTIN_COLOR.map((e, i) => (
+                                    <button
+                                        type={"button"}
+                                        key={e}
+                                        className={`w-full aspect-square rounded-md ${i === BUILTIN_COLOR.length - 1 ? "border" : ""}`}
+                                        style={{ background: e }}
+                                        onClick={() => {
+                                            applyTextColor(editor, e);
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </TabsContent>
+                        <TabsContent value="custom">222</TabsContent>
+                    </Tabs>
+                </PopoverContent>
+            </Popover>
             {/*<button
                 onClick={() => {
                     applyTextColor(editor, "#ff0000");

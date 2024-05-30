@@ -1,0 +1,18 @@
+export const BUILTIN_COLOR = [
+    "#000000",
+    "#0000aa",
+    "#00aa00",
+    "#00aaaa",
+    "#aa0000",
+    "#aa00aa",
+    "#ffaa00",
+    "#aaaaaa",
+    "#555555",
+    "#5555ff",
+    "#55ff55",
+    "#55ffff",
+    "#ff5555",
+    "#ff55ff",
+    "#ffff55",
+    "#ffffff",
+];

@@ -74,6 +74,13 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+@layer editor {
+    .editor-theme-dark {
+        background-color: #333;
+        color: #fff;
+    }
 
     .editor-text-bold {
         font-weight: bold;

@@ -39,7 +39,7 @@ export default function App() {
                     <ToolbarPlugin />
                     <div className="editor-inner">
                         <RichTextPlugin
-                            contentEditable={<ContentEditable className="min-h-16 p-3" />}
+                            contentEditable={<ContentEditable className="min-h-16 p-3 rounded-md editor-theme-dark" />}
                             placeholder={<Placeholder />}
                             ErrorBoundary={LexicalErrorBoundary}
                         />
