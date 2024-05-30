@@ -19,7 +19,7 @@ import {
     SELECTION_CHANGE_COMMAND,
     UNDO_COMMAND,
 } from "lexical";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { $patchStyleText } from "@lexical/selection";
 import { Button } from "@/components/ui/button.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
@@ -27,8 +27,13 @@ import { Bold, Italic, PaintBucket, Redo, Strikethrough, Underline, Undo } from 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
+import { HexColorPicker } from "react-colorful";
+import styles from "./ToolbarPlugin.module.scss";
+import { Input } from "@/components/ui/input.tsx";
 
 const LowPriority = 1;
+
+const hexRGBRegex = /^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
 function applyTextColor(editor: LexicalEditor, color: string) {
     editor.update(() => {
@@ -49,7 +54,9 @@ export default function ToolbarPlugin() {
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
 
-    const [currentColorTab, setCurrentColorTab] = useState("built-in");
+    const [currentColorTab, setCurrentColorTab] = useState("builtin");
+    const [currentColorCustom, setCurrentColorCustom] = useState("#66ccff");
+    const colorInputId = useId();
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -187,7 +194,31 @@ export default function ToolbarPlugin() {
                                 ))}
                             </div>
                         </TabsContent>
-                        <TabsContent value="custom">222</TabsContent>
+                        <TabsContent value="custom" className={styles.customColorSelect}>
+                            <HexColorPicker color={currentColorCustom} onChange={setCurrentColorCustom} />
+                            <div className={"mt-3 flex gap-3"}>
+                                <label className={"sr-only"} htmlFor={colorInputId}>
+                                    HEX 颜色
+                                </label>
+                                <Input
+                                    className={"flex-auto"}
+                                    id={colorInputId}
+                                    value={currentColorCustom}
+                                    onInput={e => setCurrentColorCustom(e.currentTarget.value)}
+                                />
+                                <Button
+                                    className={"flex-none"}
+                                    type={"button"}
+                                    variant={"outline"}
+                                    onClick={() => {
+                                        applyTextColor(editor, currentColorCustom);
+                                    }}
+                                    disabled={!hexRGBRegex.test(currentColorCustom)}
+                                >
+                                    确定
+                                </Button>
+                            </div>
+                        </TabsContent>
                     </Tabs>
                 </PopoverContent>
             </Popover>
