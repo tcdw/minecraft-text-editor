@@ -15,14 +15,9 @@ import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 
 import ExampleTheme from "./ExampleTheme";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import { Textarea } from "@/components/ui/textarea.tsx";
-import { Code } from "lucide-react";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
-import { $generateHtmlFromNodes } from "@lexical/html";
-import { useState } from "react";
-import { ExtendedTextNode } from "@/lib/ExtendedTextNode.ts";
+import { ExtendedTextNode } from "@/lib/extendedTextNode.ts";
 import { TextNode } from "lexical";
+import CodeEditor from "@/components/CodeEditor.tsx";
 
 function Placeholder() {
     return (
@@ -44,8 +39,6 @@ const editorConfig = {
 };
 
 export default function App() {
-    const [content, setContent] = useState("");
-
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className={"container py-4 max-w-screen-lg"}>
@@ -60,24 +53,8 @@ export default function App() {
                         <HistoryPlugin />
                         <AutoFocusPlugin />
                         <ClearEditorPlugin />
-                        <OnChangePlugin
-                            onChange={(_, editor) => {
-                                editor.update(() => {
-                                    setContent(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
-                                });
-                            }}
-                        />
                     </div>
-                    <label htmlFor={"gen-code"} className={"flex items-center py-2 px-2 gap-3"}>
-                        <Code className={"text-muted-foreground size-5"} />
-                        <span className={"text-lg font-bold leading-normal"}>生成的代码</span>
-                    </label>
-                    <Textarea
-                        id={"gen-code"}
-                        className={"font-mono"}
-                        value={content}
-                        onInput={e => setContent(e.currentTarget.value)}
-                    />
+                    <CodeEditor />
                 </div>
             </div>
         </LexicalComposer>
