@@ -30,7 +30,7 @@ import { HexColorPicker } from "react-colorful";
 import styles from "./ToolbarPlugin.module.scss";
 import { Input } from "@/components/ui/input.tsx";
 import { $generateHtmlFromNodes } from "@lexical/html";
-import { MinecraftStringItem, parseFromHTML } from "@/lib/parser.ts";
+import { MinecraftStringItem, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
 import { setStringItems } from "@/lib/editor.ts";
 
 const LowPriority = 1;
@@ -245,14 +245,30 @@ export default function ToolbarPlugin() {
                     });
                 }}
             >
-                读取编辑器内容
+                读取内容
             </Button>
             <Button
                 onClick={() => {
                     setStringItems(editor, exampleData);
                 }}
             >
-                写入编辑器内容
+                写入内容
+            </Button>
+            <Button
+                onClick={() => {
+                    setStringItems(editor, exampleData, true);
+                }}
+            >
+                插入内容
+            </Button>
+            <Button
+                onClick={() => {
+                    editor.update(() => {
+                        console.log(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
+                    });
+                }}
+            >
+                生成 MC 表记
             </Button>
         </div>
     );
