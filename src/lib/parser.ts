@@ -145,3 +145,98 @@ export function toMinecraftString(item: MinecraftStringItem[][]) {
     const text = item.map(e => toMinecraftStringLine(e));
     return text.join("\n");
 }
+
+export function fromMinecraftStringLine(str: string) {
+    const state = {
+        color: undefined as undefined | string,
+        bold: false,
+        italic: false,
+        underline: false,
+        strikethrough: false,
+    };
+    const out: MinecraftStringItem[] = [];
+
+    let i = 0;
+    while (i <= str.length - 1) {
+        switch (str[i]) {
+            case "&": {
+                // escape char
+                if (str[i + 1] === "&") {
+                    i += 2;
+                    out.push({ ...state, text: "&" });
+                    break;
+                }
+                if (str[i + 1] === "l") {
+                    state.bold = true;
+                    i += 2;
+                    break;
+                }
+                if (str[i + 1] === "m") {
+                    state.strikethrough = true;
+                    i += 2;
+                    break;
+                }
+                if (str[i + 1] === "n") {
+                    state.underline = true;
+                    i += 2;
+                    break;
+                }
+                if (str[i + 1] === "o") {
+                    state.italic = true;
+                    i += 2;
+                    break;
+                }
+                if (str[i + 1] === "r") {
+                    state.bold = false;
+                    state.strikethrough = false;
+                    state.underline = false;
+                    state.italic = false;
+                    state.color = undefined;
+                    i += 2;
+                    break;
+                }
+                // rgb color
+                if (str[i + 1] === "#" && /^[0-9a-fA-F]{6}$/.test(str.slice(i + 2, i + 8))) {
+                    state.bold = false;
+                    state.strikethrough = false;
+                    state.underline = false;
+                    state.italic = false;
+                    state.color = `#${str.slice(i + 2, i + 8)}`;
+                    i += 8;
+                    break;
+                }
+                // builtin color
+                if (/^[0-9a-fA-F]$/.test(str[i + 1])) {
+                    state.bold = false;
+                    state.strikethrough = false;
+                    state.underline = false;
+                    state.italic = false;
+                    state.color = `${BUILTIN_COLOR[parseInt(str[i + 1], 16)]}`;
+                    i += 2;
+                    break;
+                }
+                // other character (remove that!)
+                i += 2;
+                break;
+            }
+            default: {
+                out.push({ ...state, text: str[i] });
+                i += 1;
+            }
+        }
+    }
+
+    return out;
+}
+
+export function fromMinecraftString(str: string) {
+    const lines = str.split("\n");
+    const out: MinecraftStringItem[][] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        const e = lines[i];
+        out.push(fromMinecraftStringLine(e));
+    }
+
+    return out;
+}

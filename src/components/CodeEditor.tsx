@@ -1,20 +1,31 @@
 import { Code } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea.tsx";
-import { useState } from "react";
-import { parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
+import { useCallback, useRef, useState } from "react";
+import { fromMinecraftString, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { setStringItems } from "@/lib/editor.ts";
 
 export default function CodeEditor() {
     const [content, setContent] = useState("");
+    const [editor] = useLexicalComposerContext();
+    const editorFocus = useRef(false);
+
+    const handleUpdate = useCallback(() => {
+        editor.update(() => {
+            setContent(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
+        });
+    }, [editor]);
 
     return (
         <>
             <OnChangePlugin
-                onChange={(_, editor) => {
-                    editor.update(() => {
-                        setContent(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
-                    });
+                onChange={() => {
+                    if (editorFocus.current) {
+                        return;
+                    }
+                    handleUpdate();
                 }}
             />
             <label htmlFor={"gen-code"} className={"flex items-center py-2 px-2 gap-3"}>
@@ -23,9 +34,21 @@ export default function CodeEditor() {
             </label>
             <Textarea
                 id={"gen-code"}
-                className={"font-mono"}
+                className={"font-mono h-24"}
                 value={content}
-                onInput={e => setContent(e.currentTarget.value)}
+                onInput={e => {
+                    setContent(e.currentTarget.value);
+                    setStringItems(editor, fromMinecraftString(e.currentTarget.value));
+                }}
+                onFocus={() => {
+                    editor.setEditable(false);
+                    editorFocus.current = true;
+                }}
+                onBlur={() => {
+                    editor.setEditable(true);
+                    editorFocus.current = false;
+                    handleUpdate();
+                }}
             />
         </>
     );

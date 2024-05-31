@@ -1,10 +1,3 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -14,7 +7,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 
 import ExampleTheme from "./ExampleTheme";
-import ToolbarPlugin from "./plugins/ToolbarPlugin";
+import Toolbar from "./components/Toolbar.tsx";
 import { ExtendedTextNode } from "@/lib/extendedTextNode.ts";
 import { TextNode } from "lexical";
 import CodeEditor from "@/components/CodeEditor.tsx";
@@ -43,7 +36,7 @@ export default function App() {
         <LexicalComposer initialConfig={editorConfig}>
             <div className={"container py-4 max-w-screen-lg"}>
                 <div className="border rounded-xl p-2 flex flex-col items-stretch gap-2">
-                    <ToolbarPlugin />
+                    <Toolbar />
                     <div className="relative">
                         <RichTextPlugin
                             contentEditable={<ContentEditable className="min-h-16 p-3 rounded-md editor-theme-dark" />}

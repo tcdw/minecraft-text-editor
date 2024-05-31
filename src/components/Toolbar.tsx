@@ -58,7 +58,7 @@ function applyTextColor(editor: LexicalEditor, color: string) {
     });
 }
 
-export default function ToolbarPlugin() {
+export default function Toolbar() {
     const [editor] = useLexicalComposerContext();
     const toolbarRef = useRef(null);
     const [canUndo, setCanUndo] = useState(false);

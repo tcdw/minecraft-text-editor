@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { PaintBucket } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
-import styles from "@/plugins/ToolbarPlugin.module.scss";
+import styles from "./ColorPicker.module.scss";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "@/components/ui/input.tsx";
 import { PropsWithChildren, useId, useState } from "react";
