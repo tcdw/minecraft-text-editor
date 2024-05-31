@@ -1,41 +1,32 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
+import { $getNearestBlockElementAncestorOrThrow, mergeRegister } from "@lexical/utils";
 import {
+    $createParagraphNode,
     $getSelection,
     $isRangeSelection,
+    $isTextNode,
     CAN_REDO_COMMAND,
     CAN_UNDO_COMMAND,
     FORMAT_TEXT_COMMAND,
     LexicalEditor,
     REDO_COMMAND,
     SELECTION_CHANGE_COMMAND,
+    TextNode,
     UNDO_COMMAND,
 } from "lexical";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { $patchStyleText } from "@lexical/selection";
 import { Button } from "@/components/ui/button.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
-import { Bold, Italic, PaintBucket, Redo, Strikethrough, Underline, Undo } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
-import { BUILTIN_COLOR } from "@/constants/colors.ts";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
-import { HexColorPicker } from "react-colorful";
-import styles from "./ToolbarPlugin.module.scss";
-import { Input } from "@/components/ui/input.tsx";
+import { Bold, Italic, Redo, RemoveFormatting, Strikethrough, Underline, Undo } from "lucide-react";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { MinecraftStringItem, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
 import { setStringItems } from "@/lib/editor.ts";
+import ColorPicker from "@/components/ColorPicker.tsx";
+import { $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
+import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
 
 const LowPriority = 1;
-
-const hexRGBRegex = /^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
 const exampleData: MinecraftStringItem[] = [
     { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
@@ -66,10 +57,6 @@ export default function ToolbarPlugin() {
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
 
-    const [currentColorTab, setCurrentColorTab] = useState("builtin");
-    const [currentColorCustom, setCurrentColorCustom] = useState("#66ccff");
-    const colorInputId = useId();
-
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -80,6 +67,46 @@ export default function ToolbarPlugin() {
             setIsStrikethrough(selection.hasFormat("strikethrough"));
         }
     }, []);
+
+    const clearFormatting = useCallback(() => {
+        editor.update(() => {
+            const selection = $getSelection();
+            if ($isRangeSelection(selection)) {
+                const anchor = selection.anchor;
+                const focus = selection.focus;
+                const nodes = selection.getNodes();
+
+                if (anchor.key === focus.key && anchor.offset === focus.offset) {
+                    return;
+                }
+
+                nodes.forEach((node, idx) => {
+                    // We split the first and last node by the selection
+                    // So that we don't format unselected text inside those nodes
+                    if ($isTextNode(node)) {
+                        if (idx === 0 && anchor.offset !== 0) {
+                            node = node.splitText(anchor.offset)[1] || node;
+                        }
+                        if (idx === nodes.length - 1) {
+                            node = (node as TextNode).splitText(focus.offset)[0] || node;
+                        }
+
+                        if ((node as TextNode).__style !== "") {
+                            (node as TextNode).setStyle("");
+                        }
+                        if ((node as TextNode).__format !== 0) {
+                            (node as TextNode).setFormat(0);
+                            $getNearestBlockElementAncestorOrThrow(node).setFormat("");
+                        }
+                    } else if ($isHeadingNode(node) || $isQuoteNode(node)) {
+                        node.replace($createParagraphNode(), true);
+                    } else if ($isDecoratorBlockNode(node)) {
+                        node.setFormat("");
+                    }
+                });
+            }
+        });
+    }, [editor]);
 
     useEffect(() => {
         return mergeRegister(
@@ -179,97 +206,57 @@ export default function ToolbarPlugin() {
             >
                 <Strikethrough className={"size-4"} />
             </Toggle>
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant={"ghost"} size={"icon"} aria-label="Text Color">
-                        <PaintBucket className={"size-4"} />
+            <Button
+                variant={"ghost"}
+                size={"icon"}
+                onClick={() => {
+                    clearFormatting();
+                }}
+                aria-label="Clear Styling"
+            >
+                <RemoveFormatting className={"size-4"} />
+            </Button>
+            <ColorPicker
+                onDone={e => {
+                    applyTextColor(editor, e);
+                }}
+            />
+            {process.env.NODE_ENV === "development" ? (
+                <>
+                    <Button
+                        onClick={() => {
+                            editor.update(() => {
+                                console.log(parseFromHTML($generateHtmlFromNodes(editor, null)));
+                            });
+                        }}
+                    >
+                        读取内容
                     </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-72 p-3">
-                    <Tabs className="w-full" value={currentColorTab} onValueChange={setCurrentColorTab}>
-                        <TabsList className="grid w-full grid-cols-2 mb-3">
-                            <TabsTrigger value="builtin">内置</TabsTrigger>
-                            <TabsTrigger value="custom">自定义</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="builtin">
-                            <div className="grid grid-cols-8 gap-1.5">
-                                {BUILTIN_COLOR.map((e, i) => (
-                                    <button
-                                        type={"button"}
-                                        key={e}
-                                        className={`w-full aspect-square rounded-md ${i === BUILTIN_COLOR.length - 1 ? "border" : ""}`}
-                                        style={{ background: e }}
-                                        onClick={() => {
-                                            applyTextColor(editor, e);
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                        </TabsContent>
-                        <TabsContent value="custom" className={styles.customColorSelect}>
-                            <HexColorPicker color={currentColorCustom} onChange={setCurrentColorCustom} />
-                            <div className={"mt-3 flex gap-3"}>
-                                <label className={"sr-only"} htmlFor={colorInputId}>
-                                    HEX 颜色
-                                </label>
-                                <Input
-                                    className={"flex-auto"}
-                                    id={colorInputId}
-                                    value={currentColorCustom}
-                                    onInput={e => setCurrentColorCustom(e.currentTarget.value)}
-                                />
-                                <Button
-                                    className={"flex-none"}
-                                    type={"button"}
-                                    variant={"outline"}
-                                    onClick={() => {
-                                        if (currentColorCustom.startsWith("#")) {
-                                            applyTextColor(editor, currentColorCustom);
-                                            return;
-                                        }
-                                        applyTextColor(editor, "#" + currentColorCustom);
-                                    }}
-                                    disabled={!hexRGBRegex.test(currentColorCustom)}
-                                >
-                                    确定
-                                </Button>
-                            </div>
-                        </TabsContent>
-                    </Tabs>
-                </PopoverContent>
-            </Popover>
-            <Button
-                onClick={() => {
-                    editor.update(() => {
-                        console.log(parseFromHTML($generateHtmlFromNodes(editor, null)));
-                    });
-                }}
-            >
-                读取内容
-            </Button>
-            <Button
-                onClick={() => {
-                    setStringItems(editor, exampleData);
-                }}
-            >
-                写入内容
-            </Button>
-            <Button
-                onClick={() => {
-                    setStringItems(editor, exampleData, true);
-                }}
-            >
-                插入内容
-            </Button>
-            <Button
-                onClick={() => {
-                    editor.update(() => {
-                        console.log(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
-                    });
-                }}
-            >
-                生成 MC 表记
-            </Button>
+                    <Button
+                        onClick={() => {
+                            setStringItems(editor, exampleData);
+                        }}
+                    >
+                        写入内容
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setStringItems(editor, exampleData, true);
+                        }}
+                    >
+                        插入内容
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            editor.update(() => {
+                                console.log(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
+                            });
+                        }}
+                    >
+                        生成 MC 表记
+                    </Button>
+                </>
+            ) : null}
         </div>
     );
 }
