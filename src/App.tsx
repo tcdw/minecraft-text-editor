@@ -16,6 +16,13 @@ import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 import ExampleTheme from "./ExampleTheme";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import { Textarea } from "@/components/ui/textarea.tsx";
+import { Code } from "lucide-react";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
+import { $generateHtmlFromNodes } from "@lexical/html";
+import { useState } from "react";
+import { ExtendedTextNode } from "@/lib/ExtendedTextNode.ts";
+import { TextNode } from "lexical";
 
 function Placeholder() {
     return (
@@ -27,7 +34,7 @@ function Placeholder() {
 
 const editorConfig = {
     namespace: "React.js Demo",
-    nodes: [],
+    nodes: [ExtendedTextNode, { replace: TextNode, with: (node: TextNode) => new ExtendedTextNode(node.__text) }],
     // Handling of errors during update
     onError(error: Error) {
         throw error;
@@ -37,6 +44,8 @@ const editorConfig = {
 };
 
 export default function App() {
+    const [content, setContent] = useState("");
+
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className={"container py-4 max-w-screen-lg"}>
@@ -51,11 +60,24 @@ export default function App() {
                         <HistoryPlugin />
                         <AutoFocusPlugin />
                         <ClearEditorPlugin />
+                        <OnChangePlugin
+                            onChange={(_, editor) => {
+                                editor.update(() => {
+                                    setContent(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
+                                });
+                            }}
+                        />
                     </div>
-                    <label htmlFor={"gen-code"} className={"block text-xl font-bold leading-normal py-1"}>
-                        生成的代码
+                    <label htmlFor={"gen-code"} className={"flex items-center py-2 px-2 gap-3"}>
+                        <Code className={"text-muted-foreground size-5"} />
+                        <span className={"text-lg font-bold leading-normal"}>生成的代码</span>
                     </label>
-                    <Textarea id={"gen-code"} />
+                    <Textarea
+                        id={"gen-code"}
+                        className={"font-mono"}
+                        value={content}
+                        onInput={e => setContent(e.currentTarget.value)}
+                    />
                 </div>
             </div>
         </LexicalComposer>

@@ -28,14 +28,25 @@ import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode"
 
 const LowPriority = 1;
 
-const exampleData: MinecraftStringItem[] = [
-    { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
-    { text: "56786", bold: false, italic: false, underline: true, strikethrough: false },
-    { text: "5", bold: false, italic: false, underline: true, strikethrough: true },
-    { text: "43", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: true, strikethrough: true },
-    { text: "456", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: true },
-    { text: "7", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: false },
-    { text: "86啊啊啊", bold: false, italic: false, underline: false, strikethrough: false },
+const exampleData: MinecraftStringItem[][] = [
+    [
+        { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
+        { text: "56786", bold: false, italic: false, underline: true, strikethrough: false },
+        { text: "5", bold: false, italic: false, underline: true, strikethrough: true },
+        { text: "43", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: true, strikethrough: true },
+        { text: "456", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: true },
+        { text: "7", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: false },
+        { text: "86啊啊啊", bold: false, italic: false, underline: false, strikethrough: false },
+    ],
+    [
+        { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
+        { text: "56786", bold: false, italic: false, underline: true, strikethrough: false },
+        { text: "5", bold: false, italic: false, underline: true, strikethrough: true },
+        { text: "43", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: true, strikethrough: true },
+        { text: "456", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: true },
+        { text: "7", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: false },
+        { text: "86啊啊啊", bold: false, italic: false, underline: false, strikethrough: false },
+    ],
 ];
 
 function applyTextColor(editor: LexicalEditor, color: string) {
