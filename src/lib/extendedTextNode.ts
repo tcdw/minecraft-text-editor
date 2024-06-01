@@ -26,10 +26,6 @@ export class ExtendedTextNode extends TextNode {
         const importers = TextNode.importDOM();
         return {
             ...importers,
-            code: () => ({
-                conversion: patchStyleConversion(importers?.code),
-                priority: 1,
-            }),
             em: () => ({
                 conversion: patchStyleConversion(importers?.em),
                 priority: 1,
@@ -40,14 +36,6 @@ export class ExtendedTextNode extends TextNode {
             }),
             strong: () => ({
                 conversion: patchStyleConversion(importers?.strong),
-                priority: 1,
-            }),
-            sub: () => ({
-                conversion: patchStyleConversion(importers?.sub),
-                priority: 1,
-            }),
-            sup: () => ({
-                conversion: patchStyleConversion(importers?.sup),
                 priority: 1,
             }),
         };
