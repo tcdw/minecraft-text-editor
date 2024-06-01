@@ -19,35 +19,11 @@ import { $patchStyleText } from "@lexical/selection";
 import { Button } from "@/components/ui/button.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
 import { Bold, Italic, Redo, RemoveFormatting, Strikethrough, Underline, Undo } from "lucide-react";
-import { $generateHtmlFromNodes } from "@lexical/html";
-import { MinecraftStringItem, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
-import { setStringItems } from "@/lib/editor.ts";
 import ColorPicker from "@/components/ColorPicker.tsx";
 import { $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
 import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
 
 const LowPriority = 1;
-
-const exampleData: MinecraftStringItem[][] = [
-    [
-        { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
-        { text: "56786", bold: false, italic: false, underline: true, strikethrough: false },
-        { text: "5", bold: false, italic: false, underline: true, strikethrough: true },
-        { text: "43", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: true, strikethrough: true },
-        { text: "456", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: true },
-        { text: "7", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: false },
-        { text: "86啊啊啊", bold: false, italic: false, underline: false, strikethrough: false },
-    ],
-    [
-        { text: "234", bold: false, italic: false, underline: false, strikethrough: false },
-        { text: "56786", bold: false, italic: false, underline: true, strikethrough: false },
-        { text: "5", bold: false, italic: false, underline: true, strikethrough: true },
-        { text: "43", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: true, strikethrough: true },
-        { text: "456", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: true },
-        { text: "7", color: "rgb(255, 255, 85)", bold: false, italic: false, underline: false, strikethrough: false },
-        { text: "86啊啊啊", bold: false, italic: false, underline: false, strikethrough: false },
-    ],
-];
 
 function applyTextColor(editor: LexicalEditor, color: string) {
     editor.update(() => {
@@ -128,7 +104,7 @@ export default function Toolbar() {
             }),
             editor.registerCommand(
                 SELECTION_CHANGE_COMMAND,
-                (_payload, _newEditor) => {
+                () => {
                     $updateToolbar();
                     return false;
                 },
@@ -232,42 +208,6 @@ export default function Toolbar() {
                     applyTextColor(editor, e);
                 }}
             />
-            {process.env.NODE_ENV === "development" ? (
-                <>
-                    <Button
-                        onClick={() => {
-                            editor.update(() => {
-                                console.log(parseFromHTML($generateHtmlFromNodes(editor, null)));
-                            });
-                        }}
-                    >
-                        读取内容
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setStringItems(editor, exampleData);
-                        }}
-                    >
-                        写入内容
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setStringItems(editor, exampleData, true);
-                        }}
-                    >
-                        插入内容
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            editor.update(() => {
-                                console.log(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
-                            });
-                        }}
-                    >
-                        生成 MC 表记
-                    </Button>
-                </>
-            ) : null}
         </div>
     );
 }

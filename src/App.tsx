@@ -35,6 +35,7 @@ export default function App() {
     return (
         <LexicalComposer initialConfig={editorConfig}>
             <div className={"container py-4 max-w-screen-lg"}>
+                <h1 className={"font-bold text-2xl leading-normal mb-4 flex justify-center"}>Minecraft Text Editor</h1>
                 <div className="border rounded-xl p-2 flex flex-col items-stretch gap-2">
                     <Toolbar />
                     <div className="relative">
