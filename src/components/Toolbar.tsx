@@ -44,6 +44,8 @@ export default function Toolbar() {
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
 
+    const [colorValue, setColorValue] = useState("#5555ff");
+
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -204,7 +206,9 @@ export default function Toolbar() {
                 <RemoveFormatting className={"size-4"} />
             </Button>
             <ColorPicker
-                onDone={e => {
+                value={colorValue}
+                onValueChange={e => {
+                    setColorValue(e);
                     applyTextColor(editor, e);
                 }}
             />

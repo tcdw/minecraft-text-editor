@@ -75,30 +75,3 @@
         @apply bg-background text-foreground;
     }
 }
-
-@layer editor {
-    .editor-theme-dark {
-        background-color: #333;
-        color: #fff;
-    }
-
-    .editor-text-bold {
-        font-weight: bold;
-    }
-
-    .editor-text-italic {
-        font-style: italic;
-    }
-
-    .editor-text-strikethrough {
-        text-decoration: line-through;
-    }
-
-    .editor-text-underline {
-        text-decoration: underline;
-    }
-
-    .editor-text-underlineStrikethrough {
-        text-decoration: underline line-through;
-    }
-}

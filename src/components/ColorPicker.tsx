@@ -1,6 +1,5 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { PaintBucket } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import styles from "./ColorPicker.module.scss";
@@ -11,10 +10,11 @@ import { PropsWithChildren, useId, useState } from "react";
 const hexRGBRegex = /^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
 export interface ColorPickerProps {
-    onDone?: (color: string) => void;
+    value: string;
+    onValueChange?: (color: string) => void;
 }
 
-export default function ColorPicker({ onDone, children }: PropsWithChildren<ColorPickerProps>) {
+export default function ColorPicker({ value, onValueChange, children }: PropsWithChildren<ColorPickerProps>) {
     const [currentColorTab, setCurrentColorTab] = useState("builtin");
     const [currentColorCustom, setCurrentColorCustom] = useState("#66ccff");
     const colorInputId = useId();
@@ -24,7 +24,8 @@ export default function ColorPicker({ onDone, children }: PropsWithChildren<Colo
             <PopoverTrigger asChild>
                 {children ?? (
                     <Button variant={"ghost"} size={"icon"} aria-label="Text Color">
-                        <PaintBucket className={"size-4"} />
+                        {/*<PaintBucket className={"size-4"} />*/}
+                        <div className={"rounded-full size-4"} style={{ background: value }} aria-hidden />
                     </Button>
                 )}
             </PopoverTrigger>
@@ -43,7 +44,7 @@ export default function ColorPicker({ onDone, children }: PropsWithChildren<Colo
                                     className={`w-full aspect-square rounded-md ${i === BUILTIN_COLOR.length - 1 ? "border" : ""}`}
                                     style={{ background: e }}
                                     onClick={() => {
-                                        onDone?.(e);
+                                        onValueChange?.(e);
                                     }}
                                 />
                             ))}
@@ -67,10 +68,10 @@ export default function ColorPicker({ onDone, children }: PropsWithChildren<Colo
                                 variant={"outline"}
                                 onClick={() => {
                                     if (currentColorCustom.startsWith("#")) {
-                                        onDone?.(currentColorCustom);
+                                        onValueChange?.(currentColorCustom);
                                         return;
                                     }
-                                    onDone?.("#" + currentColorCustom);
+                                    onValueChange?.("#" + currentColorCustom);
                                 }}
                                 disabled={!hexRGBRegex.test(currentColorCustom)}
                             >
