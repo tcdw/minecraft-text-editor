@@ -11,6 +11,7 @@ import Toolbar from "./components/Toolbar.tsx";
 import { ExtendedTextNode } from "@/lib/extendedTextNode.ts";
 import { TextNode } from "lexical";
 import CodeEditor from "@/components/CodeEditor.tsx";
+import About from "@/components/About.tsx";
 
 function Placeholder() {
     return (
@@ -34,22 +35,50 @@ const editorConfig = {
 export default function App() {
     return (
         <LexicalComposer initialConfig={editorConfig}>
+            {/* Outer Frame */}
             <div className={"container py-4 max-w-screen-lg"}>
-                <h1 className={"font-bold text-2xl leading-normal mb-4 flex justify-center"}>Minecraft Text Editor</h1>
-                <div className="border rounded-xl p-2 flex flex-col items-stretch gap-2">
-                    <Toolbar />
-                    <div className="relative">
-                        <RichTextPlugin
-                            contentEditable={<ContentEditable className="min-h-16 p-3 rounded-md editor-theme-dark" />}
-                            placeholder={<Placeholder />}
-                            ErrorBoundary={LexicalErrorBoundary}
-                        />
-                        <HistoryPlugin />
-                        <AutoFocusPlugin />
-                        <ClearEditorPlugin />
+                {/* Title */}
+                <header className={"contents"}>
+                    <h1 className={"font-bold text-2xl leading-normal mb-4 flex justify-center"}>
+                        A Text Editor for Minecraft
+                    </h1>
+                </header>
+                {/* Editor */}
+                <main className={"contents"}>
+                    <div className="border rounded-xl p-2 flex flex-col items-stretch gap-2">
+                        <Toolbar />
+                        <div className="relative">
+                            <RichTextPlugin
+                                contentEditable={
+                                    <ContentEditable className="min-h-16 p-3 rounded-md editor-theme-dark" />
+                                }
+                                placeholder={<Placeholder />}
+                                ErrorBoundary={LexicalErrorBoundary}
+                            />
+                            <HistoryPlugin />
+                            <AutoFocusPlugin />
+                            <ClearEditorPlugin />
+                        </div>
+                        <CodeEditor />
                     </div>
-                    <CodeEditor />
-                </div>
+                    <div className={"py-6"}>
+                        <About />
+                    </div>
+                </main>
+                <footer className={"text-muted-foreground leading-relaxed text-md border-t mt-4 pt-4"}>
+                    <p className={"text-center"}>
+                        &copy; 2020-2024 tcdw. Released under MIT License.&nbsp;
+                        <a
+                            href={"https://github.com/tcdw/minecraft-text-editor"}
+                            className={"text-foreground underline"}
+                        >
+                            Source
+                        </a>
+                    </p>
+                    <p className={"text-center"}>
+                        Minecraft<sup>®</sup> is a trademark of Microsoft Corporation.
+                    </p>
+                </footer>
             </div>
         </LexicalComposer>
     );

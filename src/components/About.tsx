@@ -1,6 +1,10 @@
 export default function About() {
     return (
-        <div className={"prose"}>
+        <div
+            className={
+                "prose max-w-full prose-img:rounded-lg prose-thead:border-b-2 prose-th:text-base prose-th:leading-8 prose-td:text-base prose-td:leading-8 prose-li:my-0.5"
+            }
+        >
             <h2>关于本工具</h2>
             <p>
                 这是一款用来编辑 Minecraft 文本的所见即所得 (WYSIWYG) 编辑器，使用该工具可以方便的编辑 Minecraft
@@ -18,18 +22,6 @@ export default function About() {
                 <li>向玩家开放彩色文本及样式权限</li>
             </ul>
             <p>如果需使用自定义 RGB 颜色，服务端的 Minecraft 版本应 ≥1.16，EssentialsX 版本应 ≥2.18.0。</p>
-            <hr />
-            <p>
-                {"本工具目前由 "}
-                <a href="https://www.tcdw.net" target="_blank" rel="noreferrer">
-                    tcdw
-                </a>
-                {" 维护，源代码可以在 "}
-                <a href="https://github.com/tcdw/minecraft-text-editor" target="_blank" rel="noreferrer">
-                    这里
-                </a>
-                {" 见到。"}
-            </p>
         </div>
     );
 }
