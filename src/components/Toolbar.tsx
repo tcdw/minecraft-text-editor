@@ -22,6 +22,17 @@ import { Bold, Italic, Redo, RemoveFormatting, Strikethrough, Underline, Undo } 
 import ColorPicker from "@/components/ColorPicker.tsx";
 import { $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
 import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import useSettingsStore from "@/store/settings.ts";
+import { EDITOR_COLOR } from "@/constants/colors.ts";
 
 const LowPriority = 1;
 
@@ -45,6 +56,10 @@ export default function Toolbar() {
     const [isStrikethrough, setIsStrikethrough] = useState(false);
 
     const [colorValue, setColorValue] = useState("#5555ff");
+    const { editorTheme, setEditorTheme } = useSettingsStore(state => ({
+        editorTheme: state.editorTheme,
+        setEditorTheme: state.setEditorTheme,
+    }));
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -132,86 +147,114 @@ export default function Toolbar() {
     }, [editor, $updateToolbar]);
 
     return (
-        <div className="flex gap-1" ref={toolbarRef}>
-            <Button
-                variant={"ghost"}
-                size={"icon"}
-                disabled={!canUndo}
-                onClick={() => {
-                    editor.dispatchCommand(UNDO_COMMAND, undefined);
-                }}
-                aria-label="Undo"
-            >
-                <Undo className={"size-4"} />
-            </Button>
-            <Button
-                variant={"ghost"}
-                size={"icon"}
-                disabled={!canRedo}
-                onClick={() => {
-                    editor.dispatchCommand(REDO_COMMAND, undefined);
-                }}
-                aria-label="Redo"
-            >
-                <Redo className={"size-4"} />
-            </Button>
-            <Toggle
-                pressed={isBold}
-                onPressedChange={setIsBold}
-                onClick={() => {
-                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
-                }}
-                aria-label="Format Bold"
-            >
-                <Bold className={"size-4"} />
-            </Toggle>
-            <Toggle
-                pressed={isItalic}
-                onPressedChange={setIsItalic}
-                onClick={() => {
-                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
-                }}
-                aria-label="Format Italics"
-            >
-                <Italic className={"size-4"} />
-            </Toggle>
-            <Toggle
-                pressed={isUnderline}
-                onPressedChange={setIsUnderline}
-                onClick={() => {
-                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
-                }}
-                aria-label="Format Underline"
-            >
-                <Underline className={"size-4"} />
-            </Toggle>
-            <Toggle
-                pressed={isStrikethrough}
-                onPressedChange={setIsStrikethrough}
-                onClick={() => {
-                    editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
-                }}
-                aria-label="Format Strikethrough"
-            >
-                <Strikethrough className={"size-4"} />
-            </Toggle>
-            <Button
-                variant={"ghost"}
-                size={"icon"}
-                onClick={() => {
-                    clearFormatting();
-                }}
-                aria-label="Clear Styling"
-            >
-                <RemoveFormatting className={"size-4"} />
-            </Button>
-            <ColorPicker
-                value={colorValue}
-                onValueChange={e => {
-                    setColorValue(e);
-                    applyTextColor(editor, e);
-                }}
-            />
+        <div className="flex" ref={toolbarRef}>
+            <div className={"flex-auto flex gap-1"}>
+                <Button
+                    variant={"ghost"}
+                    size={"icon"}
+                    disabled={!canUndo}
+                    onClick={() => {
+                        editor.dispatchCommand(UNDO_COMMAND, undefined);
+                    }}
+                    aria-label="Undo"
+                >
+                    <Undo className={"size-4"} />
+                </Button>
+                <Button
+                    variant={"ghost"}
+                    size={"icon"}
+                    disabled={!canRedo}
+                    onClick={() => {
+                        editor.dispatchCommand(REDO_COMMAND, undefined);
+                    }}
+                    aria-label="Redo"
+                >
+                    <Redo className={"size-4"} />
+                </Button>
+                <Toggle
+                    pressed={isBold}
+                    onPressedChange={setIsBold}
+                    onClick={() => {
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
+                    }}
+                    aria-label="Format Bold"
+                >
+                    <Bold className={"size-4"} />
+                </Toggle>
+                <Toggle
+                    pressed={isItalic}
+                    onPressedChange={setIsItalic}
+                    onClick={() => {
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
+                    }}
+                    aria-label="Format Italics"
+                >
+                    <Italic className={"size-4"} />
+                </Toggle>
+                <Toggle
+                    pressed={isUnderline}
+                    onPressedChange={setIsUnderline}
+                    onClick={() => {
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
+                    }}
+                    aria-label="Format Underline"
+                >
+                    <Underline className={"size-4"} />
+                </Toggle>
+                <Toggle
+                    pressed={isStrikethrough}
+                    onPressedChange={setIsStrikethrough}
+                    onClick={() => {
+                        editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
+                    }}
+                    aria-label="Format Strikethrough"
+                >
+                    <Strikethrough className={"size-4"} />
+                </Toggle>
+                <Button
+                    variant={"ghost"}
+                    size={"icon"}
+                    onClick={() => {
+                        clearFormatting();
+                    }}
+                    aria-label="Clear Styling"
+                >
+                    <RemoveFormatting className={"size-4"} />
+                </Button>
+                <ColorPicker
+                    value={colorValue}
+                    onValueChange={e => {
+                        setColorValue(e);
+                        applyTextColor(editor, e);
+                    }}
+                />
+            </div>
+            <Select value={editorTheme} onValueChange={setEditorTheme}>
+                <SelectTrigger className="w-[180px] flex-none">
+                    <SelectValue placeholder="Select a fruit" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        {EDITOR_COLOR.map(e => {
+                            if (e.isLabelOnly) {
+                                return <SelectLabel key={e.value}>{e.label}</SelectLabel>;
+                            }
+                            return (
+                                <SelectItem value={e.value} key={e.value}>
+                                    <div className={"flex items-center gap-3"}>
+                                        <span
+                                            className={`size-4 rounded-full ${e.background === "#ffffff" ? "border border-muted-foreground" : ""}`}
+                                            style={{ background: e.background }}
+                                            aria-hidden={true}
+                                        />
+                                        <span>{e.label}</span>
+                                    </div>
+                                </SelectItem>
+                            );
+                        })}
+                    </SelectGroup>
+                </SelectContent>
+            </Select>
         </div>
     );
 }

@@ -12,14 +12,8 @@ import { ExtendedTextNode } from "@/lib/extendedTextNode.ts";
 import { TextNode } from "lexical";
 import CodeEditor from "@/components/CodeEditor.tsx";
 import About from "@/components/About.tsx";
-
-function Placeholder() {
-    return (
-        <div className="p-3 absolute top-0 left-0 text-neutral-500 pointer-events-none" aria-hidden={true}>
-            在这里输入你的内容……
-        </div>
-    );
-}
+import useSettingsStore from "@/store/settings.ts";
+import { EDITOR_COLOR } from "@/constants/colors.ts";
 
 const editorConfig = {
     namespace: "React.js Demo",
@@ -33,6 +27,12 @@ const editorConfig = {
 };
 
 export default function App() {
+    const { editorTheme } = useSettingsStore(state => ({
+        editorTheme: state.editorTheme,
+    }));
+
+    const actualTheme = EDITOR_COLOR.find(e => e.value === editorTheme) || EDITOR_COLOR[0];
+
     return (
         <LexicalComposer initialConfig={editorConfig}>
             {/* Outer Frame */}
@@ -50,9 +50,25 @@ export default function App() {
                         <div className="relative">
                             <RichTextPlugin
                                 contentEditable={
-                                    <ContentEditable className="min-h-16 p-3 rounded-md editor-theme-dark" />
+                                    <ContentEditable
+                                        className="min-h-16 p-3 rounded-md"
+                                        style={{
+                                            background: actualTheme.background,
+                                            color: actualTheme.foreground,
+                                        }}
+                                    />
                                 }
-                                placeholder={<Placeholder />}
+                                placeholder={
+                                    <div
+                                        className="p-3 absolute top-0 left-0 opacity-50 pointer-events-none"
+                                        style={{
+                                            color: actualTheme.foreground,
+                                        }}
+                                        aria-hidden={true}
+                                    >
+                                        在这里输入你的内容……
+                                    </div>
+                                }
                                 ErrorBoundary={LexicalErrorBoundary}
                             />
                             <HistoryPlugin />
