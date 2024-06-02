@@ -81,7 +81,7 @@ export default function App() {
                         <About />
                     </div>
                 </main>
-                <footer className={"text-muted-foreground leading-relaxed text-md border-t mt-4 pt-4"}>
+                <footer className={"text-muted-foreground leading-relaxed text-sm border-t mt-4 pt-4"}>
                     <p className={"text-center"}>
                         &copy; 2020-2024 tcdw. Released under MIT License.&nbsp;
                         <a
