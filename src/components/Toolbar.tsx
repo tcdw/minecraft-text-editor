@@ -18,7 +18,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { $patchStyleText } from "@lexical/selection";
 import { Button } from "@/components/ui/button.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
-import { Bold, Italic, Redo, RemoveFormatting, Strikethrough, Underline, Undo } from "lucide-react";
+import { Bold, Italic, Rainbow, Redo, RemoveFormatting, Strikethrough, Underline, Undo } from "lucide-react";
 import ColorPicker from "@/components/ColorPicker.tsx";
 import { $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
 import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
+import RainbowTextCreator from "@/components/RainbowTextCreator.tsx";
 
 const LowPriority = 1;
 
@@ -228,6 +229,7 @@ export default function Toolbar() {
                         applyTextColor(editor, e);
                     }}
                 />
+                <RainbowTextCreator />
             </div>
             <Select value={editorTheme} onValueChange={setEditorTheme}>
                 <SelectTrigger className="w-[180px] flex-none">
