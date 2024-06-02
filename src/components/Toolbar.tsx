@@ -156,7 +156,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(UNDO_COMMAND, undefined);
                     }}
-                    aria-label="Undo"
+                    aria-label="撤销"
                 >
                     <Undo className={"size-4"} />
                 </Button>
@@ -167,7 +167,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(REDO_COMMAND, undefined);
                     }}
-                    aria-label="Redo"
+                    aria-label="重做"
                 >
                     <Redo className={"size-4"} />
                 </Button>
@@ -177,7 +177,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
                     }}
-                    aria-label="Format Bold"
+                    aria-label="设置加粗"
                 >
                     <Bold className={"size-4"} />
                 </Toggle>
@@ -187,7 +187,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
                     }}
-                    aria-label="Format Italics"
+                    aria-label="设置斜体"
                 >
                     <Italic className={"size-4"} />
                 </Toggle>
@@ -197,7 +197,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
                     }}
-                    aria-label="Format Underline"
+                    aria-label="设置下划线"
                 >
                     <Underline className={"size-4"} />
                 </Toggle>
@@ -207,7 +207,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
                     }}
-                    aria-label="Format Strikethrough"
+                    aria-label="设置删除线"
                 >
                     <Strikethrough className={"size-4"} />
                 </Toggle>
@@ -217,7 +217,7 @@ export default function Toolbar() {
                     onClick={() => {
                         clearFormatting();
                     }}
-                    aria-label="Clear Styling"
+                    aria-label="清除样式"
                 >
                     <RemoveFormatting className={"size-4"} />
                 </Button>
@@ -231,7 +231,7 @@ export default function Toolbar() {
             </div>
             <Select value={editorTheme} onValueChange={setEditorTheme}>
                 <SelectTrigger className="w-[180px] flex-none">
-                    <SelectValue placeholder="Select a fruit" />
+                    <SelectValue placeholder="选择编辑器样式……" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
