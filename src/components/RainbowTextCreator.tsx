@@ -8,16 +8,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Rainbow } from "lucide-react";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+import { ChevronDown, Rainbow } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input.tsx";
 
 const FormSchema = z.object({
     bio: z
@@ -53,13 +53,13 @@ export default function RainbowTextCreator() {
                     <Rainbow className={"size-4"} />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[768px]">
                 <DialogHeader>
                     <DialogTitle>插入渐变文本</DialogTitle>
                     <DialogDescription>创建漂亮的渐变文本，并插入到编辑器中。</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
                             name="bio"
@@ -67,20 +67,21 @@ export default function RainbowTextCreator() {
                                 <FormItem>
                                     <FormLabel>文本内容</FormLabel>
                                     <FormControl>
-                                        <Textarea
+                                        <Input
                                             placeholder="Tell us a little bit about yourself"
                                             className="resize-none"
                                             {...field}
                                         />
                                     </FormControl>
-                                    <FormDescription>
-                                        You can <span>@mention</span> other users and organizations.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <DialogFooter className={"mt-4"}>
+                        <Button variant={"outline"}>
+                            Color
+                            <ChevronDown className={"size-4 ms-2"} />
+                        </Button>
+                        <DialogFooter className={"mt-6"}>
                             <Button type="submit">Save changes</Button>
                         </DialogFooter>
                     </form>
