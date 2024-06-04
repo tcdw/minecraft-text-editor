@@ -103,7 +103,17 @@ export default function RainbowTextCreator() {
                                 <FormItem>
                                     <FormLabel>渐变色</FormLabel>
                                     <FormControl>
-                                        <RainbowColorEditor value={field.value} onChange={field.onChange} />
+                                        <RainbowColorEditor
+                                            value={field.value}
+                                            onChange={e => {
+                                                const table = createGradientColor({
+                                                    colors: e,
+                                                    text: form.getValues("text"),
+                                                });
+                                                setPreview(measuredStringColorToHTML(table));
+                                                field.onChange(e);
+                                            }}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -112,7 +122,7 @@ export default function RainbowTextCreator() {
                         <div className="space-y-2">
                             <div
                                 id={`${id}_preview`}
-                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                className="inline-block text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                                 效果预览
                             </div>

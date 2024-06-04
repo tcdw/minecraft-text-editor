@@ -24,14 +24,26 @@ export default function ColorPicker({
     const [currentColorTab, setCurrentColorTab] = useState("builtin");
     const [currentColorCustom, setCurrentColorCustom] = useState("#66ccff");
     const colorInputId = useId();
+    const [open, setOpen] = useState(false);
 
     // Sync editor color value after parent value changes
     useEffect(() => {
+        let canceled = false;
         setCurrentColorCustom(value);
+        setOpen(false);
+        setTimeout(() => {
+            if (canceled) {
+                return;
+            }
+            setCurrentColorTab("builtin");
+        }, 200);
+        return () => {
+            canceled = true;
+        };
     }, [value]);
 
     return (
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 {children ?? (
                     <Button variant={"ghost"} size={"icon"} aria-label="Text Color">

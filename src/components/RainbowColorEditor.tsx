@@ -35,7 +35,12 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
                     value={e}
                     onValueChange={color => handleChange(i, color)}
                     extraAction={
-                        <Button variant={"destructive"} className={"w-full"} onClick={() => handleDelete(i)}>
+                        <Button
+                            variant={"destructive"}
+                            className={"w-full"}
+                            onClick={() => handleDelete(i)}
+                            disabled={value.length <= 2}
+                        >
                             <Trash2 className={"size-4 me-2"} />
                             删除
                         </Button>
