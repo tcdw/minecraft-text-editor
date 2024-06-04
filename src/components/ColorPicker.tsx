@@ -5,19 +5,30 @@ import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import styles from "./ColorPicker.module.scss";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "@/components/ui/input.tsx";
-import { PropsWithChildren, useId, useState } from "react";
+import { PropsWithChildren, ReactNode, useEffect, useId, useState } from "react";
 
 const hexRGBRegex = /^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
 export interface ColorPickerProps {
     value: string;
     onValueChange?: (color: string) => void;
+    extraAction?: ReactNode;
 }
 
-export default function ColorPicker({ value, onValueChange, children }: PropsWithChildren<ColorPickerProps>) {
+export default function ColorPicker({
+    value,
+    onValueChange,
+    children,
+    extraAction,
+}: PropsWithChildren<ColorPickerProps>) {
     const [currentColorTab, setCurrentColorTab] = useState("builtin");
     const [currentColorCustom, setCurrentColorCustom] = useState("#66ccff");
     const colorInputId = useId();
+
+    // Sync editor color value after parent value changes
+    useEffect(() => {
+        setCurrentColorCustom(value);
+    }, [value]);
 
     return (
         <Popover>
@@ -80,6 +91,7 @@ export default function ColorPicker({ value, onValueChange, children }: PropsWit
                         </div>
                     </TabsContent>
                 </Tabs>
+                {extraAction && <div className={"mt-3"}>{extraAction}</div>}
             </PopoverContent>
         </Popover>
     );

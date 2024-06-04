@@ -79,5 +79,5 @@ export function createGradientColor({ colors, text }: CreateGradientColorParams)
 }
 
 export function measuredStringColorToHTML(from: MeasuredStringColor[]) {
-    return from.map(e => `<span style="color: ${e.color}">${escapeHTML(e.char)}</span>`).toString();
+    return from.map(e => `<span style="color: ${e.color}">${escapeHTML(e.char)}</span>`).join("");
 }

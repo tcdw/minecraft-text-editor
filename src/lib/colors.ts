@@ -48,3 +48,11 @@ export function assembleRGBA(color: Array<string | number>) {
 export function assembleRGB(color: Array<string | number>) {
     return `rgb(${color.slice(0, 3).join(", ")})`;
 }
+
+export function randomHexColor() {
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+        color += "0123456789abcdef"[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
