@@ -8,7 +8,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import usePresetActionsStore from "@/store/presetActions.ts";
+import usePresetActionsStore from "@/store/rainbowActions.ts";
 import { useShallow } from "zustand/react/shallow";
 import usePresetsStore from "@/store/presets.ts";
 import { Check, PenLine, Trash2 } from "lucide-react";

@@ -26,7 +26,7 @@ import RainbowNameDialog from "@/components/RainbowNameDialog.tsx";
 import usePresetsStore from "@/store/presets.ts";
 import { v4 } from "uuid";
 import { useShallow } from "zustand/react/shallow";
-import usePresetActionsStore from "@/store/presetActions.ts";
+import useRainbowActionsStore from "@/store/rainbowActions.ts";
 
 const FormSchema = z.object({
     text: z.string(),
@@ -35,7 +35,12 @@ const FormSchema = z.object({
     }),
 });
 
-export default function RainbowTextCreatorDialog() {
+export interface RainbowTextCreatorDialogProps {
+    onInsert: (content: string) => void;
+}
+
+export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreatorDialogProps) {
+    const [open, setOpen] = useState(false);
     const id = useId();
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -48,7 +53,7 @@ export default function RainbowTextCreatorDialog() {
     // rainbow preset
     const [namingOpen, setNamingOpen] = useState(false);
     const { addPreset } = usePresetsStore(useShallow(state => ({ addPreset: state.addPreset })));
-    const { setPresetDialogOpen, presetDemand, setPresetDemand } = usePresetActionsStore(
+    const { setPresetDialogOpen, presetDemand, setPresetDemand } = useRainbowActionsStore(
         useShallow(state => ({
             setPresetDialogOpen: state.setPresetDialogOpen,
             presetDemand: state.presetDemand,
@@ -77,15 +82,9 @@ export default function RainbowTextCreatorDialog() {
     // preview field
     const [preview, setPreview] = useState("");
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        });
+    function onSubmit() {
+        onInsert(preview);
+        setOpen(false);
     }
 
     function handlePresetSubmit(name: string) {
@@ -183,7 +182,7 @@ export default function RainbowTextCreatorDialog() {
 
     return (
         <>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant={"ghost"} size={"icon"} aria-label="插入渐变文本">
                         <Rainbow className={"size-4"} />
@@ -198,7 +197,7 @@ export default function RainbowTextCreatorDialog() {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             {formFields}
                             <DialogFooter className={"mt-6"}>
-                                <Button type="submit">Save changes</Button>
+                                <Button type="submit">插入文本</Button>
                             </DialogFooter>
                         </form>
                     </Form>

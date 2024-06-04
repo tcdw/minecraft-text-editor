@@ -1,20 +1,20 @@
 import { create } from "zustand";
 
-export interface PresetActionsProps {
+export interface RainbowActionsProps {
     presetDemand: string[] | null;
     presetDialogOpen: boolean;
 }
 
-export interface PresetActionsMethods {
+export interface RainbowActionsMethods {
     setPresetDemand: (presetDemand: string[] | null) => void;
     setPresetDialogOpen: (presetDialogOpen: boolean) => void;
 }
 
-const usePresetActionsStore = create<PresetActionsProps & PresetActionsMethods>()(setState => ({
+const useRainbowActionsStore = create<RainbowActionsProps & RainbowActionsMethods>()(setState => ({
     presetDemand: null,
     setPresetDemand: presetDemand => setState({ presetDemand }),
     presetDialogOpen: false,
     setPresetDialogOpen: presetDialogOpen => setState({ presetDialogOpen }),
 }));
 
-export default usePresetActionsStore;
+export default useRainbowActionsStore;
