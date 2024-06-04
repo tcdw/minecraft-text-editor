@@ -24,12 +24,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { toast } from "@/components/ui/use-toast.ts";
 
 export default function RainbowPresetsDialog() {
-    const { setPresetDialogOpen, presetDialogOpen } = usePresetActionsStore(
+    const { setPresetDialogOpen, presetDialogOpen, setPresetDemand } = usePresetActionsStore(
         useShallow(state => ({
             setPresetDialogOpen: state.setPresetDialogOpen,
             presetDialogOpen: state.presetDialogOpen,
+            setPresetDemand: state.setPresetDemand,
         })),
     );
     const { presets, editPreset, deletePreset } = usePresetsStore(
@@ -114,7 +116,19 @@ export default function RainbowPresetsDialog() {
                                             >
                                                 <Trash2 className={"size-4"} />
                                             </Button>
-                                            <Button variant={"ghost"} size={"icon"} aria-label={"使用"}>
+                                            <Button
+                                                variant={"ghost"}
+                                                size={"icon"}
+                                                aria-label={"使用"}
+                                                onClick={() => {
+                                                    setPresetDemand(e.colors);
+                                                    setPresetDialogOpen(false);
+                                                    toast({
+                                                        title: "预设应用成功",
+                                                        description: e.name,
+                                                    });
+                                                }}
+                                            >
                                                 <Check className={"size-4"} />
                                             </Button>
                                         </TableCell>

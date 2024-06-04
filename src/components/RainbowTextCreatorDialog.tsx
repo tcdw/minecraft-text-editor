@@ -17,7 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input.tsx";
 import RainbowColorEditor from "@/components/RainbowColorEditor.tsx";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
 import { randomHexColor } from "@/lib/colors.ts";
@@ -48,9 +48,25 @@ export default function RainbowTextCreatorDialog() {
     // rainbow preset
     const [namingOpen, setNamingOpen] = useState(false);
     const { addPreset } = usePresetsStore(useShallow(state => ({ addPreset: state.addPreset })));
-    const { setPresetDialogOpen } = usePresetActionsStore(
-        useShallow(state => ({ setPresetDialogOpen: state.setPresetDialogOpen })),
+    const { setPresetDialogOpen, presetDemand, setPresetDemand } = usePresetActionsStore(
+        useShallow(state => ({
+            setPresetDialogOpen: state.setPresetDialogOpen,
+            presetDemand: state.presetDemand,
+            setPresetDemand: state.setPresetDemand,
+        })),
     );
+    useEffect(() => {
+        if (!presetDemand) {
+            return;
+        }
+        form.setValue("colors", presetDemand);
+        setPresetDemand(null);
+        const table = createGradientColor({
+            colors: form.getValues("colors"),
+            text: form.getValues("text"),
+        });
+        setPreview(measuredStringColorToHTML(table));
+    }, [presetDemand, setPresetDemand, form]);
 
     // editor theme
     const { editorTheme } = useSettingsStore(state => ({
