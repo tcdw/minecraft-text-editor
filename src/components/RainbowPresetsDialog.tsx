@@ -124,7 +124,9 @@ export default function RainbowPresetsDialog() {
                         </Table>
                     </div>
                     <DialogFooter>
-                        <Button variant={"outline"}>取消</Button>
+                        <Button variant={"outline"} onClick={() => setPresetDialogOpen(false)}>
+                            取消
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
