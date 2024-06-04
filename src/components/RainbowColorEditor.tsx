@@ -40,6 +40,7 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
                             className={"w-full"}
                             onClick={() => handleDelete(i)}
                             disabled={value.length <= 2}
+                            type={"button"}
                         >
                             <Trash2 className={"size-4 me-2"} />
                             删除

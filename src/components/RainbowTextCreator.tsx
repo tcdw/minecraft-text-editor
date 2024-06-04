@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Rainbow } from "lucide-react";
+import { FileCog, Rainbow, Save } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,6 +22,11 @@ import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
 import { randomHexColor } from "@/lib/colors.ts";
 import { createGradientColor, measuredStringColorToHTML } from "@/lib/string.ts";
+import RainbowNameDialog from "@/components/RainbowNameDialog.tsx";
+import usePresetsStore from "@/store/presets.ts";
+import { v4 } from "uuid";
+import { useShallow } from "zustand/react/shallow";
+import usePresetActionsStore from "@/store/presetActions.ts";
 
 const FormSchema = z.object({
     text: z.string(),
@@ -40,11 +45,20 @@ export default function RainbowTextCreator() {
         },
     });
 
+    // rainbow preset
+    const [namingOpen, setNamingOpen] = useState(false);
+    const { addPreset } = usePresetsStore(useShallow(state => ({ addPreset: state.addPreset })));
+    const { setPresetDialogOpen } = usePresetActionsStore(
+        useShallow(state => ({ setPresetDialogOpen: state.setPresetDialogOpen })),
+    );
+
+    // editor theme
     const { editorTheme } = useSettingsStore(state => ({
         editorTheme: state.editorTheme,
     }));
     const actualTheme = EDITOR_COLOR.find(e => e.value === editorTheme) || EDITOR_COLOR[0];
 
+    // preview field
     const [preview, setPreview] = useState("");
 
     function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -58,90 +72,129 @@ export default function RainbowTextCreator() {
         });
     }
 
-    return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant={"ghost"} size={"icon"} aria-label="插入渐变文本">
-                    <Rainbow className={"size-4"} />
-                </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[768px]">
-                <DialogHeader>
-                    <DialogTitle>插入渐变文本</DialogTitle>
-                    <DialogDescription>创建漂亮的渐变文本，并插入到编辑器中。</DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
-                            control={form.control}
-                            name="text"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>文本内容</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder=""
-                                            {...field}
-                                            onChange={e => {
-                                                const table = createGradientColor({
-                                                    colors: form.getValues("colors"),
-                                                    text: e.currentTarget.value,
-                                                });
-                                                setPreview(measuredStringColorToHTML(table));
-                                                field.onChange(e);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="colors"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>渐变色</FormLabel>
-                                    <FormControl>
-                                        <RainbowColorEditor
-                                            value={field.value}
-                                            onChange={e => {
-                                                const table = createGradientColor({
-                                                    colors: e,
-                                                    text: form.getValues("text"),
-                                                });
-                                                setPreview(measuredStringColorToHTML(table));
-                                                field.onChange(e);
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <div className="space-y-2">
-                            <div
-                                id={`${id}_preview`}
-                                className="inline-block text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                                效果预览
-                            </div>
-                            <div
-                                aria-describedby={`${id}_preview`}
-                                className="p-3 rounded-md"
-                                style={{
-                                    background: actualTheme.background,
-                                    color: actualTheme.foreground,
+    function handlePresetSubmit(name: string) {
+        addPreset({ id: v4(), name, colors: form.getValues("colors") });
+        toast({
+            title: "预设保存成功",
+            description: `新的预设：${name}`,
+        });
+    }
+
+    const formFields = (
+        <>
+            <FormField
+                control={form.control}
+                name="text"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>文本内容</FormLabel>
+                        <FormControl>
+                            <Input
+                                placeholder=""
+                                {...field}
+                                onChange={e => {
+                                    const table = createGradientColor({
+                                        colors: form.getValues("colors"),
+                                        text: e.currentTarget.value,
+                                    });
+                                    setPreview(measuredStringColorToHTML(table));
+                                    field.onChange(e);
                                 }}
-                                dangerouslySetInnerHTML={{ __html: preview }}
                             />
-                        </div>
-                        <DialogFooter className={"mt-6"}>
-                            <Button type="submit">Save changes</Button>
-                        </DialogFooter>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="colors"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>渐变色</FormLabel>
+                        <FormControl>
+                            <div>
+                                <RainbowColorEditor
+                                    value={field.value}
+                                    onChange={e => {
+                                        const table = createGradientColor({
+                                            colors: e,
+                                            text: form.getValues("text"),
+                                        });
+                                        setPreview(measuredStringColorToHTML(table));
+                                        field.onChange(e);
+                                    }}
+                                />
+                                <div className={"pt-2 flex items-center gap-2"}>
+                                    <Button variant={"outline"} type={"button"} onClick={() => setNamingOpen(true)}>
+                                        <Save className={"size-4 me-2"} />
+                                        保存当前预设
+                                    </Button>
+                                    <Button
+                                        variant={"outline"}
+                                        type={"button"}
+                                        onClick={() => setPresetDialogOpen(true)}
+                                    >
+                                        <FileCog className={"size-4 me-2"} />
+                                        预设管理
+                                    </Button>
+                                </div>
+                            </div>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <div className="space-y-2">
+                <div
+                    id={`${id}_preview`}
+                    className="inline-block text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                    效果预览
+                </div>
+                <div
+                    aria-describedby={`${id}_preview`}
+                    className="p-3 rounded-md min-h-12"
+                    style={{
+                        background: actualTheme.background,
+                        color: actualTheme.foreground,
+                    }}
+                    dangerouslySetInnerHTML={{ __html: preview }}
+                />
+            </div>
+        </>
+    );
+
+    return (
+        <>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant={"ghost"} size={"icon"} aria-label="插入渐变文本">
+                        <Rainbow className={"size-4"} />
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[768px]">
+                    <DialogHeader>
+                        <DialogTitle>插入渐变文本</DialogTitle>
+                        <DialogDescription>创建漂亮的渐变文本，并插入到编辑器中。</DialogDescription>
+                    </DialogHeader>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {formFields}
+                            <DialogFooter className={"mt-6"}>
+                                <Button type="submit">Save changes</Button>
+                            </DialogFooter>
+                        </form>
+                    </Form>
+                </DialogContent>
+            </Dialog>
+            <RainbowNameDialog
+                open={namingOpen}
+                onOpenChange={setNamingOpen}
+                onSubmit={handlePresetSubmit}
+                title={"创建渐变预设"}
+                description={"请输入新创建渐变预设的名称："}
+            />
+        </>
     );
 }

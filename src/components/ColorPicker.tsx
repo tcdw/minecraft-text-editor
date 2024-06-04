@@ -88,7 +88,6 @@ export default function ColorPicker({
                             <Button
                                 className={"flex-none"}
                                 type={"button"}
-                                variant={"outline"}
                                 onClick={() => {
                                     if (currentColorCustom.startsWith("#")) {
                                         onValueChange?.(currentColorCustom);

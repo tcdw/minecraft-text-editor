@@ -14,6 +14,7 @@ import CodeEditor from "@/components/CodeEditor.tsx";
 import About from "@/components/About.tsx";
 import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
+import RainbowPresetsDialog from "@/components/RainbowPresetsDialog.tsx";
 
 const editorConfig = {
     namespace: "React.js Demo",
@@ -96,6 +97,9 @@ export default function App() {
                     </p>
                 </footer>
             </div>
+
+            {/* Managed with zustand */}
+            <RainbowPresetsDialog />
         </LexicalComposer>
     );
 }
