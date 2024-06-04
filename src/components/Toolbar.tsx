@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
-import RainbowTextCreator from "@/components/RainbowTextCreator.tsx";
+import RainbowTextCreatorDialog from "@/components/RainbowTextCreatorDialog.tsx";
 
 const LowPriority = 1;
 
@@ -229,7 +229,7 @@ export default function Toolbar() {
                         applyTextColor(editor, e);
                     }}
                 />
-                <RainbowTextCreator />
+                <RainbowTextCreatorDialog />
             </div>
             <Select value={editorTheme} onValueChange={setEditorTheme}>
                 <SelectTrigger className="w-[180px] flex-none">

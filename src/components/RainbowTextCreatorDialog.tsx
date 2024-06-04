@@ -35,7 +35,7 @@ const FormSchema = z.object({
     }),
 });
 
-export default function RainbowTextCreator() {
+export default function RainbowTextCreatorDialog() {
     const id = useId();
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),

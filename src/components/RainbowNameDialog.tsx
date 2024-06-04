@@ -8,7 +8,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ReactNode, useId } from "react";
+import { ReactNode, useEffect, useId, useState } from "react";
 
 export interface RainbowNameDialogProps {
     open: boolean;
@@ -16,6 +16,7 @@ export interface RainbowNameDialogProps {
     onSubmit: (name: string) => void;
     title: ReactNode;
     description: ReactNode;
+    initialName?: string;
 }
 
 export default function RainbowNameDialog({
@@ -24,17 +25,23 @@ export default function RainbowNameDialog({
     onSubmit,
     title,
     description,
+    initialName = "未命名预设",
 }: RainbowNameDialogProps) {
     const id = useId();
+    const [name, setName] = useState("未命名预设");
+
+    useEffect(() => {
+        if (open) {
+            setName(initialName);
+        }
+    }, [open, initialName]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[512px]">
                 <form
                     onSubmit={e => {
-                        const el = document.getElementById(id) as HTMLInputElement;
-                        onSubmit(el.value);
-                        el.value = "";
+                        onSubmit(name);
                         onOpenChange(false);
                         e.preventDefault();
                     }}
@@ -47,7 +54,7 @@ export default function RainbowNameDialog({
                         <label className={"sr-only"} htmlFor={id}>
                             预设名称
                         </label>
-                        <Input id={id} defaultValue="未命名预设" />
+                        <Input id={id} value={name} onChange={e => setName(e.currentTarget.value)} />
                     </div>
                     <DialogFooter>
                         <Button type="submit">保存</Button>

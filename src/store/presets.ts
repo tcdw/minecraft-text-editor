@@ -14,6 +14,8 @@ export interface PresetsProps {
 export interface PresetsMethods {
     setPresets: (presets: Preset[]) => void;
     addPreset: (preset: Preset) => void;
+    editPreset: (index: number, preset: Preset) => void;
+    deletePreset: (index: number) => void;
 }
 
 const usePresetsStore = create<PresetsProps & PresetsMethods>()(
@@ -24,6 +26,16 @@ const usePresetsStore = create<PresetsProps & PresetsMethods>()(
             addPreset: preset => {
                 const presets = getState().presets.concat();
                 presets.push(preset);
+                setState({ presets });
+            },
+            editPreset: (index, preset) => {
+                const presets = getState().presets.concat();
+                presets[index] = preset;
+                setState({ presets });
+            },
+            deletePreset: index => {
+                const presets = getState().presets.concat();
+                presets.splice(index, 1);
                 setState({ presets });
             },
         }),
