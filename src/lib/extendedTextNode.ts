@@ -80,7 +80,7 @@ function patchStyleConversion(
             return originalOutput;
         }
 
-        const backgroundColor = node.style.backgroundColor;
+        // const backgroundColor = node.style.backgroundColor;
         const color = node.style.color;
         const fontFamily = node.style.fontFamily;
         const fontWeight = node.style.fontWeight;
@@ -94,7 +94,7 @@ function patchStyleConversion(
                 const result = originalForChild(lexicalNode, parent);
                 if ($isTextNode(result)) {
                     const style = [
-                        backgroundColor ? `background-color: ${backgroundColor}` : null,
+                        // backgroundColor ? `background-color: ${backgroundColor}` : null,
                         color ? `color: ${color}` : null,
                         fontFamily ? `font-family: ${fontFamily}` : null,
                         fontWeight ? `font-weight: ${fontWeight}` : null,
