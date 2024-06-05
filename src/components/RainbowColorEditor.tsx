@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button.tsx";
-import { ChevronDown, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, Plus, StepBack, Trash2 } from "lucide-react";
 import ColorPicker from "@/components/ColorPicker.tsx";
 import { randomHexColor } from "@/lib/colors.ts";
 
@@ -24,6 +24,12 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
     function handleDelete(index: number) {
         const newValue = value.concat();
         newValue.splice(index, 1);
+        onChange(newValue);
+    }
+
+    function handleReverse() {
+        const newValue = value.concat();
+        newValue.reverse();
         onChange(newValue);
     }
 
@@ -53,7 +59,16 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
                     </Button>
                 </ColorPicker>
             ))}
-            <Button type={"button"} variant={"outline"} size={"icon"} onClick={handleAdd}>
+            <Button type={"button"} variant={"outline"} size={"icon"} onClick={handleReverse} aria-label={"倒置渐变"}>
+                <StepBack className={"size-4"} />
+            </Button>
+            <Button
+                type={"button"}
+                variant={"outline"}
+                size={"icon"}
+                onClick={handleAdd}
+                aria-label={"添加新的颜色到渐变"}
+            >
                 <Plus className={"size-4"} />
             </Button>
         </div>
