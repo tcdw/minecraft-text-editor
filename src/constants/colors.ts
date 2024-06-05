@@ -1,3 +1,5 @@
+import { Preset } from "@/store/presets.ts";
+
 export const BUILTIN_COLOR: ReadonlyArray<string> = [
     "#000000",
     "#0000aa",
@@ -41,4 +43,12 @@ export const EDITOR_COLOR: ReadonlyArray<EditorColor> = [
     { background: "#6e292c", foreground: "#000000", label: "红树木", value: "wood-9" },
     { background: "#d69297", foreground: "#000000", label: "樱花木", value: "wood-10" },
     { background: "#c6af4c", foreground: "#000000", label: "竹", value: "wood-11" },
+];
+
+export const BUILTIN_PRESETS: ReadonlyArray<Preset> = [
+    {
+        id: "1",
+        name: "彩虹",
+        colors: ["#ff0000", "#ffff00", "#00ff00", "#00ffff", "#0000ff", "#ff00ff", "#ff0000"],
+    },
 ];

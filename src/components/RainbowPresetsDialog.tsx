@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import usePresetActionsStore from "@/store/rainbowActions.ts";
 import { useShallow } from "zustand/react/shallow";
 import usePresetsStore from "@/store/presets.ts";
-import { Check, Download, PenLine, Trash2, Upload } from "lucide-react";
+import { Check, Download, Lock, PenLine, Trash2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import RainbowNameDialog from "@/components/RainbowNameDialog.tsx";
 import {
@@ -27,6 +27,7 @@ import {
 import { toast } from "@/components/ui/use-toast.ts";
 import { exportPresetData } from "@/lib/data.ts";
 import RainbowPresetsImportDialog from "@/components/RainbowPresetsImportDialog.tsx";
+import { BUILTIN_PRESETS } from "@/constants/colors.ts";
 
 export default function RainbowPresetsDialog() {
     const { setPresetDialogOpen, presetDialogOpen, setPresetDemand } = usePresetActionsStore(
@@ -102,6 +103,41 @@ export default function RainbowPresetsDialog() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
+                                    {BUILTIN_PRESETS.map(e => (
+                                        <TableRow key={e.id}>
+                                            <TableCell className="font-medium break-all align-middle py-0">
+                                                <div className={"flex items-center"}>
+                                                    <Lock className={"size-4 me-2"} />
+                                                    {e.name}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell className={"py-2"}>
+                                                <div
+                                                    className={"w-full h-6 rounded-full bg-red-500"}
+                                                    style={{
+                                                        background: `linear-gradient(90deg, ${e.colors.join(",")})`,
+                                                    }}
+                                                ></div>
+                                            </TableCell>
+                                            <TableCell className="py-2 px-0 text-center">
+                                                <Button
+                                                    variant={"ghost"}
+                                                    size={"icon"}
+                                                    aria-label={"使用"}
+                                                    onClick={() => {
+                                                        setPresetDemand(e.colors);
+                                                        setPresetDialogOpen(false);
+                                                        toast({
+                                                            title: "预设应用成功",
+                                                            description: e.name,
+                                                        });
+                                                    }}
+                                                >
+                                                    <Check className={"size-4"} />
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
                                     {presets.map((e, i) => (
                                         <TableRow key={e.id}>
                                             <TableCell className="font-medium break-all">{e.name}</TableCell>
