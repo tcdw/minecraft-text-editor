@@ -39,6 +39,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.5",
     "rgb2hex": "^0.2.5",
+    "smol-toml": "^1.2.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",

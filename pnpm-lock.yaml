@@ -89,6 +89,9 @@ importers:
       rgb2hex:
         specifier: ^0.2.5
         version: 0.2.5
+      smol-toml:
+        specifier: ^1.2.1
+        version: 1.2.1
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
@@ -3019,6 +3022,10 @@ packages:
 
   slashes@3.0.12:
     resolution: {integrity: sha512-Q9VME8WyGkc7pJf6QEkj3wE+2CnvZMI+XJhwdTPR8Z/kWQRXi7boAWLDibRPyHRTUTPx5FaU7MsyrjI3yLB4HA==}
+
+  smol-toml@1.2.1:
+    resolution: {integrity: sha512-OtZKrVrGIT+m++lxyF0z5n68nkwdgZotPhy89bfA4T7nSWe0xeQtfbjM1z5VLTilJdWXH46g8i0oAcpQNkzZTg==}
+    engines: {node: '>= 18', pnpm: '>= 9'}
 
   source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
@@ -6373,6 +6380,8 @@ snapshots:
   slash@3.0.0: {}
 
   slashes@3.0.12: {}
+
+  smol-toml@1.2.1: {}
 
   source-map-js@1.2.0: {}
 

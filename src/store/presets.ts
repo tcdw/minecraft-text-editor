@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface Preset {
-    id: string;
+    id?: string;
     name: string;
     colors: string[];
 }

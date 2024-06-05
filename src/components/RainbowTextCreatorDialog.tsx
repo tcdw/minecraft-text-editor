@@ -188,7 +188,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                         <Rainbow className={"size-4"} />
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[768px]">
+                <DialogContent className="sm:max-w-[768px] max-h-screen sm:max-h-[calc(100dvh-2rem)]">
                     <DialogHeader>
                         <DialogTitle>插入渐变文本</DialogTitle>
                         <DialogDescription>创建漂亮的渐变文本，并插入到编辑器中。</DialogDescription>

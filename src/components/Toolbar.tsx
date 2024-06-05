@@ -149,8 +149,8 @@ export default function Toolbar() {
     }, [editor, $updateToolbar]);
 
     return (
-        <div className="flex" ref={toolbarRef}>
-            <div className={"flex-auto flex gap-1"}>
+        <div className="flex items-center flex-wrap gap-1" ref={toolbarRef}>
+            <div className={"flex-auto contents md:flex gap-1"}>
                 <Button
                     variant={"ghost"}
                     size={"icon"}
