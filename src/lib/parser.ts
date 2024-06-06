@@ -1,6 +1,6 @@
 import escapeHTML from "escape-html";
-import rgb2hex from "rgb2hex";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
+import Color from "colorjs.io";
 
 export interface MinecraftStringItem {
     text: string;
@@ -103,7 +103,8 @@ export function toMinecraftStringLine(item: MinecraftStringItem[]) {
             if (!e.color) {
                 result += "&r";
             } else {
-                const hexColor = rgb2hex(e.color).hex;
+                // const hexColor = rgb2hex(e.color).hex;
+                const hexColor = new Color(e.color).to("srgb").toString({ format: "hex" });
                 for (let j = 0; j < BUILTIN_COLOR.length; j += 1) {
                     if (hexColor === `${BUILTIN_COLOR[j]}`) {
                         result += `&${j.toString(16)}`;
