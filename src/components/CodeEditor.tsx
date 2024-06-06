@@ -9,15 +9,19 @@ import { setStringItems } from "@/lib/editor.ts";
 import { useClipboard } from "foxact/use-clipboard";
 import { Button } from "@/components/ui/button.tsx";
 import { toast } from "@/components/ui/use-toast.ts";
+import { MinecraftTextFragment } from "@/types/main";
 
 export default function CodeEditor() {
     const [content, setContent] = useState("");
+    const [jsonObject, setJsonObject] = useState<MinecraftTextFragment[][]>([]);
     const [editor] = useLexicalComposerContext();
     const editorFocus = useRef(false);
 
     const handleUpdate = useCallback(() => {
         editor.update(() => {
-            setContent(toMinecraftString(parseFromHTML($generateHtmlFromNodes(editor, null))));
+            const obj = parseFromHTML($generateHtmlFromNodes(editor, null));
+            setJsonObject(obj);
+            setContent(toMinecraftString(obj));
         });
     }, [editor]);
 
@@ -87,6 +91,9 @@ export default function CodeEditor() {
                     </svg>
                 ) : null}
             </div>
+            {process.env.NODE_ENV === "development" && (
+                <pre className={"break-all whitespace-pre-wrap text-sm"}>{JSON.stringify(jsonObject, null, 2)}</pre>
+            )}
         </>
     );
 }

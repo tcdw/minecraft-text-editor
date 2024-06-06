@@ -24,7 +24,7 @@ export function parseFromHTML(html: string) {
             const e = elements[j];
             if (e.childNodes.length === 1 && e.childNodes[0].nodeType === Node.TEXT_NODE) {
                 const styles = getComputedStyle(e);
-                const { color } = styles;
+                const color = new Color(styles.color).toString({ format: "hex" });
                 const bold = Number(styles.fontWeight) >= 700;
                 const italic = styles.fontStyle === "italic" || styles.fontStyle === "oblique";
                 const underline = styles.textDecorationLine.includes("underline");
@@ -32,7 +32,8 @@ export function parseFromHTML(html: string) {
                 const text = `${e.textContent}`;
                 msiPara.push({
                     text: text,
-                    color: color.startsWith("rgba") ? undefined : color,
+                    // Need filtered: `#RGBA` or `#RRGGBBAA`
+                    color: color?.length === 5 || color?.length === 9 ? undefined : color,
                     bold,
                     italic,
                     underlined: underline,
