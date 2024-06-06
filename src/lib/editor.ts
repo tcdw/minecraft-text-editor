@@ -1,8 +1,9 @@
 import { $getRoot, $getSelection, $insertNodes, LexicalEditor } from "lexical";
-import { MinecraftStringItem, stringItemsToHTML } from "@/lib/parser.ts";
+import { stringItemsToHTML } from "@/lib/parser.ts";
 import { $generateNodesFromDOM } from "@lexical/html";
+import { MinecraftTextFragment } from "@/types/main";
 
-export function setStringItems(editor: LexicalEditor, treeOrHTML: MinecraftStringItem[][] | string, insert = false) {
+export function setStringItems(editor: LexicalEditor, treeOrHTML: MinecraftTextFragment[][] | string, insert = false) {
     editor.update(() => {
         const html = typeof treeOrHTML === "string" ? treeOrHTML : stringItemsToHTML(treeOrHTML);
         const dom = new DOMParser().parseFromString(html, "text/html");

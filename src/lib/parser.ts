@@ -1,15 +1,7 @@
 import escapeHTML from "escape-html";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import Color from "colorjs.io";
-
-export interface MinecraftStringItem {
-    text: string;
-    color?: string;
-    bold: boolean;
-    italic: boolean;
-    underline: boolean;
-    strikethrough: boolean;
-}
+import { MinecraftTextFragment } from "@/types/main";
 
 /**
  * 从 HTML 解析多彩文本数据结构
@@ -19,13 +11,13 @@ export function parseFromHTML(html: string) {
     const el = document.getElementById("parser-temp") as HTMLElement;
     el.innerHTML = html;
 
-    const msi: MinecraftStringItem[][] = [];
+    const msi: MinecraftTextFragment[][] = [];
     let paragraph: ArrayLike<HTMLElement> = el.querySelectorAll("p");
     if (paragraph.length <= 0) {
         paragraph = [el];
     }
     for (let i = 0; i < paragraph.length; i++) {
-        const msiPara: MinecraftStringItem[] = [];
+        const msiPara: MinecraftTextFragment[] = [];
         const f = paragraph[i];
         const elements = f.querySelectorAll("*");
         for (let j = 0; j < elements.length; j++) {
@@ -43,7 +35,7 @@ export function parseFromHTML(html: string) {
                     color: color.startsWith("rgba") ? undefined : color,
                     bold,
                     italic,
-                    underline,
+                    underlined: underline,
                     strikethrough,
                 });
             }
@@ -58,7 +50,7 @@ export function parseFromHTML(html: string) {
  * 从多彩文本数据结构生成 HTML
  * @param tree
  */
-export function stringItemsToHTML(tree: MinecraftStringItem[][]) {
+export function stringItemsToHTML(tree: MinecraftTextFragment[][]) {
     let html = "";
     for (let i = 0; i < tree.length; i++) {
         html += "<p>";
@@ -72,7 +64,7 @@ export function stringItemsToHTML(tree: MinecraftStringItem[][]) {
             if (f.italic) {
                 char = `<i>${char}</i>`;
             }
-            if (f.underline) {
+            if (f.underlined) {
                 char = `<u>${char}</u>`;
             }
             if (f.strikethrough) {
@@ -88,7 +80,7 @@ export function stringItemsToHTML(tree: MinecraftStringItem[][]) {
     return html;
 }
 
-export function toMinecraftStringLine(item: MinecraftStringItem[]) {
+export function toMinecraftStringLine(item: MinecraftTextFragment[]) {
     let result = "";
     for (let i = 0; i < item.length; i++) {
         const e = item[i];
@@ -97,7 +89,7 @@ export function toMinecraftStringLine(item: MinecraftStringItem[]) {
             e.color !== item[i - 1].color ||
             (!e.bold && item[i - 1].bold) ||
             (!e.strikethrough && item[i - 1].strikethrough) ||
-            (!e.underline && item[i - 1].underline) ||
+            (!e.underlined && item[i - 1].underlined) ||
             (!e.italic && item[i - 1].italic)
         ) {
             if (!e.color) {
@@ -122,7 +114,7 @@ export function toMinecraftStringLine(item: MinecraftStringItem[]) {
         if (e.strikethrough) {
             result += "&m";
         }
-        if (e.underline) {
+        if (e.underlined) {
             result += "&n";
         }
         if (e.italic) {
@@ -142,7 +134,7 @@ export function toMinecraftStringLine(item: MinecraftStringItem[]) {
     return result;
 }
 
-export function toMinecraftString(item: MinecraftStringItem[][]) {
+export function toMinecraftString(item: MinecraftTextFragment[][]) {
     const text = item.map(e => toMinecraftStringLine(e));
     return text.join("\n");
 }
@@ -152,10 +144,10 @@ export function fromMinecraftStringLine(str: string) {
         color: undefined as undefined | string,
         bold: false,
         italic: false,
-        underline: false,
+        underlined: false,
         strikethrough: false,
     };
-    const out: MinecraftStringItem[] = [];
+    const out: MinecraftTextFragment[] = [];
 
     let i = 0;
     while (i <= str.length - 1) {
@@ -178,7 +170,7 @@ export function fromMinecraftStringLine(str: string) {
                     break;
                 }
                 if (str[i + 1] === "n") {
-                    state.underline = true;
+                    state.underlined = true;
                     i += 2;
                     break;
                 }
@@ -190,7 +182,7 @@ export function fromMinecraftStringLine(str: string) {
                 if (str[i + 1] === "r") {
                     state.bold = false;
                     state.strikethrough = false;
-                    state.underline = false;
+                    state.underlined = false;
                     state.italic = false;
                     state.color = undefined;
                     i += 2;
@@ -200,7 +192,7 @@ export function fromMinecraftStringLine(str: string) {
                 if (str[i + 1] === "#" && /^[0-9a-fA-F]{6}$/.test(str.slice(i + 2, i + 8))) {
                     state.bold = false;
                     state.strikethrough = false;
-                    state.underline = false;
+                    state.underlined = false;
                     state.italic = false;
                     state.color = `#${str.slice(i + 2, i + 8)}`;
                     i += 8;
@@ -210,7 +202,7 @@ export function fromMinecraftStringLine(str: string) {
                 if (/^[0-9a-fA-F]$/.test(str[i + 1])) {
                     state.bold = false;
                     state.strikethrough = false;
-                    state.underline = false;
+                    state.underlined = false;
                     state.italic = false;
                     state.color = `${BUILTIN_COLOR[parseInt(str[i + 1], 16)]}`;
                     i += 2;
@@ -232,7 +224,7 @@ export function fromMinecraftStringLine(str: string) {
 
 export function fromMinecraftString(str: string) {
     const lines = str.split("\n");
-    const out: MinecraftStringItem[][] = [];
+    const out: MinecraftTextFragment[][] = [];
 
     for (let i = 0; i < lines.length; i++) {
         const e = lines[i];
