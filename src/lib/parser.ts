@@ -96,8 +96,9 @@ export function toMinecraftStringLine(item: MinecraftTextFragment[]) {
             if (!e.color) {
                 result += "&r";
             } else {
-                // const hexColor = rgb2hex(e.color).hex;
-                const hexColor = new Color(e.color).to("srgb").toString({ format: "hex" });
+                const color = new Color(e.color);
+                color.alpha = 1;
+                const hexColor = color.to("srgb").toString({ format: "hex" });
                 for (let j = 0; j < BUILTIN_COLOR.length; j += 1) {
                     if (hexColor === `${BUILTIN_COLOR[j]}`) {
                         result += `&${j.toString(16)}`;
