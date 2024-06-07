@@ -3,6 +3,18 @@ import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import Color from "colorjs.io";
 import { MinecraftTextFragment } from "@/types/main";
 
+function standardizeHexColor(color: string) {
+    // #RGB / #RGBA -> #RRGGBB
+    if (color.length === 4 || color.length === 5) {
+        return `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`;
+    }
+    // #RRGGBBAA -> #RRGGBB
+    if (color.length === 9) {
+        return color.slice(0, 7);
+    }
+    return color;
+}
+
 /**
  * 从 HTML 解析多彩文本数据结构
  * @param html
@@ -105,7 +117,7 @@ export function toMinecraftStringLine(item: MinecraftTextFragment[]) {
                         break;
                     }
                     if (j >= BUILTIN_COLOR.length - 1) {
-                        result += `&${hexColor}`;
+                        result += `&${standardizeHexColor(hexColor)}`;
                     }
                 }
             }
