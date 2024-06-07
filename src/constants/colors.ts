@@ -1,22 +1,22 @@
 import { Preset } from "@/store/presets.ts";
 
 export const BUILTIN_COLOR: ReadonlyArray<string> = [
-    "#000000",
-    "#0000aa",
-    "#00aa00",
-    "#00aaaa",
-    "#aa0000",
-    "#aa00aa",
-    "#ffaa00",
-    "#aaaaaa",
-    "#555555",
-    "#5555ff",
-    "#55ff55",
-    "#55ffff",
-    "#ff5555",
-    "#ff55ff",
-    "#ffff55",
-    "#ffffff",
+    "#000",
+    "#00a",
+    "#0a0",
+    "#0aa",
+    "#a00",
+    "#a0a",
+    "#fa0",
+    "#aaa",
+    "#555",
+    "#55f",
+    "#5f5",
+    "#5ff",
+    "#f55",
+    "#f5f",
+    "#ff5",
+    "#fff",
 ];
 
 export interface EditorColor {
