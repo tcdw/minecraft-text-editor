@@ -1,7 +1,7 @@
-import { Code } from "lucide-react";
+import { Check, Code, Copy, MessageSquareText } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { useCallback, useRef, useState } from "react";
-import { fromMinecraftString, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
+import { exportFromMinecraftStringLine, fromMinecraftString, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
 import { $generateHtmlFromNodes } from "@lexical/html";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -11,6 +11,15 @@ import { Button } from "@/components/ui/button.tsx";
 import { toast } from "@/components/ui/use-toast.ts";
 import { MinecraftTextFragment } from "@/types/main";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 export default function CodeEditor() {
     const [content, setContent] = useState("");
     const [jsonObject, setJsonObject] = useState<MinecraftTextFragment[][]>([]);
@@ -52,9 +61,31 @@ export default function CodeEditor() {
                     <Code className={"text-muted-foreground size-5"} />
                     <span className={"text-lg font-bold leading-normal"}>生成的代码</span>
                 </label>
-                <Button className={"flex-none"} onClick={useCallback(() => copy(content), [copy, content])}>
-                    {copied ? "复制成功" : "复制"}
-                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Button className={"flex-none"}>
+                            {copied ? <Check className={"size-4 me-2"} /> : <Copy className={"size-4 me-2"} />}
+                            {copied ? "复制成功" : "复制"}
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>请选择复制的格式</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={useCallback(() => copy(content), [copy, content])}>
+                            <MessageSquareText className={"size-4 me-2"} />
+                            格式化代码 (EssentialsX)
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                            onClick={useCallback(
+                                () => copy(JSON.stringify(exportFromMinecraftStringLine(jsonObject))),
+                                [copy, content],
+                            )}
+                        >
+                            <Code className={"size-4 me-2"} />
+                            原始 JSON 文本格式
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
             <Textarea
                 id={"gen-code"}

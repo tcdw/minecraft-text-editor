@@ -1,7 +1,7 @@
 import escapeHTML from "escape-html";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import Color from "colorjs.io";
-import { MinecraftTextFragment } from "@/types/main";
+import { MinecraftText, MinecraftTextFragment } from "@/types/main";
 
 function standardizeHexColor(color: string) {
     // #RGB / #RGBA -> #RRGGBB
@@ -50,6 +50,7 @@ export function parseFromHTML(html: string) {
                     italic,
                     underlined: underline,
                     strikethrough,
+                    obfuscated: false,
                 });
             }
         }
@@ -246,4 +247,15 @@ export function fromMinecraftString(str: string) {
     }
 
     return out;
+}
+
+export function exportFromMinecraftStringLine(item: MinecraftTextFragment[][]) {
+    let newItem: MinecraftText = [];
+    item.forEach((e, i, arr) => {
+        newItem = newItem.concat(e);
+        if (i < arr.length - 1) {
+            newItem.push("\n");
+        }
+    });
+    return newItem;
 }
