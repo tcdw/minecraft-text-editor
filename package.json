@@ -1,7 +1,7 @@
 {
   "name": "@tcdw/minecraft-text-editor",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.2.0",
   "sideEffects": false,
   "type": "module",
   "scripts": {
