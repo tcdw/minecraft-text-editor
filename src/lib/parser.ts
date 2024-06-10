@@ -1,9 +1,9 @@
 import escapeHTML from "escape-html";
 import { BUILTIN_COLOR } from "@/constants/colors.ts";
 import Color from "colorjs.io";
-import { MinecraftText, MinecraftTextFragment } from "@/types/main";
+import { MinecraftTextFragment } from "@/types/main";
 
-function standardizeHexColor(color: string) {
+function normalizeHexColor(color: string) {
     // #RGB / #RGBA -> #RRGGBB
     if (color.length === 4 || color.length === 5) {
         return `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`;
@@ -118,7 +118,7 @@ export function toMinecraftStringLine(item: MinecraftTextFragment[]) {
                         break;
                     }
                     if (j >= BUILTIN_COLOR.length - 1) {
-                        result += `&${standardizeHexColor(hexColor)}`;
+                        result += `&${normalizeHexColor(hexColor)}`;
                     }
                 }
             }
@@ -250,11 +250,23 @@ export function fromMinecraftString(str: string) {
 }
 
 export function exportFromMinecraftStringLine(item: MinecraftTextFragment[][]) {
-    let newItem: MinecraftText = [];
+    let newItem: MinecraftTextFragment[] = [];
     item.forEach((e, i, arr) => {
         newItem = newItem.concat(e);
         if (i < arr.length - 1) {
-            newItem.push("\n");
+            newItem.push({
+                text: "\n",
+                bold: false,
+                italic: false,
+                underlined: false,
+                strikethrough: false,
+                obfuscated: false,
+            });
+        }
+    });
+    newItem.forEach(e => {
+        if (e.color && e.color.length !== 7) {
+            e.color = normalizeHexColor(e.color);
         }
     });
     return newItem;
