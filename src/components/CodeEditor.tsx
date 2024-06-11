@@ -1,4 +1,4 @@
-import { Check, Code, Copy, MessageSquareText } from "lucide-react";
+import { Braces, Check, Code, Copy, MessageSquareText } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { useCallback, useRef, useState } from "react";
 import { exportFromMinecraftStringLine, fromMinecraftString, parseFromHTML, toMinecraftString } from "@/lib/parser.ts";
@@ -81,7 +81,7 @@ export default function CodeEditor() {
                                 [copy, content],
                             )}
                         >
-                            <Code className={"size-4 me-2"} />
+                            <Braces className={"size-4 me-2"} />
                             原始 JSON 文本格式
                         </DropdownMenuItem>
                     </DropdownMenuContent>
