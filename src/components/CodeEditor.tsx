@@ -62,7 +62,7 @@ export default function CodeEditor() {
                     <span className={"text-lg font-bold leading-normal"}>生成的代码</span>
                 </label>
                 <DropdownMenu>
-                    <DropdownMenuTrigger>
+                    <DropdownMenuTrigger asChild>
                         <Button className={"flex-none"}>
                             {copied ? <Check className={"size-4 me-2"} /> : <Copy className={"size-4 me-2"} />}
                             {copied ? "复制成功" : "复制"}
