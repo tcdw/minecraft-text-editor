@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { FileCog, Rainbow, Save } from "lucide-react";
+import { Dices, FileCog, Rainbow, Save } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -87,6 +87,23 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
         setOpen(false);
     }
 
+    function handlePreviewUpdate(text: string) {
+        const table = createGradientColor({
+            colors: form.getValues("colors"),
+            text,
+        });
+        setPreview(measuredStringColorToHTML(table));
+    }
+
+    function handleRandom() {
+        const amount = form.getValues("colors").length;
+        form.setValue(
+            "colors",
+            new Array(amount).fill("").map(() => randomHexColor()),
+        );
+        handlePreviewUpdate(form.getValues("text"));
+    }
+
     function handlePresetSubmit(name: string) {
         addPreset({ id: v4(), name, colors: form.getValues("colors") });
         toast({
@@ -108,11 +125,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                                 placeholder=""
                                 {...field}
                                 onChange={e => {
-                                    const table = createGradientColor({
-                                        colors: form.getValues("colors"),
-                                        text: e.currentTarget.value,
-                                    });
-                                    setPreview(measuredStringColorToHTML(table));
+                                    handlePreviewUpdate(e.currentTarget.value);
                                     field.onChange(e);
                                 }}
                             />
@@ -152,6 +165,10 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                                     >
                                         <FileCog className={"size-4 me-2"} />
                                         预设管理
+                                    </Button>
+                                    <Button variant={"outline"} type={"button"} onClick={() => handleRandom()}>
+                                        <Dices className={"size-4 me-2"} />
+                                        手气不错
                                     </Button>
                                 </div>
                             </div>
