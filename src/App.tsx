@@ -82,7 +82,7 @@ export default function App() {
                 </main>
                 <footer className={"text-muted-foreground leading-relaxed text-sm border-t mt-4 pt-4"}>
                     <p className={"text-center"}>
-                        &copy; 2020-2024 tcdw. Released under MIT License.&nbsp;
+                        &copy; 2020-2025 tcdw. Released under MIT License.&nbsp;
                         <a
                             href={"https://github.com/tcdw/minecraft-text-editor"}
                             className={"text-foreground underline"}
