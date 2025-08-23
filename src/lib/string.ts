@@ -59,20 +59,37 @@ export function createGradientColor({ colors, text }: CreateGradientColorParams)
     // 拆分字符串，测距
     const measured = measureLength(text);
 
+    // 计算非空白字符的位置用于渐变计算
+    const nonWhitespaceChars = measured.chars.filter(({ char }) => !/^\s$/.test(char));
+    const nonWhitespaceWidth = nonWhitespaceChars.reduce((sum, { width }) => sum + width, 0);
+
     // 分段，一段的长度为 1（也就是说三段的长度为 3）
     let position = 0;
-    const colored: MeasuredStringColor[] = measured.chars.map(({ char, width }) => {
-        const belongPositionFull = (position / measured.width) * parts.length;
-        const belongSegment = Math.floor(belongPositionFull);
-        const belongPositionSegment = belongPositionFull - belongSegment;
+    let lastColor = "";
 
-        // 最后再移动 position
-        position += width;
+    const colored: MeasuredStringColor[] = measured.chars.map(({ char, width }) => {
+        let currentColor: string;
+
+        if (/^\s$/.test(char)) {
+            // 空白字符使用上一个字符的颜色
+            currentColor = lastColor || assembleRGB(color.mix(parts[0][1], parts[0][0], 0));
+        } else {
+            // 非空白字符正常计算颜色
+            const belongPositionFull = (position / (nonWhitespaceWidth || 1)) * parts.length;
+            const belongSegment = Math.min(Math.floor(belongPositionFull), parts.length - 1);
+            const belongPositionSegment = belongPositionFull - belongSegment;
+
+            currentColor = assembleRGB(
+                color.mix(parts[belongSegment][1], parts[belongSegment][0], belongPositionSegment),
+            );
+            position += width;
+            lastColor = currentColor;
+        }
 
         return {
             char,
             width,
-            color: assembleRGB(color.mix(parts[belongSegment][1], parts[belongSegment][0], belongPositionSegment)),
+            color: currentColor,
         };
     });
 
