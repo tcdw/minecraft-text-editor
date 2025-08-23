@@ -58,10 +58,7 @@ export default function Toolbar() {
     const [isStrikethrough, setIsStrikethrough] = useState(false);
 
     const [colorValue, setColorValue] = useState("#5555ff");
-    const { editorTheme, setEditorTheme } = useSettingsStore(state => ({
-        editorTheme: state.editorTheme,
-        setEditorTheme: state.setEditorTheme,
-    }));
+    const { editorTheme, setEditorTheme } = useSettingsStore();
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();

@@ -1,7 +1,7 @@
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
@@ -28,16 +28,14 @@ const editorConfig = {
 };
 
 export default function App() {
-    const { editorTheme } = useSettingsStore(state => ({
-        editorTheme: state.editorTheme,
-    }));
+    const { editorTheme } = useSettingsStore();
 
     const actualTheme = EDITOR_COLOR.find(e => e.value === editorTheme) || EDITOR_COLOR[0];
 
     return (
         <LexicalComposer initialConfig={editorConfig}>
             {/* Outer Frame */}
-            <div className={"container py-4 max-w-screen-lg"}>
+            <div className={"mx-auto py-4 max-w-screen-lg"}>
                 {/* Title */}
                 <header className={"contents"}>
                     <h1 className={"font-bold text-2xl leading-normal mb-4 flex justify-center"}>

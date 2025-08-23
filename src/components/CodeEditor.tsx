@@ -8,7 +8,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { setStringItems } from "@/lib/editor.ts";
 import { useClipboard } from "foxact/use-clipboard";
 import { Button } from "@/components/ui/button.tsx";
-import { toast } from "@/components/ui/use-toast.ts";
+import { toast } from "sonner";
 import { MinecraftTextFragment } from "@/types/main";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
@@ -39,8 +39,7 @@ export default function CodeEditor() {
         usePromptAsFallback: false,
         promptFallbackText: "请从以下文本框手动复制文本内容：",
         onCopyError(e) {
-            toast({
-                title: "复制失败了！",
+            toast.error("复制失败了！", {
                 description: e.message,
             });
         },
@@ -64,7 +63,7 @@ export default function CodeEditor() {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button className={"flex-none"}>
-                            {copied ? <Check className={"size-4 me-2"} /> : <Copy className={"size-4 me-2"} />}
+                            {copied ? <Check className={"size-4"} /> : <Copy className={"size-4"} />}
                             {copied ? "复制成功" : "复制"}
                         </Button>
                     </DropdownMenuTrigger>
@@ -72,7 +71,7 @@ export default function CodeEditor() {
                         <DropdownMenuLabel>请选择复制的格式</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={useCallback(() => copy(content), [copy, content])}>
-                            <MessageSquareText className={"size-4 me-2"} />
+                            <MessageSquareText className={"size-4"} />
                             格式化代码 (EssentialsX)
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -81,7 +80,7 @@ export default function CodeEditor() {
                                 [copy, content],
                             )}
                         >
-                            <Braces className={"size-4 me-2"} />
+                            <Braces className={"size-4"} />
                             原始 JSON 文本格式
                         </DropdownMenuItem>
                     </DropdownMenuContent>

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import usePresetActionsStore from "@/store/rainbowActions.ts";
-import { useShallow } from "zustand/react/shallow";
 import usePresetsStore from "@/store/presets.ts";
 import { Check, Download, Lock, PenLine, Trash2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
@@ -24,26 +23,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "@/components/ui/use-toast.ts";
+import { toast } from "sonner";
 import { exportPresetData } from "@/lib/data.ts";
 import RainbowPresetsImportDialog from "@/components/RainbowPresetsImportDialog.tsx";
 import { BUILTIN_PRESETS } from "@/constants/colors.ts";
 
 export default function RainbowPresetsDialog() {
-    const { setPresetDialogOpen, presetDialogOpen, setPresetDemand } = usePresetActionsStore(
-        useShallow(state => ({
-            setPresetDialogOpen: state.setPresetDialogOpen,
-            presetDialogOpen: state.presetDialogOpen,
-            setPresetDemand: state.setPresetDemand,
-        })),
-    );
-    const { presets, editPreset, deletePreset } = usePresetsStore(
-        useShallow(state => ({
-            presets: state.presets,
-            editPreset: state.editPreset,
-            deletePreset: state.deletePreset,
-        })),
-    );
+    const { setPresetDialogOpen, presetDialogOpen, setPresetDemand } = usePresetActionsStore();
+    const { presets, editPreset, deletePreset } = usePresetsStore();
 
     const [editingName, setEditingName] = useState("");
     const [renameOpen, setRenameOpen] = useState(false);
@@ -85,11 +72,11 @@ export default function RainbowPresetsDialog() {
                     <div className="space-y-4 flex-auto overflow-y-auto">
                         <div className={"flex items-center gap-2"}>
                             <Button variant={"outline"} onClick={() => setImportOpen(true)}>
-                                <Upload className={"size-4 me-2"} />
+                                <Upload className={"size-4"} />
                                 导入
                             </Button>
                             <Button variant={"outline"} onClick={exportPresetData}>
-                                <Download className={"size-4 me-2"} />
+                                <Download className={"size-4"} />
                                 导出
                             </Button>
                         </div>
@@ -107,7 +94,7 @@ export default function RainbowPresetsDialog() {
                                         <TableRow key={e.id}>
                                             <TableCell className="font-medium break-all align-middle py-0">
                                                 <div className={"flex items-center"}>
-                                                    <Lock className={"size-4 me-2"} />
+                                                    <Lock className={"size-4"} />
                                                     {e.name}
                                                 </div>
                                             </TableCell>
@@ -127,8 +114,7 @@ export default function RainbowPresetsDialog() {
                                                     onClick={() => {
                                                         setPresetDemand(e.colors);
                                                         setPresetDialogOpen(false);
-                                                        toast({
-                                                            title: "预设应用成功",
+                                                        toast.success("预设应用成功", {
                                                             description: e.name,
                                                         });
                                                     }}
@@ -173,8 +159,7 @@ export default function RainbowPresetsDialog() {
                                                     onClick={() => {
                                                         setPresetDemand(e.colors);
                                                         setPresetDialogOpen(false);
-                                                        toast({
-                                                            title: "预设应用成功",
+                                                        toast.success("预设应用成功", {
                                                             description: e.name,
                                                         });
                                                     }}

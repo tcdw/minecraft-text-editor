@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input.tsx";
 import RainbowColorEditor from "@/components/RainbowColorEditor.tsx";
 import { useEffect, useId, useState } from "react";
@@ -25,7 +25,6 @@ import { createGradientColor, measuredStringColorToHTML } from "@/lib/string.ts"
 import RainbowNameDialog from "@/components/RainbowNameDialog.tsx";
 import usePresetsStore from "@/store/presets.ts";
 import { v4 } from "uuid";
-import { useShallow } from "zustand/react/shallow";
 import useRainbowActionsStore from "@/store/rainbowActions.ts";
 
 const FormSchema = z.object({
@@ -52,14 +51,8 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
 
     // rainbow preset
     const [namingOpen, setNamingOpen] = useState(false);
-    const { addPreset } = usePresetsStore(useShallow(state => ({ addPreset: state.addPreset })));
-    const { setPresetDialogOpen, presetDemand, setPresetDemand } = useRainbowActionsStore(
-        useShallow(state => ({
-            setPresetDialogOpen: state.setPresetDialogOpen,
-            presetDemand: state.presetDemand,
-            setPresetDemand: state.setPresetDemand,
-        })),
-    );
+    const { addPreset } = usePresetsStore();
+    const { setPresetDialogOpen, presetDemand, setPresetDemand } = useRainbowActionsStore();
     useEffect(() => {
         if (!presetDemand) {
             return;
@@ -74,9 +67,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
     }, [presetDemand, setPresetDemand, form]);
 
     // editor theme
-    const { editorTheme } = useSettingsStore(state => ({
-        editorTheme: state.editorTheme,
-    }));
+    const { editorTheme } = useSettingsStore();
     const actualTheme = EDITOR_COLOR.find(e => e.value === editorTheme) || EDITOR_COLOR[0];
 
     // preview field
@@ -106,8 +97,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
 
     function handlePresetSubmit(name: string) {
         addPreset({ id: v4(), name, colors: form.getValues("colors") });
-        toast({
-            title: "预设保存成功",
+        toast.success("预设保存成功", {
             description: `新的预设：${name}`,
         });
     }
@@ -155,7 +145,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                                 />
                                 <div className={"pt-2 flex items-center gap-2"}>
                                     <Button variant={"outline"} type={"button"} onClick={() => setNamingOpen(true)}>
-                                        <Save className={"size-4 me-2"} />
+                                        <Save className={"size-4"} />
                                         保存当前预设
                                     </Button>
                                     <Button
@@ -163,11 +153,11 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                                         type={"button"}
                                         onClick={() => setPresetDialogOpen(true)}
                                     >
-                                        <FileCog className={"size-4 me-2"} />
+                                        <FileCog className={"size-4"} />
                                         预设管理
                                     </Button>
                                     <Button variant={"outline"} type={"button"} onClick={() => handleRandom()}>
-                                        <Dices className={"size-4 me-2"} />
+                                        <Dices className={"size-4"} />
                                         手气不错
                                     </Button>
                                 </div>

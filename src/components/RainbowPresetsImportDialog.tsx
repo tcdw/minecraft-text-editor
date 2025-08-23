@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { importPresetData } from "@/lib/data.ts";
-import { toast } from "@/components/ui/use-toast.ts";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
     file: z.instanceof(File, { message: "请选择文件" }),
@@ -35,14 +35,12 @@ export default function RainbowPresetsImportDialog({ open, onOpenChange }: Rainb
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
         try {
             const records = (await importPresetData(formData.file)).length;
-            toast({
-                title: "导入成功",
+            toast.success(`导入成功`, {
                 description: `共计导入 ${records} 条数据`,
             });
             onOpenChange(false);
         } catch (e) {
-            toast({
-                title: "导入失败",
+            toast.error(`导入失败`, {
                 description: `${(e as Error).message}`,
             });
         }
