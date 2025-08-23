@@ -2,8 +2,9 @@ import * as color from "./colors.ts";
 import { assembleRGB } from "./colors.ts";
 import escapeHTML from "escape-html";
 
-// 全角字符匹配
-const FULL_WIDTH_CHAR_REGEX = /^\p{Ideo}|[\uFF01-\uFF61]$/u;
+// 全角字符匹配 - 使用 Unicode 属性匹配 CJK 字符和全角符号
+const FULL_WIDTH_CHAR_REGEX =
+    /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\u{3000}-\u{303F}\u{FF01}-\u{FF60}]/u;
 
 export interface MeasuredCharacter {
     char: string;
