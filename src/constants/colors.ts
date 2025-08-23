@@ -42,7 +42,8 @@ export const EDITOR_COLOR: ReadonlyArray<EditorColor> = [
     { background: "#4b7f7f", foreground: "#000000", label: "诡异木", value: "wood-8" },
     { background: "#6e292c", foreground: "#000000", label: "红树木", value: "wood-9" },
     { background: "#d69297", foreground: "#000000", label: "樱花木", value: "wood-10" },
-    { background: "#c6af4c", foreground: "#000000", label: "竹", value: "wood-11" },
+    { background: "#eee7e5", foreground: "#000000", label: "苍白橡木", value: "wood-11" },
+    { background: "#c6af4c", foreground: "#000000", label: "竹", value: "wood-12" },
 ];
 
 export const BUILTIN_PRESETS: ReadonlyArray<Preset> = [
