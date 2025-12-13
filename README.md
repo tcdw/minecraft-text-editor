@@ -4,8 +4,7 @@
 
 与市面上其它编辑器不同的是，这是专门针对第三方 Minecraft 服务器玩家设计的。
 
-> [!NOTE]  
-> 项目推倒重写中，采用 React + Lexical 实现。
+项目采用 React + Lexical 实现。
 
 ## 使用生成的文本
 
@@ -18,7 +17,7 @@
 
 ## 开发/编译
 
-本工具使用 Farm 进行编译工作。
+本工具使用 Vite 进行编译工作。
 
 - 编译：`npm run build`
 - 开发模式：`npm run dev`
