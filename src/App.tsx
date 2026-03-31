@@ -5,6 +5,7 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
+import { useTranslation } from "react-i18next";
 
 import ExampleTheme from "./ExampleTheme";
 import Toolbar from "./components/Toolbar.tsx";
@@ -15,6 +16,7 @@ import About from "@/components/About.tsx";
 import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
 import RainbowPresetsDialog from "@/components/RainbowPresetsDialog.tsx";
+import LanguageSwitcher from "@/components/LanguageSwitcher.tsx";
 
 const editorConfig = {
     namespace: "React.js Demo",
@@ -29,18 +31,18 @@ const editorConfig = {
 
 export default function App() {
     const { editorTheme } = useSettingsStore();
+    const { t } = useTranslation();
 
     const actualTheme = EDITOR_COLOR.find(e => e.value === editorTheme) || EDITOR_COLOR[0];
 
     return (
         <LexicalComposer initialConfig={editorConfig}>
             {/* Outer Frame */}
-            <div className={"mx-auto py-4 max-w-screen-lg"}>
+            <div className={"mx-auto py-4 max-w-5xl"}>
                 {/* Title */}
-                <header className={"contents"}>
-                    <h1 className={"font-bold text-2xl leading-normal mb-4 flex justify-center"}>
-                        A Text Editor for Minecraft
-                    </h1>
+                <header className={"flex items-center justify-center mb-4 gap-3"}>
+                    <h1 className={"font-bold text-2xl leading-normal"}>{t("app.title")}</h1>
+                    <LanguageSwitcher />
                 </header>
                 {/* Editor */}
                 <main className={"contents"}>
@@ -65,7 +67,7 @@ export default function App() {
                                         }}
                                         aria-hidden={true}
                                     >
-                                        在这里输入你的内容……
+                                        {t("app.placeholder")}
                                     </div>
                                 }
                                 ErrorBoundary={LexicalErrorBoundary}
@@ -87,11 +89,11 @@ export default function App() {
                             href={"https://github.com/tcdw/minecraft-text-editor"}
                             className={"text-foreground underline"}
                         >
-                            Source
+                            {t("app.source")}
                         </a>
                     </p>
                     <p className={"text-center"}>
-                        Minecraft<sup>®</sup> is a trademark of Microsoft Corporation.
+                        Minecraft<sup>&reg;</sup> is a trademark of Microsoft Corporation.
                     </p>
                 </footer>
             </div>

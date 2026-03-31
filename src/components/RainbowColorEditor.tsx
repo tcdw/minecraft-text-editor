@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { ChevronDown, Plus, StepBack, Trash2 } from "lucide-react";
 import ColorPicker from "@/components/ColorPicker.tsx";
 import { randomHexColor } from "@/lib/colors.ts";
+import { useTranslation } from "react-i18next";
 
 export interface RainbowColorEditorProps {
     value: string[];
@@ -9,6 +10,8 @@ export interface RainbowColorEditorProps {
 }
 
 export default function RainbowColorEditor({ value, onChange }: RainbowColorEditorProps) {
+    const { t } = useTranslation();
+
     function handleAdd() {
         const newValue = value.concat();
         newValue.push(randomHexColor());
@@ -49,7 +52,7 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
                             type={"button"}
                         >
                             <Trash2 className={"size-4"} />
-                            删除
+                            {t("rainbow.delete")}
                         </Button>
                     }
                 >
@@ -59,7 +62,13 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
                     </Button>
                 </ColorPicker>
             ))}
-            <Button type={"button"} variant={"outline"} size={"icon"} onClick={handleReverse} aria-label={"倒置渐变"}>
+            <Button
+                type={"button"}
+                variant={"outline"}
+                size={"icon"}
+                onClick={handleReverse}
+                aria-label={t("rainbow.reverseGradient")}
+            >
                 <StepBack className={"size-4"} />
             </Button>
             <Button
@@ -67,7 +76,7 @@ export default function RainbowColorEditor({ value, onChange }: RainbowColorEdit
                 variant={"outline"}
                 size={"icon"}
                 onClick={handleAdd}
-                aria-label={"添加新的颜色到渐变"}
+                aria-label={t("rainbow.addColor")}
             >
                 <Plus className={"size-4"} />
             </Button>

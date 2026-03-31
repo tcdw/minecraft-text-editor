@@ -35,6 +35,7 @@ import useSettingsStore from "@/store/settings.ts";
 import { EDITOR_COLOR } from "@/constants/colors.ts";
 import RainbowTextCreatorDialog from "@/components/RainbowTextCreatorDialog.tsx";
 import { setStringItems } from "@/lib/editor.ts";
+import { useTranslation } from "react-i18next";
 
 const LowPriority = 1;
 
@@ -59,6 +60,7 @@ export default function Toolbar() {
 
     const [colorValue, setColorValue] = useState("#5555ff");
     const { editorTheme, setEditorTheme } = useSettingsStore();
+    const { t } = useTranslation();
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -155,7 +157,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(UNDO_COMMAND, undefined);
                     }}
-                    aria-label="撤销"
+                    aria-label={t("toolbar.undo")}
                 >
                     <Undo className={"size-4"} />
                 </Button>
@@ -166,7 +168,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(REDO_COMMAND, undefined);
                     }}
-                    aria-label="重做"
+                    aria-label={t("toolbar.redo")}
                 >
                     <Redo className={"size-4"} />
                 </Button>
@@ -176,7 +178,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
                     }}
-                    aria-label="设置加粗"
+                    aria-label={t("toolbar.bold")}
                 >
                     <Bold className={"size-4"} />
                 </Toggle>
@@ -186,7 +188,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
                     }}
-                    aria-label="设置斜体"
+                    aria-label={t("toolbar.italic")}
                 >
                     <Italic className={"size-4"} />
                 </Toggle>
@@ -196,7 +198,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
                     }}
-                    aria-label="设置下划线"
+                    aria-label={t("toolbar.underline")}
                 >
                     <Underline className={"size-4"} />
                 </Toggle>
@@ -206,7 +208,7 @@ export default function Toolbar() {
                     onClick={() => {
                         editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough");
                     }}
-                    aria-label="设置删除线"
+                    aria-label={t("toolbar.strikethrough")}
                 >
                     <Strikethrough className={"size-4"} />
                 </Toggle>
@@ -216,7 +218,7 @@ export default function Toolbar() {
                     onClick={() => {
                         clearFormatting();
                     }}
-                    aria-label="清除样式"
+                    aria-label={t("toolbar.clearFormatting")}
                 >
                     <RemoveFormatting className={"size-4"} />
                 </Button>
@@ -235,13 +237,13 @@ export default function Toolbar() {
             </div>
             <Select value={editorTheme} onValueChange={setEditorTheme}>
                 <SelectTrigger className="w-[180px] flex-none">
-                    <SelectValue placeholder="选择编辑器样式……" />
+                    <SelectValue placeholder={t("toolbar.selectEditorTheme")} />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
                         {EDITOR_COLOR.map(e => {
                             if (e.isLabelOnly) {
-                                return <SelectLabel key={e.value}>{e.label}</SelectLabel>;
+                                return <SelectLabel key={e.value}>{t(e.label)}</SelectLabel>;
                             }
                             return (
                                 <SelectItem value={e.value} key={e.value}>
@@ -251,7 +253,7 @@ export default function Toolbar() {
                                             style={{ background: e.background }}
                                             aria-hidden={true}
                                         />
-                                        <span>{e.label}</span>
+                                        <span>{t(e.label)}</span>
                                     </div>
                                 </SelectItem>
                             );

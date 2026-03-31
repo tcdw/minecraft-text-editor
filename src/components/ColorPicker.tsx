@@ -6,6 +6,7 @@ import styles from "./ColorPicker.module.scss";
 import { HexColorPicker } from "react-colorful";
 import { Input } from "@/components/ui/input.tsx";
 import { PropsWithChildren, ReactNode, useEffect, useId, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const hexRGBRegex = /^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
@@ -25,6 +26,7 @@ export default function ColorPicker({
     const [currentColorCustom, setCurrentColorCustom] = useState("#66ccff");
     const colorInputId = useId();
     const [open, setOpen] = useState(false);
+    const { t } = useTranslation();
 
     // Sync editor color value after parent value changes
     useEffect(() => {
@@ -46,7 +48,7 @@ export default function ColorPicker({
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 {children ?? (
-                    <Button variant={"ghost"} size={"icon"} aria-label="Text Color">
+                    <Button variant={"ghost"} size={"icon"} aria-label={t("colorPicker.textColor")}>
                         {/*<PaintBucket className={"size-4"} />*/}
                         <div className={"rounded-full size-4"} style={{ background: value }} aria-hidden />
                     </Button>
@@ -55,8 +57,8 @@ export default function ColorPicker({
             <PopoverContent className="w-72 p-3">
                 <Tabs className="w-full" value={currentColorTab} onValueChange={setCurrentColorTab}>
                     <TabsList className="grid w-full grid-cols-2 mb-3">
-                        <TabsTrigger value="builtin">内置</TabsTrigger>
-                        <TabsTrigger value="custom">自定义</TabsTrigger>
+                        <TabsTrigger value="builtin">{t("colorPicker.builtin")}</TabsTrigger>
+                        <TabsTrigger value="custom">{t("colorPicker.custom")}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="builtin">
                         <div className="grid grid-cols-8 gap-1.5">
@@ -77,7 +79,7 @@ export default function ColorPicker({
                         <HexColorPicker color={currentColorCustom} onChange={setCurrentColorCustom} />
                         <div className={"mt-3 flex gap-3"}>
                             <label className={"sr-only"} htmlFor={colorInputId}>
-                                HEX 颜色
+                                {t("colorPicker.hexColor")}
                             </label>
                             <Input
                                 className={"flex-auto"}
@@ -97,7 +99,7 @@ export default function ColorPicker({
                                 }}
                                 disabled={!hexRGBRegex.test(currentColorCustom)}
                             >
-                                确定
+                                {t("colorPicker.confirm")}
                             </Button>
                         </div>
                     </TabsContent>

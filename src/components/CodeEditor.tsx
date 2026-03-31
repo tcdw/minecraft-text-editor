@@ -19,12 +19,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "react-i18next";
 
 export default function CodeEditor() {
     const [content, setContent] = useState("");
     const [jsonObject, setJsonObject] = useState<MinecraftTextFragment[][]>([]);
     const [editor] = useLexicalComposerContext();
     const editorFocus = useRef(false);
+    const { t } = useTranslation();
 
     const handleUpdate = useCallback(() => {
         editor.update(() => {
@@ -37,9 +39,9 @@ export default function CodeEditor() {
     const { copy, copied } = useClipboard({
         timeout: 1500,
         usePromptAsFallback: false,
-        promptFallbackText: "请从以下文本框手动复制文本内容：",
+        promptFallbackText: t("codeEditor.manualCopyPrompt"),
         onCopyError(e) {
-            toast.error("复制失败了！", {
+            toast.error(t("codeEditor.copyFailed"), {
                 description: e.message,
             });
         },
@@ -58,21 +60,21 @@ export default function CodeEditor() {
             <div className={"flex items-center"}>
                 <label htmlFor={"gen-code"} className={"flex-auto flex items-center py-2 px-2 gap-3"}>
                     <Code className={"text-muted-foreground size-5"} />
-                    <span className={"text-lg font-bold leading-normal"}>生成的代码</span>
+                    <span className={"text-lg font-bold leading-normal"}>{t("codeEditor.generatedCode")}</span>
                 </label>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button className={"flex-none"}>
                             {copied ? <Check className={"size-4"} /> : <Copy className={"size-4"} />}
-                            {copied ? "复制成功" : "复制"}
+                            {copied ? t("codeEditor.copySuccess") : t("codeEditor.copy")}
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuLabel>请选择复制的格式</DropdownMenuLabel>
+                        <DropdownMenuLabel>{t("codeEditor.selectCopyFormat")}</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={useCallback(() => copy(content), [copy, content])}>
                             <MessageSquareText className={"size-4"} />
-                            格式化代码 (EssentialsX)
+                            {t("codeEditor.formattedCode")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={useCallback(
@@ -81,7 +83,7 @@ export default function CodeEditor() {
                             )}
                         >
                             <Braces className={"size-4"} />
-                            原始 JSON 文本格式
+                            {t("codeEditor.rawJson")}
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -109,9 +111,9 @@ export default function CodeEditor() {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <div className={"flex items-center gap-1 cursor-help"}>
-                                <div
-                                    className={content.length >= 240 ? "text-red-500" : "text-muted-foreground"}
-                                >{`当前字符数：${content.length}`}</div>
+                                <div className={content.length >= 240 ? "text-red-500" : "text-muted-foreground"}>
+                                    {t("codeEditor.charCount", { count: content.length })}
+                                </div>
                                 {content.length >= 240 ? (
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -132,8 +134,8 @@ export default function CodeEditor() {
                             </div>
                         </TooltipTrigger>
                         <TooltipContent className={"text-sm space-y-1"}>
-                            <p>Minecraft 的聊天框最多只能输入 256 个字符。</p>
-                            <p>大量的使用样式（特别是 RGB 颜色）会导致代码字符数迅速上升。</p>
+                            <p>{t("codeEditor.chatCharLimit")}</p>
+                            <p>{t("codeEditor.styleWarning")}</p>
                         </TooltipContent>
                     </Tooltip>
                 </TooltipProvider>

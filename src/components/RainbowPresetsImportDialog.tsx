@@ -14,9 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { importPresetData } from "@/lib/data.ts";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 const FormSchema = z.object({
-    file: z.instanceof(File, { message: "请选择文件" }),
+    file: z.instanceof(File, { message: i18n.t("presets.selectFile") }),
 });
 
 export interface RainbowPresetsImportDialogProps {
@@ -31,16 +33,17 @@ export default function RainbowPresetsImportDialog({ open, onOpenChange }: Rainb
             file: undefined,
         },
     });
+    const { t } = useTranslation();
 
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
         try {
             const records = (await importPresetData(formData.file)).length;
-            toast.success(`导入成功`, {
-                description: `共计导入 ${records} 条数据`,
+            toast.success(t("presets.importSuccess"), {
+                description: t("presets.importCount", { count: records }),
             });
             onOpenChange(false);
         } catch (e) {
-            toast.error(`导入失败`, {
+            toast.error(t("presets.importFailed"), {
                 description: `${(e as Error).message}`,
             });
         }
@@ -50,8 +53,8 @@ export default function RainbowPresetsImportDialog({ open, onOpenChange }: Rainb
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>导入预设</DialogTitle>
-                    <DialogDescription>在这里，可以导入之前从本工具导出的预设数据。</DialogDescription>
+                    <DialogTitle>{t("presets.importPreset")}</DialogTitle>
+                    <DialogDescription>{t("presets.importDescription")}</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className={"space-y-6"}>
@@ -63,7 +66,7 @@ export default function RainbowPresetsImportDialog({ open, onOpenChange }: Rainb
                                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                 render={({ field: { value, onChange, ...fieldProps } }) => (
                                     <FormItem>
-                                        <FormLabel>预设文件</FormLabel>
+                                        <FormLabel>{t("presets.presetFile")}</FormLabel>
                                         <FormControl>
                                             <Input
                                                 {...fieldProps}
@@ -82,9 +85,9 @@ export default function RainbowPresetsImportDialog({ open, onOpenChange }: Rainb
                         </div>
                         <DialogFooter>
                             <Button type={"button"} variant={"outline"} onClick={() => onOpenChange(false)}>
-                                取消
+                                {t("presets.cancel")}
                             </Button>
-                            <Button type="submit">导入</Button>
+                            <Button type="submit">{t("presets.import")}</Button>
                         </DialogFooter>
                     </form>
                 </Form>

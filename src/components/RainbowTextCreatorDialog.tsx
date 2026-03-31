@@ -26,11 +26,13 @@ import RainbowNameDialog from "@/components/RainbowNameDialog.tsx";
 import usePresetsStore from "@/store/presets.ts";
 import { v4 } from "uuid";
 import useRainbowActionsStore from "@/store/rainbowActions.ts";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 const FormSchema = z.object({
     text: z.string(),
-    colors: z.array(z.string()).min(2, {
-        message: "需要至少指定两种颜色",
+    colors: z.array(z.string()).refine(val => val.length >= 2, {
+        message: i18n.t("rainbow.minColors"),
     }),
 });
 
@@ -41,6 +43,7 @@ export interface RainbowTextCreatorDialogProps {
 export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreatorDialogProps) {
     const [open, setOpen] = useState(false);
     const id = useId();
+    const { t } = useTranslation();
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -97,8 +100,8 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
 
     function handlePresetSubmit(name: string) {
         addPreset({ id: v4(), name, colors: form.getValues("colors") });
-        toast.success("预设保存成功", {
-            description: `新的预设：${name}`,
+        toast.success(t("rainbow.presetSaved"), {
+            description: t("rainbow.newPreset", { name }),
         });
     }
 
@@ -109,7 +112,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                 name="text"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>文本内容</FormLabel>
+                        <FormLabel>{t("rainbow.textContent")}</FormLabel>
                         <FormControl>
                             <Input
                                 placeholder=""
@@ -129,7 +132,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                 name="colors"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>渐变色</FormLabel>
+                        <FormLabel>{t("rainbow.gradientColors")}</FormLabel>
                         <FormControl>
                             <div>
                                 <RainbowColorEditor
@@ -146,7 +149,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                                 <div className={"pt-2 flex items-center gap-2"}>
                                     <Button variant={"outline"} type={"button"} onClick={() => setNamingOpen(true)}>
                                         <Save className={"size-4"} />
-                                        保存当前预设
+                                        {t("rainbow.savePreset")}
                                     </Button>
                                     <Button
                                         variant={"outline"}
@@ -154,11 +157,11 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                                         onClick={() => setPresetDialogOpen(true)}
                                     >
                                         <FileCog className={"size-4"} />
-                                        预设管理
+                                        {t("rainbow.presetManagement")}
                                     </Button>
                                     <Button variant={"outline"} type={"button"} onClick={() => handleRandom()}>
                                         <Dices className={"size-4"} />
-                                        手气不错
+                                        {t("rainbow.feelingLucky")}
                                     </Button>
                                 </div>
                             </div>
@@ -172,7 +175,7 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                     id={`${id}_preview`}
                     className="inline-block text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                    效果预览
+                    {t("rainbow.preview")}
                 </div>
                 <div
                     aria-describedby={`${id}_preview`}
@@ -191,20 +194,20 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
         <>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant={"ghost"} size={"icon"} aria-label="插入渐变文本">
+                    <Button variant={"ghost"} size={"icon"} aria-label={t("rainbow.insertGradientText")}>
                         <Rainbow className={"size-4"} />
                     </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[768px] max-h-screen sm:max-h-[calc(100dvh-2rem)]">
                     <DialogHeader>
-                        <DialogTitle>插入渐变文本</DialogTitle>
-                        <DialogDescription>创建漂亮的渐变文本，并插入到编辑器中。</DialogDescription>
+                        <DialogTitle>{t("rainbow.insertGradientText")}</DialogTitle>
+                        <DialogDescription>{t("rainbow.createGradientDescription")}</DialogDescription>
                     </DialogHeader>
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             {formFields}
                             <DialogFooter className={"mt-6"}>
-                                <Button type="submit">插入文本</Button>
+                                <Button type="submit">{t("rainbow.insertText")}</Button>
                             </DialogFooter>
                         </form>
                     </Form>
@@ -214,8 +217,8 @@ export default function RainbowTextCreatorDialog({ onInsert }: RainbowTextCreato
                 open={namingOpen}
                 onOpenChange={setNamingOpen}
                 onSubmit={handlePresetSubmit}
-                title={"创建渐变预设"}
-                description={"请输入新创建渐变预设的名称："}
+                title={t("rainbow.createPreset")}
+                description={t("rainbow.createPresetDescription")}
             />
         </>
     );

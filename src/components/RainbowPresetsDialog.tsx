@@ -27,10 +27,12 @@ import { toast } from "sonner";
 import { exportPresetData } from "@/lib/data.ts";
 import RainbowPresetsImportDialog from "@/components/RainbowPresetsImportDialog.tsx";
 import { BUILTIN_PRESETS } from "@/constants/colors.ts";
+import { useTranslation } from "react-i18next";
 
 export default function RainbowPresetsDialog() {
     const { setPresetDialogOpen, presetDialogOpen, setPresetDemand } = usePresetActionsStore();
     const { presets, editPreset, deletePreset } = usePresetsStore();
+    const { t } = useTranslation();
 
     const [editingName, setEditingName] = useState("");
     const [renameOpen, setRenameOpen] = useState(false);
@@ -66,27 +68,27 @@ export default function RainbowPresetsDialog() {
             <Dialog open={presetDialogOpen} onOpenChange={setPresetDialogOpen}>
                 <DialogContent className="sm:max-w-[640px] max-h-screen sm:max-h-[calc(100dvh-2rem)] flex flex-col items-stretch">
                     <DialogHeader className={"flex-none"}>
-                        <DialogTitle>预设管理</DialogTitle>
-                        <DialogDescription>可以应用、重命名和删除你设置的渐变预设。</DialogDescription>
+                        <DialogTitle>{t("presets.management")}</DialogTitle>
+                        <DialogDescription>{t("presets.description")}</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 flex-auto overflow-y-auto">
                         <div className={"flex items-center gap-2"}>
                             <Button variant={"outline"} onClick={() => setImportOpen(true)}>
                                 <Upload className={"size-4"} />
-                                导入
+                                {t("presets.import")}
                             </Button>
                             <Button variant={"outline"} onClick={exportPresetData}>
                                 <Download className={"size-4"} />
-                                导出
+                                {t("presets.export")}
                             </Button>
                         </div>
                         <div className={"overflow-x-auto"}>
                             <Table className={"table-fixed min-w-[500px]"}>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className={"w-36"}>名称</TableHead>
-                                        <TableHead>渐变</TableHead>
-                                        <TableHead className="text-center w-[8.5rem]">操作</TableHead>
+                                        <TableHead className={"w-36"}>{t("presets.name")}</TableHead>
+                                        <TableHead>{t("presets.gradient")}</TableHead>
+                                        <TableHead className="text-center w-[8.5rem]">{t("presets.actions")}</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -95,7 +97,7 @@ export default function RainbowPresetsDialog() {
                                             <TableCell className="font-medium break-all align-middle py-0">
                                                 <div className={"flex items-center"}>
                                                     <Lock className={"size-4"} />
-                                                    {e.name}
+                                                    {t(e.name)}
                                                 </div>
                                             </TableCell>
                                             <TableCell className={"py-2"}>
@@ -110,12 +112,12 @@ export default function RainbowPresetsDialog() {
                                                 <Button
                                                     variant={"ghost"}
                                                     size={"icon"}
-                                                    aria-label={"使用"}
+                                                    aria-label={t("presets.use")}
                                                     onClick={() => {
                                                         setPresetDemand(e.colors);
                                                         setPresetDialogOpen(false);
-                                                        toast.success("预设应用成功", {
-                                                            description: e.name,
+                                                        toast.success(t("presets.applied"), {
+                                                            description: t(e.name),
                                                         });
                                                     }}
                                                 >
@@ -139,7 +141,7 @@ export default function RainbowPresetsDialog() {
                                                 <Button
                                                     variant={"ghost"}
                                                     size={"icon"}
-                                                    aria-label={"重命名"}
+                                                    aria-label={t("presets.rename")}
                                                     onClick={() => handleEdit(i)}
                                                 >
                                                     <PenLine className={"size-4"} />
@@ -147,7 +149,7 @@ export default function RainbowPresetsDialog() {
                                                 <Button
                                                     variant={"ghost"}
                                                     size={"icon"}
-                                                    aria-label={"删除"}
+                                                    aria-label={t("presets.delete")}
                                                     onClick={() => handleDelete(i)}
                                                 >
                                                     <Trash2 className={"size-4"} />
@@ -155,11 +157,11 @@ export default function RainbowPresetsDialog() {
                                                 <Button
                                                     variant={"ghost"}
                                                     size={"icon"}
-                                                    aria-label={"使用"}
+                                                    aria-label={t("presets.use")}
                                                     onClick={() => {
                                                         setPresetDemand(e.colors);
                                                         setPresetDialogOpen(false);
-                                                        toast.success("预设应用成功", {
+                                                        toast.success(t("presets.applied"), {
                                                             description: e.name,
                                                         });
                                                     }}
@@ -175,7 +177,7 @@ export default function RainbowPresetsDialog() {
                     </div>
                     <DialogFooter className={"flex-none"}>
                         <Button variant={"outline"} onClick={() => setPresetDialogOpen(false)}>
-                            取消
+                            {t("presets.cancel")}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
@@ -184,20 +186,22 @@ export default function RainbowPresetsDialog() {
                 open={renameOpen}
                 onOpenChange={setRenameOpen}
                 onSubmit={handleEditDone}
-                title={"重命名渐变预设"}
-                description={"请输入新的渐变预设名称："}
+                title={t("presets.renamePreset")}
+                description={t("presets.renameDescription")}
                 initialName={editingName}
             />
             <RainbowPresetsImportDialog open={importOpen} onOpenChange={setImportOpen} />
             <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>删除确认</AlertDialogTitle>
-                        <AlertDialogDescription>{`确定要删除预设「${editingName}」吗？此操作不可逆，请再次确认。`}</AlertDialogDescription>
+                        <AlertDialogTitle>{t("presets.deleteConfirm")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {t("presets.deleteConfirmDescription", { name: editingName })}
+                        </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>取消</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteDone}>确定</AlertDialogAction>
+                        <AlertDialogCancel>{t("presets.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteDone}>{t("presets.confirm")}</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

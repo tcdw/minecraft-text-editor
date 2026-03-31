@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ReactNode, useEffect, useId, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface RainbowNameDialogProps {
     open: boolean;
@@ -25,16 +26,18 @@ export default function RainbowNameDialog({
     onSubmit,
     title,
     description,
-    initialName = "未命名预设",
+    initialName,
 }: RainbowNameDialogProps) {
     const id = useId();
-    const [name, setName] = useState("未命名预设");
+    const { t } = useTranslation();
+    const defaultName = initialName ?? t("rainbow.defaultPresetName");
+    const [name, setName] = useState(defaultName);
 
     useEffect(() => {
         if (open) {
-            setName(initialName);
+            setName(initialName ?? t("rainbow.defaultPresetName"));
         }
-    }, [open, initialName]);
+    }, [open, initialName, t]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -52,12 +55,12 @@ export default function RainbowNameDialog({
                     </DialogHeader>
                     <div className={"my-4"}>
                         <label className={"sr-only"} htmlFor={id}>
-                            预设名称
+                            {t("rainbow.presetName")}
                         </label>
                         <Input id={id} value={name} onChange={e => setName(e.currentTarget.value)} />
                     </div>
                     <DialogFooter>
-                        <Button type="submit">保存</Button>
+                        <Button type="submit">{t("rainbow.save")}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

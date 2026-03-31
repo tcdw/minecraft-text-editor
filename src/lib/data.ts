@@ -2,6 +2,7 @@ import usePresetsStore, { Preset } from "@/store/presets.ts";
 import { parse, stringify } from "smol-toml";
 import { saveString } from "@/lib/saveFile.ts";
 import { v4 } from "uuid";
+import i18n from "@/i18n";
 
 const KIND_IDENTIFIER = "run.tuu.mte.gradient";
 
@@ -10,7 +11,7 @@ export async function importPresetData(data: File) {
     const decoded = new TextDecoder().decode(raw);
     const parsed: any = parse(decoded);
     if (parsed?.kind !== KIND_IDENTIFIER || parsed?.version !== 1) {
-        throw new Error("不支持的数据格式");
+        throw new Error(i18n.t("data.unsupportedFormat"));
     }
     const newPresets: Preset[] = parsed?.presets ?? [];
     newPresets.forEach(e => {
@@ -32,5 +33,5 @@ export function exportPresetData() {
         e.id = undefined;
     });
     const toml = stringify(exportObject);
-    saveString(`渐变色预设导出_${new Date().getTime()}.toml`, toml);
+    saveString(i18n.t("data.exportFilename", { timestamp: new Date().getTime() }), toml);
 }
