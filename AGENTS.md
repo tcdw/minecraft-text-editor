@@ -8,8 +8,8 @@ Minecraft Text Editor 是一个面向 Minecraft 服务器玩家的彩色文本�
 - 编辑器内核：Lexical
 - 状态管理：zustand
 - UI：Radix UI + 自有 `src/components/ui/*` 封装
-- 样式：Tailwind CSS v4（通过 Vite 插件接入）+ Sass（`src/editor.scss`）
-- 打包：Vite 7
+- 样式：Tailwind CSS v4（通过 PostCSS 接入）+ Sass（`src/editor.scss`）
+- 打包：Rsbuild
 
 ## 快速开始
 
@@ -41,7 +41,7 @@ pnpm lint:fix
 
 ## 构建与样式（重要）
 
-- Tailwind CSS v4 通过 `@tailwindcss/vite` 插件在构建期处理。
+- Tailwind CSS v4 通过 `@tailwindcss/postcss` 在 Rsbuild 构建期处理。
 - 入口样式文件：
   - `src/styles.css`：`@import "tailwindcss";`、`@plugin "@tailwindcss/typography";`、主题 tokens（`@theme`）与基础层 `@layer base`
   - `src/editor.scss`：编辑器相关样式
@@ -50,7 +50,7 @@ pnpm lint:fix
 
 - `@` 指向 `src/`
 - 位置：
-  - Vite：`vite.config.ts`
+  - Rsbuild：`rsbuild.config.ts`
   - TypeScript：`tsconfig.json` 的 `paths`
 
 写代码时优先使用 `@/…` 导入以避免相对路径层级过深。

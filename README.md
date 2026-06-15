@@ -17,7 +17,7 @@
 
 ## 开发/编译
 
-本工具使用 Vite 进行编译工作。
+本工具使用 Rsbuild 进行编译工作。
 
 - 编译：`npm run build`
 - 开发模式：`npm run dev`
